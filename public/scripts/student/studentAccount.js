@@ -33,12 +33,12 @@ function toggleAdvisorFields(graduateProgram) {
     const advisorNameDiv = document.querySelector('.advisorname');
     const advisorEmailDiv = document.querySelector('.advisoremail');
 
-    if (graduateProgram === 'MS Non Thesis') {
-        advisorNameDiv.style.display = 'none';
-        advisorEmailDiv.style.display = 'none';
-    } else {
+    if (graduateProgram === 'PHD Thesis' || graduateProgram === 'MS Thesis') {
         advisorNameDiv.style.display = 'grid';
         advisorEmailDiv.style.display = 'grid';
+    } else {
+        advisorNameDiv.style.display = 'none';
+        advisorEmailDiv.style.display = 'none';
     }
 }
 
@@ -141,7 +141,7 @@ async function replaceTextWithInputs() {
     const departments = await fetchDepartments();
     document.querySelector('.dept .value').innerHTML = createDropdown('dept', departments);
 
-    const graduateProgramOptions = ['PHD Thesis', 'MS Thesis', 'MS Non Thesis'];
+    const graduateProgramOptions = ['PHD Thesis', 'PHD Thesis ( Advisor Unknown )', 'MS Thesis', 'MS Thesis ( Advisor Unknown )', 'MS Non Thesis', 'Combined BS/MS', 'Undergraduate (UG)'];
     document.querySelector('.graduateprogram .value').innerHTML = createDropdown('graduateprogram', graduateProgramOptions);
 
     const enrollementStatusOptions = ['Continuing student', 'New Student'];
