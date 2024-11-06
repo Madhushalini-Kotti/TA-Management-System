@@ -1,0 +1,105 @@
+CRN,Course,Course Title,Inst. Method,TA Hours
+20180,CGS 5937,Graduate Seminar,Fully Online Class,60
+20491,CAP 6610,Applied Machine Learning,Fully Online Class,80
+15295,COP 2220,Intro to Programming in C,Fully Online Class,60
+18917,COP 3014,Foundations of Computer Sci,Fully Online Class,80
+16441,COP 3813,Intro to Internet Computing,Fully Online Class,20
+18919,COP 4610,Computer Operating Systems,Fully Online Class,40
+15304,COT 4400,Design/Analysis of Algorithms,Fully Online Class,20
+22165,COT 4930,Topics in Comp Sci & Eng,Fully Online Class,40
+22166,COT 4930,Topics in Comp Sci & Eng,Fully Online Class,40
+22167,COT 4930,Topics in Comp Sci & Eng,Fully Online Class,40
+16556,COT 6405,Analysis of Algorithms,Fully Online Class,40
+19511,EGN 4952C,RI: Engineering Design 2,Fully Online Class,40
+18502,EEL 4512L,Communications Systems Lab,In-Person,40
+16238,EEL 3118L,Electronics Laboratory 1,In-Person,40
+18497,EEL 3118L,Electronics Laboratory 1,In-Person,40
+20115,CAP 6974,Master's Thesis Artific Intel,In-Person,40
+21872,CAP 6974,Master's Thesis Artific Intel,In-Person,40
+21873,CAP 6974,Master's Thesis Artific Intel,In-Person,40
+20146,CDA 3331C,Intro Microprocessor Systems,In-Person,40
+15298,COP 2220,Intro to Programming in C,In-Person,40
+17991,COP 2220,Intro to Programming in C,In-Person,40
+17992,COP 2220,Intro to Programming in C,In-Person,40
+15300,COP 3530,Data Struct/Algorithm Analysis,In-Person,40
+20155,COT 2000,Foundations of Computing,In-Person,40
+15291,EEL 3111,Circuits 1,In-Person,40
+16239,EEL 4119L,Electronics Laboratory 2,In-Person,40
+21522,EEL 4930,Special Topics,In-Person,40
+17409,CDA 3201C,Introduction To Logic Design,In-Person,40
+20993,CDA 3201C,Introduction To Logic Design,In-Person,40
+20137,CAP 2753,Exper Design Data Analysis,In-Person w/Live Remote Option,40
+21676,CAP 5768,Intro to Data Science,In-Person w/Live Remote Option,40
+21677,CAP 5768,Intro to Data Science,In-Person w/Live Remote Option,40
+21678,CAP 6619,Deep Learning,In-Person w/Live Remote Option,40
+21679,CAP 6619,Deep Learning,In-Person w/Live Remote Option,40
+15289,CDA 3331C,Intro Microprocessor Systems,In-Person w/Live Remote Option,40
+21680,CEN 5086,Cloud Computing,In-Person w/Live Remote Option,40
+21681,CEN 5086,Cloud Computing,In-Person w/Live Remote Option,40
+21682,CEN 6027,Software Maint and Evolution,In-Person w/Live Remote Option,40
+21683,CEN 6027,Software Maint and Evolution,In-Person w/Live Remote Option,40
+21633,COP 2034,Intro to Programming in Python,In-Person w/Live Remote Option,40
+21229,COP 3014,Foundations of Computer Sci,In-Person w/Live Remote Option,40
+20153,COP 3410,Data Strc Algrthm Anlys Python,In-Person w/Live Remote Option,40
+18918,COP 3540,Intro to Database Structures,In-Person w/Live Remote Option,40
+20951,EEE 4360C,High Frequency Amp Design,In-Person w/Live Remote Option,40
+15292,EEL 3470,Electromagnetic Fields & Waves,In-Person w/Live Remote Option,40
+15288,CDA 3201C,Introduction To Logic Design,In-Person w/Live Remote Option,40
+16240,EEE 3300,Electronics 1,In-Person w/Live Remote Option,40
+17661,BME 5000,Intro to Biomed Engineering,In-Person w/Recorded Lecture,40
+17254,BME 5742,Biosystems Modeling & Control,In-Person w/Recorded Lecture,40
+20949,BME 5937,Special Topics Bioengineering,In-Person w/Recorded Lecture,40
+20139,CAP 4401,Digital Image Processing,In-Person w/Recorded Lecture,40
+20141,CAP 4613,Intro to Deep Learning,In-Person w/Recorded Lecture,40
+20142,CAP 4773,Intro Data Science Analytics,In-Person w/Recorded Lecture,40
+20090,CAP 5768,Intro to Data Science,In-Person w/Recorded Lecture,40
+20092,CAP 6629,Reinforcement Learning,In-Person w/Recorded Lecture,40
+20094,CAP 6635,Artificial Intelligence,In-Person w/Recorded Lecture,40
+20113,CAP 6640,Natural Language Processing,In-Person w/Recorded Lecture,40
+19514,CAP 6673,Data Mining & Mach Learning,In-Person w/Recorded Lecture,40
+19284,CDA 4210,Introduction to VLSI,In-Person w/Recorded Lecture,40
+21048,CDA 4240C,Design of Digital Sys and Lab,In-Person w/Recorded Lecture,40
+19067,CDA 6316,Embedded System Design I,In-Person w/Recorded Lecture,40
+17410,CEN 4010,Prin Software Engineering,In-Person w/Recorded Lecture,40
+20200,CEN 4400,Intro Cptr Sys Perf Eval,In-Person w/Recorded Lecture,40
+20663,CEN 5035,Software Engineering,In-Person w/Recorded Lecture,40
+20151,CIS 4634,Appl Cryptography and Security,In-Person w/Recorded Lecture,40
+20096,CIS 5371,Prac Aspects Mod Cryptography,In-Person w/Recorded Lecture,40
+19073,CNT 4104,Intro to Data Communications,In-Person w/Recorded Lecture,40
+15301,COP 3530,Data Struct/Algorithm Analysis,In-Person w/Recorded Lecture,40
+18920,COP 4703,Applied Database Systems,In-Person w/Recorded Lecture,40
+18467,COP 5339,Object-Oriented Softw Design,In-Person w/Recorded Lecture,40
+18924,COP 6731,Thry/Implmntl Database Systms,In-Person w/Recorded Lecture,40
+20098,COP 6819,Advanced Internet Systems,In-Person w/Recorded Lecture,40
+21516,COT 4400,Design/Analysis of Algorithms,In-Person w/Recorded Lecture,40
+15305,COT 4420,Form Lang & Auto Theory,In-Person w/Recorded Lecture,40
+20156,COT 4930,Topics in Comp Sci & Eng,In-Person w/Recorded Lecture,40
+20160,COT 4930,Topics in Comp Sci & Eng,In-Person w/Recorded Lecture,40
+20193,COT 4930,Topics in Comp Sci & Eng,In-Person w/Recorded Lecture,40
+21485,COT 4930,Topics in Comp Sci & Eng,In-Person w/Recorded Lecture,40
+19521,COT 5930,Topics in Computer Science,In-Person w/Recorded Lecture,40
+20100,COT 5930,Topics in Computer Science,In-Person w/Recorded Lecture,40
+21488,COT 5930,Topics in Computer Science,In-Person w/Recorded Lecture,40
+20102,COT 6930,Topics in Computer Science,In-Person w/Recorded Lecture,40
+20104,COT 6930,Topics in Computer Science,In-Person w/Recorded Lecture,40
+20585,COT 6930,Topics in Computer Science,In-Person w/Recorded Lecture,40
+21049,COT 6930,Topics in Computer Science,In-Person w/Recorded Lecture,40
+16707,EEE 4361,Electronics 2,In-Person w/Recorded Lecture,40
+17449,EEE 4510,Intro to Digital Signal Proces,In-Person w/Recorded Lecture,40
+20890,EEE 4541,Stochastic Proc/Random Signals,In-Person w/Recorded Lecture,40
+20165,EEE 4541,Stochastic Proc/Random Signals,In-Person w/Recorded Lecture,40
+20166,EEE 5502,Digital Processing of Signals,In-Person w/Recorded Lecture,40
+20123,EEE 5557,Introduction to Radar Systems,In-Person w/Recorded Lecture,40
+18195,EEE 6374,RF Devices and Circuits,In-Person w/Recorded Lecture,40
+18498,EEL 4216,Electric Power Systems,In-Person w/Recorded Lecture,40
+17336,EEL 4512,Communication Systems,In-Person w/Recorded Lecture,40
+15293,EEL 4656,Analysis Linear Systems,In-Person w/Recorded Lecture,40
+20168,EEL 4930,Special Topics,In-Person w/Recorded Lecture,40
+20170,EEL 4930,Special Topics,In-Person w/Recorded Lecture,40
+20891,EEL 4930,Special Topics,In-Person w/Recorded Lecture,40
+20107,EEL 5500,Digital Communications Systems,In-Person w/Recorded Lecture,40
+20109,EEL 5934,Special Topics-Electrical Eng,In-Person w/Recorded Lecture,40
+20111,EEL 6935,Special Topics,In-Person w/Recorded Lecture,40
+18178,EGN 4950C,RI: Engineering Design 1,Mostly Online Class,40
+17408,EGN 4952C,RI: Engineering Design 2,Mostly Online Class,40
+19069,CEN 6075,Software Requirements Engr,Online Live Lecture,40

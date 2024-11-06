@@ -1,0 +1,136 @@
+/* Dashboard */
+
+.StudentAccountContent {
+    display: none;
+}
+
+.StudentApplyContent {
+    display: none;
+}
+
+.StudentApplicationsContent {
+    display: none;
+}
+
+.StudentStatusContent {
+    display: none;
+}
+
+.StudentInboxContent {
+    display: none;
+}
+
+.StudentDashboardContent {
+    height: 100vh;
+    width: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.dashboard_title_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: 100%;
+    height: 80px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.dashboard_title {
+    color: #003366;
+    margin-left: 50px;
+    font-size: 30px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-bottom: 0px;
+}
+
+.first_dashboard_items_wrapper {
+    width: 80%;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.second_dashboard_items_wrapper {
+    width: 60%;
+    flex: 1;
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+
+.dashboard_item {
+    height: 250px;
+    width: 280px;
+    border: 2px solid #003366;
+    border-radius: 5%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 58% 42%;
+}
+
+.dashboard_item.first>.top_part {
+    background-color: #0374b5;
+}
+
+.dashboard_item.first>.lower_part {
+    color: #0374b5;
+}
+
+.dashboard_item.second>.top_part {
+    background-color: #e1185c;
+}
+
+.dashboard_item.second>.lower_part {
+    color: #e1185c;
+}
+
+.dashboard_item.third>.top_part {
+    background-color: #927005;
+}
+
+.dashboard_item.third>.lower_part {
+    color: #927005;
+}
+
+.dashboard_item.fourth>.top_part {
+    background-color: #4f8045;
+}
+
+.dashboard_item.fourth>.lower_part {
+    color: #4f8045;
+}
+
+.dashboard_item.fifth>.top_part {
+    background-color: #9f3636;
+}
+
+.dashboard_item.fifth>.lower_part {
+    color: #9f3636;
+}
+
+.top_part {
+    border-radius: 5%;
+    border-bottom-left-radius: 0%;
+    border-bottom-right-radius: 0%;
+}
+
+.lower_part {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lower_part>span {
+    font-size: 30px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+}

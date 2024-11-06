@@ -1,0 +1,581 @@
+.StaffApplicantsContent {
+    width: 100%;
+    display: grid;
+    grid-template-rows: 70px 60px 60px auto;
+    grid-template-columns: 100%;
+    row-gap: 1px;
+    background-color: rgb(236, 239, 241);
+}
+
+.StaffApplicantsContent .department_semester_container {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 200px auto 200px;
+    background-color: #fff;
+    gap: 30px;
+}
+
+.StaffApplicantsContent .department_title_container {
+    width: 100%;
+    background-color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.StaffApplicantsContent .department_title_container span {
+    font-size: 22px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgb(131, 3, 3);
+}
+
+.StaffApplicantsContent .semester_title_container {
+
+    width: 100%;
+    background-color: #fff;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.StaffApplicantsContent .semester_title_container span {
+    font-size: 22px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgb(131, 3, 3);
+}
+
+.StaffApplicantsContent .export_applicants_btn_container {
+    width: 100%;
+    background-color: #fff;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.StaffApplicantsContent .export_applicants_btn {
+    background-color: #fff;
+    border: none;
+
+    font-size: 20px;
+    font-family: "Open Sans", sans-serif;
+}
+
+
+
+
+
+
+.StaffApplicantsContent .Applicant_type_btns_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.Applicant_type_btns_container button {
+    padding: 8px 12px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 18px;
+    border: 1px solid white;
+    width: 100%;
+    height: 100%;
+}
+
+.Applicant_type_btns_container button.active {
+    background-color: #0155a9;
+    color: white;
+    font-size: 20px;
+}
+
+.StaffApplicantsContent .navigation {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 15px;
+    background-color: rgb(129, 133, 138);
+}
+
+.StaffApplicantsContent .navigation .title span {
+    font-size: 20px;
+    color: #fff;
+    text-align: center;
+    font-family: OpenSans-Bold, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.StaffApplicantsContent .course_selection_container {
+    display: inline-flex;
+    gap: 7px;
+}
+
+.StaffApplicantsContent .navigation select {
+
+    font-size: 18px;
+    color: #333;
+    text-transform: capitalize;
+    font-weight: 400;
+    letter-spacing: 1px;
+
+    height: 30px;
+    width: 400px;
+    border: 1px solid rgb(131, 3, 3);
+    border-radius: 5px;
+    overflow-y: hidden;
+}
+
+.StaffApplicantsContent .navigation .served_as_ta_container, .a_grade_container, .experience_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.StaffApplicantsContent .navigation .served_as_ta_container .title span {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(131, 3, 3);
+}
+
+.StaffApplicantsContent .navigation .a_grade_container .title span {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(131, 3, 3);
+}
+
+.StaffApplicantsContent .navigation .experience_container .title span {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(131, 3, 3);
+}
+
+
+.StaffApplicantsContent .navigation .sort_by_container select {
+    width: 170px;
+}
+
+.StaffApplicantsContent .sort_by_container {
+    display: inline-flex;
+    gap: 7px;
+    padding-right: 40px;
+}
+
+.StaffApplicantsContent option {
+    margin: 5px;
+}
+
+.applicants_container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 50px;
+}
+
+.applicants_container .applicant_item {
+    display: grid;
+    align-items: center;
+    justify-content: flex-start;
+    grid-template-rows: 1fr;
+    grid-template-columns: 2fr 1.25fr 0.65fr 1.40fr 1fr 1.5fr;
+    gap: 20px;
+    background-color: #fff;
+    width: 95%;
+    padding: 10px 20px;
+    min-height: 95px;
+    height: auto;
+    /* Adjust height based on content */
+
+}
+
+.applicants_container .applicant_item span{
+    font-size: 17px;
+        color: #333;
+        font-weight: 400px;
+        text-transform: capitalize;
+        font-family: OpenSans-Bold, Helvetica, Arial, sans-serif;
+        letter-spacing: 1px;
+        text-align: center;
+
+}
+
+.applicants_container #ApplicantItemHeading {
+    border: 1px solid rgb(131, 3, 3);
+    border-width: 0px 0px 1px 0px;
+}
+
+.applicants_container > div {
+    border: 1px solid black;
+        border-width: 0px 0px 1px 0px;
+}
+
+.applicants_container #ApplicantItemHeading span {
+    color: rgb(131, 3, 3)
+}
+
+.applicant_item .view_profile_btn {
+    background-color: white;
+}
+
+.view_profile_btn {
+    border: none;
+    background-color: white;
+    color: #157be1;
+    font-size: 17px;
+    width: 100%;
+    margin: 0px;
+    text-align: left;
+    justify-content: center;
+    padding: 0;
+}
+
+.view_profile_btn:hover {
+    color: #e04848;
+}
+
+
+
+
+
+.applicant_item .shortlist_btn {
+    background-color: rgb(129, 133, 138);
+        /* Light blue for Shortlist */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        position: relative;
+}
+
+.applicant_item .shortlist_btn::before {
+    content: 'Shortlist';
+}
+
+/* Change the text when hovered for Shortlist button */
+.applicant_item .shortlist_btn:hover::before {
+    content: 'Shortlist this Applicant';
+    background-color: #4cae4c;
+    /* Darker blue on hover */
+}
+
+.applicant_item .shortlist_btn:hover {
+    background-color: #4cae4c;
+    color: white;
+}
+
+
+
+
+
+
+
+/* Default styling for the "Shortlisted" button */
+.applicant_item .remove_shortlisted_btn {
+    background-color: #f0ad4e;
+    /* Orange for Shortlisted */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Set the default text using content for Shortlisted button */
+.applicant_item .remove_shortlisted_btn::before {
+    content: 'Shortlisted';
+}
+
+/* Change the text when hovered for Remove from Shortlist */
+.applicant_item .remove_shortlisted_btn:hover::before {
+    content: 'Remove from Shortlist';
+    background-color: #d9534f;
+    /* Red on hover */
+}
+
+/* Adjust the button styling during hover */
+.applicant_item .remove_shortlisted_btn:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+
+
+
+
+.applicant_item .shortlisted_btn {
+    background-color: #f0ad4e;
+    /* Orange for Shortlisted */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: not-allowed;
+}
+
+
+
+
+.applicant_item .select_btn_from_new {
+    background-color: rgb(129, 133, 138);
+        /* Green for Select */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        position: relative;
+}
+
+/* Set the default text using content for Select button */
+.applicant_item .select_btn_from_new::before {
+    content: 'Select';
+}
+
+/* Change the text when hovered for Select button */
+.applicant_item .select_btn_from_new:hover::before {
+    content: 'Select this Applicant';
+    background-color: #4cae4c;
+    /* Darker green on hover */
+}
+
+.applicant_item .select_btn_from_new:hover {
+    background-color: #4cae4c;
+    color: white;
+}
+
+
+
+
+.applicant_item .select_btn_from_shortlisted {
+    background-color: rgb(129, 133, 138);
+    /* Green for Select */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Set the default text using content for Select button */
+.applicant_item .select_btn_from_shortlisted::before {
+    content: 'Select';
+}
+
+/* Change the text when hovered for Select button */
+.applicant_item .select_btn_from_shortlisted:hover::before {
+    content: 'Select this Applicant';
+    background-color: #4cae4c;
+    /* Darker green on hover */
+}
+
+.applicant_item .select_btn_from_shortlisted:hover {
+    background-color: #4cae4c;
+    color: white;
+}
+
+
+
+
+
+/* Default styling for the "Selected" button */
+.applicant_item .remove_selected_btn {
+    background-color: #4cae4c;
+    /* Light blue for Selected */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Set the default text using content for Selected button */
+.applicant_item .remove_selected_btn::before {
+    content: 'Selected';
+}
+
+/* Change the text when hovered for Remove from Select */
+.applicant_item .remove_selected_btn:hover::before {
+    content: 'Remove from Select';
+    background-color: #d9534f;
+    /* Darker blue on hover */
+}
+
+/* Adjust the button styling during hover */
+.applicant_item .remove_selected_btn:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+
+
+
+.applicant_item .selected_btn {
+    background-color: #4cae4c;
+        /* Light blue for Selected */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: not-allowed;
+        position: relative;
+}
+
+
+
+
+
+.applicant_applied_courses_list {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: #f0f4f8;
+    overflow: hidden;
+    opacity: 0;
+    max-height: 0;
+    /* Start hidden */
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+    /* Smooth transition */
+}
+
+.applicant_applied_courses_list.show {
+    opacity: 1;
+    max-height: 3000px;
+    /* Allow for smooth expansion */
+    transition: max-height 0.5s ease-in, opacity 0.5s ease-in;
+}
+
+/* Heading row (Course List Heading) */
+.applicant_applied_courses_list .course_list_heading {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 0.75fr 0.75fr 120px 4fr;
+    gap: 3px;
+    margin-left: 20px;
+    width: 96%;
+    border-bottom: 2px solid #333;
+    font-weight: 300;
+    padding: 10px 0px;
+}
+
+.applicant_applied_courses_list .course_item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 0.75fr 0.75fr 120px 4fr;
+    gap: 3px;
+    margin-left: 20px;
+    width: 96%;
+    border-bottom: 1px solid #ddd;
+    font-weight: 300;
+    padding: 10px 0px;
+}
+
+.toggle_courses_btn {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ApplicantTypeAndfieldSelectionPopup {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    gap: 20px;
+}
+
+.fieldSelectionGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.span-two-columns {
+    grid-column: span 2;
+    /* Span across two columns */
+}
+
+/* Button container styling */
+.buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    padding-right: 30px;
+}
+
+.buttons-container button {
+    padding: 5px 15px; /* Add some padding inside the buttons */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buttons-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Overlay to dim background */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.confirmation-model-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.overlay button {
+    margin: 10px;
+}
+

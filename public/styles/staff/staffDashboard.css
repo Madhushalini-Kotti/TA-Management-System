@@ -1,0 +1,248 @@
+body {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    height: 100vh;
+    width: 100%;
+}
+
+.navigation_bar {
+    float: left;
+    background-color: #003366;
+    height: auto;
+}
+
+.nav_bar_item {
+    width: 90%;
+    height: 100%;
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav_bar_item_btn {
+    border: none;
+    background: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.nav_bat_item_text {
+    font-size: 16px;
+    font-family: "GothamPro Medium", serif;
+    color: white;
+}
+
+.departments>.nav_bat_item_text {
+    font-size: 14px;
+}
+
+.disabled {
+    opacity: 0.5;
+    /* Makes the div look faded */
+    pointer-events: none;
+    /* Disables any interaction (like clicks) */
+
+    color: #605c5c;
+    /* Optional: make text color lighter */
+    cursor: not-allowed;
+    /* Optional: show the "not allowed" cursor on hover */
+    display: none;
+}
+
+.disabled_btn {
+    pointer-events: none;
+    /* Disables any interaction (like clicks) */
+    cursor: not-allowed;
+    /* Optional: change cursor to indicate disabled state */
+}
+
+
+
+
+
+
+
+
+
+
+.StaffDashboardContent {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.dashboard_title_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: calc(100% - 100px);
+    height: 80px;
+    padding-bottom: 5px;
+}
+
+.dashboard_title {
+    color: #003366;
+    font-size: 30px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-bottom: 0px;
+}
+
+.dashboard_items_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 100px);
+    height: auto;
+    gap: 100px;
+    padding-bottom: 5px;
+    margin-top: 100px;
+}
+
+.dashboard_item {
+    height: 250px;
+    width: 280px;
+    border: 2px solid #003366;
+    border-radius: 5%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 58% 42%;
+}
+
+.dashboard_item.first>.top_part {
+    background-color: #927005;
+}
+
+.dashboard_item.first>.lower_part {
+    color: #927005;
+}
+
+.dashboard_item.second>.top_part {
+    background-color: #e1185c;
+}
+
+.dashboard_item.second>.lower_part {
+    color: #e1185c;
+}
+
+.dashboard_item.third>.top_part {
+    background-color: #4f8045;
+}
+
+.dashboard_item.third>.lower_part {
+    color: #4f8045;
+}
+
+.top_part {
+    border-radius: 5%;
+    border-bottom-left-radius: 0%;
+    border-bottom-right-radius: 0%;
+}
+
+.lower_part {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lower_part>span {
+    font-size: 30px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#initial-overlay {
+    z-index: 2000;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.initial-modal-container {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 70px 70px 70px 70px;
+}
+
+.initial-modal-container span {
+    color: #003366;
+    font-size: 28px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-bottom: 0px;
+}
+
+.initial-modal-container .selection-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: 110px auto;
+    grid-template-rows: 1fr;
+    gap: 20px;
+}
+
+.initial-modal-container .selection-group span {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+
+
+.initial-modal-container .selection-group select {
+    height: 30px;
+}
+
+.initial-modal-container .selection-group select option {
+    margin-bottom: 5px;
+}
+
+.initial-modal-container #submitSelection {
+    width: 150px;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.selection-group {
+    margin: 15px 0;
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}

@@ -1,0 +1,164 @@
+
+
+.course_selection_sort_by_container .sort_by_container select {
+    width: 150px;
+}
+
+.course_selection_sort_by_container option {
+    margin: 5px;
+}
+
+.programType {
+    display: flex;
+    justify-content: center;
+}
+
+.programType_value {
+    display: flex;
+    justify-content: center;
+}
+
+.eligibility {
+    display: flex;
+    flex-direction: column;
+}
+
+.eligibility_value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.servedAsTa span {
+    font-size: 14px;
+}
+
+.professionalExperience span {
+    font-size: 14px;
+}
+
+
+
+
+#heading.application_item div:nth-child(9){
+    display: none;
+}
+
+.application_management_btns {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+
+.profile_container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+}
+
+.profile_container span {
+    font-size: 17px;
+    color: #333;
+    font-weight: 300;
+    text-transform: capitalize;
+    font-family: OpenSans-Bold, Helvetica, Arial, sans-serif;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-right: 20px;
+}
+
+.profile_container div span:first-child {
+    font-size: 18px;
+    color: #2c3e50;
+    font-weight: 400;
+}
+
+.profile_container .profile_resume span:first-child{
+    font-weight: 400;
+    color: rgb(131, 3, 3);
+}
+
+.profile_container .profile_transcripts span:first-child {
+    font-weight: 400;
+    color: rgb(131, 3, 3);
+}
+
+.profile_container .profile_credits_will_register span:first-child{
+    font-size: 16px;
+}
+
+.profile_container div {
+    margin-bottom: 15px;
+}
+
+
+.close_profile_btn {
+    background-color: #ff5f5f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    float: right;
+}
+
+.close_profile_btn:hover {
+    background-color: #e04848;
+}
+
+
+
+.applications_container {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Adjust the button styling during hover */
+.remove_shortlisted_btn:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+.StaffAdminContent {
+    width: 100%;
+    display: grid;
+    grid-template-rows: 70px auto;
+    grid-template-columns: 100%;
+    row-gap: 1px;
+    background-color: rgb(236, 239, 241);
+}
+
+.StaffAdminContent .admin_navigation_btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.admin_navigation_btns button {
+    padding: 8px 12px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 18px;
+    border: 1px solid white;
+    width: 100%;
+    height: 100%;
+}
+
+.admin_navigation_btns button.active {
+    background-color: #0155a9;
+    color: white;
+    font-size: 20px;
+}
+
+
+
+
+
+

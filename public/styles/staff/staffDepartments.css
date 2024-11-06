@@ -1,0 +1,87 @@
+.StaffDepartmentsContent{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 75px 65px auto;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    background-color: white;
+}
+
+.StaffDepartmentsContent .departments_title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 30px;
+    height: 100%;
+}
+
+.StaffDepartmentsContent .departments_title span {
+    align-items: center;
+    color: #003366;
+        font-size: 25px;
+        font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        letter-spacing: 1px;
+        margin-bottom: 0px;
+        text-transform: uppercase;
+}
+
+.StaffDepartmentsContent .add_department_container {
+    background-color: rgb(129, 133, 138);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.departments_content .add_department_container input {
+    border-radius: 5px;
+    border-color: white;
+    border: 1px white solid;
+    padding: 3px;
+}
+
+.departments_content .add_department_container input:nth-child(2) {
+    width: 400px;
+}
+
+.departments_list_container {
+    width: 80%;
+    padding: 50px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px;
+    row-gap: 20px;
+}
+
+.departments_list_container .dept_item {
+    height: 60px;
+    width: 100%;
+    background-color: rgb(236, 239, 241);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 3px 50px 3px 50px;
+}
+
+.departments_list_container .dept_item .delete_dept_btn {
+    margin-left: auto;
+}
+
+.departments_list_container .dept_item span {
+    color: #003366;
+    font-size: 18px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+    margin-bottom: 0px;
+    text-transform: capitalize;
+}
+
+.departments_list_container .dept_item .dept_abbre span {
+    text-transform: uppercase;
+    font-weight: 500;
+}

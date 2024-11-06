@@ -1,0 +1,418 @@
+/* Application content */
+
+.StudentApplicationsContent {
+    display: flex;
+    height: auto;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: aliceblue;
+    width: 100%;
+}
+
+.department_semester_status_container {
+
+    background-color: aliceblue;
+
+    height: 90px;
+    width: 100%;
+    border: 1px solid #003366;
+    border-width: 0px 0px 1px 0px;
+
+    display: grid;
+    grid-template-columns: 50% 30% 20%;
+    align-items: center;
+    justify-content: start;
+}
+
+
+.department_container {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 160px calc(100% - 160px);
+    column-gap: 6px;
+    margin-left: 25px;
+}
+
+.department_semester_status_container .title,
+.value {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.department_semester_status_container .title>span {
+    font-size: 18px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #003366;
+    text-transform: uppercase;
+}
+
+.department_semester_status_container .value>span {
+    font-size: 16px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #003366;
+    text-transform: uppercase;
+}
+
+.semester_container {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 150px calc(100% - 150px);
+}
+
+.status_container {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 110px calc(100% - 110px);
+}
+
+
+
+
+
+
+
+
+
+
+.applications_list_container {
+    height: auto;
+    width: calc(100% - 200px);
+    background-color: aliceblue;
+
+    margin: 100px;
+    margin-top: 50px;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 50px;
+}
+
+.application_container {
+    width: 90%;
+    background-color: #c1d8f6;
+    border-radius: 10px;
+    padding-left: 30px;
+    padding-top: 20px;
+    padding-right: 20px;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px 50px 170px 170px 70px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+
+.course_title_status_container {
+    height: 100%;
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.course_title_status_container .course_title {
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.course_title_status_container .course_title span {
+
+    font-size: 25px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #003366;
+}
+
+.course_title_status_container .course_status {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.course_title_status_container .status_title {
+    font-size: 20px;
+        font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+        color: #003366;
+}
+
+.course_title_status_container .course_status .under_review_status {
+    font-size: 20px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: rgb(232, 128, 9);
+    margin-left: 10px;
+}
+
+.course_title_status_container .course_status .selected_status {
+    font-size: 20px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: green;
+    margin-right: 4PX;
+}
+
+
+.course_title_status_container .navigation_btn {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #c1d8f6;
+    padding: 0px;
+}
+
+.course_title_status_container .navigation_btn button {
+    border: none;
+    background-color: #c1d8f6;
+}
+
+
+
+
+.course_name_number_department_semester_container {
+    height: 100%;
+    width: 100%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 50px;
+}
+
+.course_name_number_department_semester_container>div {
+    display: inline-flex;
+    gap: 8px;
+}
+
+.course_name_number_department_semester_container .title span {
+    font-size: 18px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #003366;
+}
+
+.course_name_number_department_semester_container .value span {
+    font-size: 18px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #003366;
+}
+
+
+
+.eligibility_criteria_items_container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 50px;
+}
+
+.eligibility_criteria_items_container .eligibility_criteria_item {
+    display: inline-flex;
+    gap: 15px;
+    margin-left: 15px;
+}
+
+.eligibility_criteria_items_container .title {
+    font-size: 18px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: rgb(3, 25, 96);
+}
+
+.criteria {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    /* Adjust spacing between items */
+}
+
+.criteria svg {
+    margin-right: 8px;
+    /* Space between the SVG and checkbox */
+    width: 20px;
+    /* Size of SVG */
+    height: 20px;
+    /* Size of SVG */
+    fill: #003366;
+    /* Color of the SVG */
+}
+
+.criteria input[type="checkbox"] {
+    margin-left: 5px;
+    /* Space between SVG and checkbox */
+}
+
+.comments {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.comments span {
+    font-size: 20px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: rgb(3, 25, 96);
+}
+
+.comments .value {
+    width: 95%;
+    height: 120px;
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comments .value span {
+    width: 95%;
+    height: 100%;
+    font-weight: 400;
+    font-size: 17px;
+}
+
+.comments textarea {
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    text-wrap: wrap;
+    resize: none;
+    border: none;
+    border-radius: 10px;
+}
+
+.application_container .edit_delete_save_cancel_btns_container {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-basis: 120px;
+    gap: 15px;
+}
+
+.application_container .edit_btn {
+    width: 100px;
+    height: 30px;
+    background-color: #0d6efd;
+    border: none;
+    border-radius: 5px;
+    color: white;
+}
+
+.application_container .delete_btn {
+    width: 100px;
+    height: 30px;
+    background-color: #6c757d;
+    border: none;
+    border-radius: 5px;
+    color: white;
+}
+
+.application_container .save_btn {
+    width: 150px;
+        height: 30px;
+        background-color: green;
+        border: none;
+        border-radius: 5px;
+        color: white;
+}
+
+.application_container .cancel_btn {
+    width: 150px;
+        height: 30px;
+        background-color: rgb(219, 60, 60);
+        border: none;
+        border-radius: 5px;
+        color: white;
+}
+
+
+
+/* End of Application Content */
+
+
+
+.overlayContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    /* Make sure this is high enough */
+}
+
+
+/* Button styles for testing 
+.view_message_btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 20px;
+}
+
+.view_message_btn:hover{
+    background-color: #0066d2;
+    color: white;
+}
+
+*/
+
+/* Message container styles */
+.message_container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1005;
+    /* Higher than overlay */
+}
+
+.congratulations_title {
+    align-self: center;
+}
+
+.message_container .congratulations_title span{
+    font-size: 25px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: rgb(3, 25, 96);
+}

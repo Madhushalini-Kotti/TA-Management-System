@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HomePage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link href="/styles/staff/staffDashboard.css" rel="stylesheet" />
+    <link href="/styles/staff/staffAdmin.css" rel="stylesheet" />
+    <link href="/styles/staff/staffDepartments.css" rel="stylesheet" />
+    <link href="/styles/staff/staffSemesters.css" rel="stylesheet" />
+    <link href="/styles/staff/staffCourses.css" rel="stylesheet" />
+    <link href="/styles/staff/staffApplications.css" rel="stylesheet" />
+    <link href="/styles/staff/staffApplicants.css" rel="stylesheet" />
+    <link href="/styles/staff/staffSelectedApplicants.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="overlay" id="initial-overlay">
+        <div class="initial-modal-container">
+            <span>Select Semester and Department</span>
+            <div class="selection-group">
+                <label for="semester"><span>Semester</span></label>
+                <select id="semester" required>
+                    <option value="" disabled selected>Select Semester</option>
+                    <option value="spring 2024">Spring 2024</option>
+                    <option value="summer 2024">Summer 2024</option>
+                    <option value="fall 2024">Fall 2024</option>
+                    <option value="spring 2025">Spring 2025</option>
+                    <option value="summer 2025">Summer 2025</option>
+                    <option value="fall 2025">Fall 2025</option>
+                </select>
+            </div>
+        
+            <div class="selection-group">
+                <label for="department"><span>Department</span></label>
+                <select id="department" required>
+                    <option value="" disabled selected>Select Department</option>
+                    <option value="eecs">EECS</option>
+                    <option value="ome">OME</option>
+                    <option value="ghik">GHIK</option>
+                    <option value="lmo">LMO</option>
+                </select>
+            </div>
+        
+            <button id="submitSelection" class="btn btn-primary" disabled>Submit</button>
+        </div>
+    </div>
+
+    <div class="navigation_bar">
+
+        <button type="submit" class="nav_bar_item_btn manageUsers" id="manageUsers_btn" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="30" fill="white" class="bi bi-person-fill-gear"
+                viewBox="0 0 16 16">
+                <path
+                    d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4m9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
+            </svg>
+            <span class="nav_bat_item_text">Manage Users</span>
+        </button>
+
+        <button type="submit" class="nav_bar_item_btn departments" id="departments_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-buildings-fill"
+                viewBox="0 0 16 16">
+                <path
+                    d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zM2 11h1v1H2zm2 0h1v1H4zm-1 2v1H2v-1zm1 0h1v1H4zm9-10v1h-1V3zM8 5h1v1H8zm1 2v1H8V7zM8 9h1v1H8zm2 0h1v1h-1zm-1 2v1H8v-1zm1 0h1v1h-1zm3-2v1h-1V9zm-1 2h1v1h-1zm-2-4h1v1h-1zm3 0v1h-1V7zm-2-2v1h-1V5zm1 0h1v1h-1z" />
+            </svg>
+            <span class="nav_bat_item_text">Departments</span>
+        </button>
+
+        <button type="submit" class="nav_bar_item_btn semesters" id="semesters_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-journal-check"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0" />
+                <path
+                    d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+                <path
+                    d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+            </svg>
+            <span class="nav_bat_item_text">Semesters</span>
+        </button>
+
+        <button type="submit" class="nav_bar_item_btn dashboard" id="dashboard_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" fill="white" class="bi bi-speedometer2"
+                viewBox="0 0 16 16">
+                <path
+                    d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z" />
+                <path fill-rule="evenodd"
+                    d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3" />
+            </svg>
+            <span class="nav_bat_item_text">Dashboard</span>
+        </button>
+
+        <button type="submit" class="nav_bar_item_btn courses" id="courses_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white"
+                class="ic-icon-svg ic-icon-svg--courses" viewBox="0 0 280 259">
+                <path
+                    d="M73.31,198c-11.93,0-22.22,8-24,18.73a26.67,26.67,0,0,0-.3,3.63v.3a22,22,0,0,0,5.44,14.65,22.47,22.47,0,0,0,17.22,8H200V228.19h-134V213.08H200V198Zm21-105.74h90.64V62H94.3ZM79.19,107.34V46.92H200v60.42Zm7.55,30.21V122.45H192.49v15.11ZM71.65,16.71A22.72,22.72,0,0,0,49,39.36V190.88a41.12,41.12,0,0,1,24.32-8h157V16.71ZM33.88,39.36A37.78,37.78,0,0,1,71.65,1.6H245.36V198H215.15v45.32h22.66V258.4H71.65a37.85,37.85,0,0,1-37.76-37.76Z">
+                </path>
+            </svg>
+            <span class="nav_bat_item_text">Courses</span>
+        </button>
+
+        <button type="submit" class="nav_bar_item_btn applicants" id="applicants_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-people-fill"
+                viewBox="0 0 16 16">
+                <path
+                    d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+            </svg>
+            <span class="nav_bat_item_text">Applicants</span>
+        </button>
+
+        <button type="submit" class="nav_bar_item_btn selectedApplicants" id="selectedApplicants_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-person-check-fill"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
+                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+            </svg>
+            <span class="nav_bat_item_text">Selected Applicants</span>
+        </button>
+
+        <button type="submit" class="nav_bar_item_btn logout" id="logout_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="37" height="35" fill="white"
+                class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                <path fill-rule="evenodd"
+                    d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+            </svg>
+            <span class="nav_bat_item_text">Logout</span>
+        </button>
+    </div>
+
+    <div class="StaffDashboardContent" style="display: none">
+    
+        <div class="dashboard_title_wrapper">
+            <div class="dashboard_title">Dashboard</div>
+        </div>
+    
+        <div class="dashboard_items_wrapper">
+        
+            <button type="submit" class="nav_bar_item_btn courses" id="courses_btn_dashboard">
+                <div class="dashboard_item first">
+                    <div class="top_part">
+                    </div>
+                    <div class="lower_part">
+                        <span>Courses</span>
+                    </div>
+                </div>
+            </button>
+        
+            <button type="submit" class="nav_bar_item_btn applicants" id="applicants_btn_dashboard">
+                <div class="dashboard_item second">
+                    <div class="top_part">
+                    </div>
+                    <div class="lower_part">
+                        <span>Applicants</span>
+                    </div>
+                </div>
+            </button>
+
+            <button type="submit" class="nav_bar_item_btn selectedApplicants" id="selectedApplicants_btn_dashboard">
+                <div class="dashboard_item third">
+                    <div class="top_part">
+                    </div>
+                    <div class="lower_part">
+                        <span>Selected Applicants</span>
+                    </div>
+                </div>
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="StaffDepartmentsContent" style="display: none;">
+        <div class="departments_title">
+            <span>Departments</span>
+        </div>
+        <div class="add_department_container">
+            <input placeholder="Department Abbr." />
+            <input placeholder="Department name" />
+            <button type="submit" class="btn btn-primary" id="new_department_btn">Add New Department</button>
+        </div>
+        <div class="departments_list_container">
+            <!-- The dept_item elements will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <div class="StaffSemestersContent" style="display: none;">
+        <div class="semesters_title">
+            <span>Semesters</span>
+        </div>
+        <div class="add_semester_container">
+            <select class="select_semester_name">
+                <option disabled selected>Select Semester Name</option>
+                <option value="Spring">Spring</option>
+                <option value="Summer">Summer</option>
+                <option value="Fall">Fall</option>
+            </select>
+        
+            <select class="select_year" id="selectYearNewSemester">
+                <option disabled selected>Select Year</option>
+                <!-- Year options will be added dynamically by JS -->
+            </select>
+        
+            <select class="select_status">
+                <option disabled selected>Select Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">In Active</option>
+            </select>
+            <button type="submit" class="btn btn-primary" id="new_semester_btn">Add New Semester</button>
+        </div>
+        <div class="semesters_list_container">
+            <!-- The semester_item elements will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <div class="StaffManageUsersContent" style="display: none;">
+    </div>
+
+    <div class="StaffCoursesContent" style="display: none">
+
+        <div class="department_semester_container">
+
+            <div class="semester_title_container">
+                <span>
+                    
+                </span>
+            </div>
+                
+            <div class="department_title_container">
+                <span>
+                    
+                </span>
+            </div>
+
+        </div>
+        
+        <div class="search_course_manage_courses_containers">
+
+            <!--
+            <div class="search_course_container">
+                <div class="title">
+                    <span>Course :</span>
+                </div>
+                <div class="value">
+                    <input />
+                </div>
+            </div> -->
+
+            <div class="manage_courses_buttons_container">
+                <button id="addMultipleCoursesBtn"><span>Add Multiple Courses</span></button>
+                <button id="addSingleCourseBtn"><span>Add Single Courses</span></button>
+                <button id="deleteSingleCourseBtn"><span>Delete course</span></button>
+                <button><span>Delete Muliple Courses</span></button>
+            </div>
+        </div>
+
+        <div class="CoursesFileUploadContainer" style="display:none">
+            <input type="file" id="csvFileInput" accept=".csv" style="margin-right: 10px;" />
+            <button id="uploadCsvBtn" class="btn btn-primary">Upload</button>
+            <button id="cancleFileUploadBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+
+        <div class="SingleCourseUploadContainer" style="display:none">
+            <input type="text" id="courseTitle" name="courseTitle" class="form-control" placeholder="Enter course title" />
+            <input type="text" id="courseName" name="courseName" class="form-control" placeholder="Enter course name" />
+            <input type="text" id="courseNumber" name="courseNumber" class="form-control" placeholder="Enter course number" />
+            <button id="uploadSingleCourseBtn" class="btn btn-primary">Upload</button>
+            <button id="cancelSingleCourseUploadBtn" class="btn btn-secondary">Cancel</button>           
+        </div>
+
+        <div class="SingleCourseDeleteContainer" style="display: none;">
+            <input type="text" id="courseNumberDelete" name="courseNumber" class="form-control" placeholder="Enter CourseNumber" />
+            <input type="text" id="courseNameDelete" name="courseName" class="form-control" placeholder="Enter Course Name" />
+            <button id="deleteCourseBtn" class="btn btn-primary">Delete</button>
+            <button id="cancelDeletelSingleCourseBtn" class="btn btn-secondary">Cancel</button>    
+        </div>
+
+        <div class="courses_list_container">
+                <!-- Courses will be Updated Dynamically-->
+        </div>
+    </div>
+
+    <div class="StaffApplicantsContent" style="display: none;">
+
+        <div class="department_semester_container">
+            <div class="semester_title_container">
+                <span></span>
+            </div>
+            <div class="department_title_container">
+                <span></span>
+            </div>
+            <div class="export_applicants_btn_container">
+                <button class="export_applicants_btn btn btn-link" id="exportApplicants">Export Applicants</button>
+            </div>
+        </div>
+    
+        <div class="Applicant_type_btns_container">
+            <button id="allApplicantsBtn" class="active">
+                <span>All Applicants</span>
+            </button>
+            <button id="shortlistedApplicantsBtn">
+                <span>Shortlisted Applicants</span>
+            </button>
+            <button id="selectedApplicantsBtn">
+                <span>Selected Applicants</span>
+            </button>
+        </div>
+
+        <div class="navigation">
+
+            <div class="course_selection_container">
+                <div class="title">
+                    <span>Course : </span>
+                </div>
+                <div class="courses_dropdown_container">
+                    <select id="courseDropdownApplicants" size="1">
+                    </select>
+                </div>
+            </div>
+
+            <div class="served_as_ta_container" style="display: none;">
+                <div class="title">
+                    <span>Served as TA </span>
+                </div>
+                <div>
+                    <input type="checkbox" value="servedAsTA" />
+                </div>
+            </div>
+
+            <div class="a_grade_container" style="display: none;">
+                <div class="title">
+                    <span>A Grade </span>
+                </div>
+                <div>
+                    <input type="checkbox" value="AGrade" />
+                </div>
+            </div>
+
+            <div class="experience_container" style="display: none;">
+                <div class="title">
+                    <span>Professional Experience</span>
+                </div>
+                <div>
+                    <input type="checkbox" value="experience" />
+                </div>
+            </div>
+
+            <div class="sort_by_container">
+                <div class="title">
+                    <span>Sort By :</span>
+                </div>
+                <div class="sort_by_dropdown_container">
+                    <select id="sortApplicantsByDropdown" size="1">
+                        <option value="gpa">GPA</option>
+                        <option value="name">Name</option>
+                        <option value="programType">Program Type</option>
+                        <option value="applicationType">Application Type</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    
+        <div class="applicants_container">
+            <div class="applicant_item" id="ApplicantItemHeading">
+                <div><span>Name</span></div>
+                <div><span>Netid</span></div>
+                <div><span>GPA</span></div>
+                <div><span>Program Type</span></div>
+                <div><span>Applied Courses</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="StaffSelectedApplicantsContent" style="display: none;">
+
+        <div class="applicantTypeAndfieldSelectionContainer" id="ApplicantTypeAndfieldSelectionPopup"
+            style="display: none;">
+            <div>
+                <h4>Select Fields to Print</h4>
+            </div>
+            <div class="fieldSelectionGrid">
+                <div>
+                    <input type="checkbox" id="nameCheckbox" checked>
+                    <label for="nameCheckbox">Name</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="netidCheckbox">
+                    <label for="netidCheckbox">NetID</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="znumberCheckbox" checked>
+                    <label for="znumberCheckbox">Z-Number</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="gpaCheckbox" checked>
+                    <label for="gpaCheckbox">GPA</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="emailCheckbox" checked>
+                    <label for="emailCheckbox">Email</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="phoneCheckbox">
+                    <label for="phoneCheckbox">Phone Number</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="programTypeCheckbox" checked>
+                    <label for="programTypeCheckbox">Program Type</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="startDateCheckbox" checked>
+                    <label for="startDateCheckbox">Program Start Date</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="graduationDateCheckbox">
+                    <label for="graduationDateCheckbox">Graduation Date</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="enrollmentStatusCheckbox">
+                    <label for="enrollmentStatusCheckbox">Enrollment Status</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="citizenshipStatusCheckbox" checked>
+                    <label for="citizenshipStatusCheckbox">Citizenship Status</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="creditsCompletedCheckbox">
+                    <label for="creditsCompletedCheckbox">Credits Completed at FAU</label>
+                </div>
+                <div class="span-two-columns">
+                    <input type="checkbox" id="creditsPlannedCheckbox">
+                    <label for="creditsPlannedCheckbox">Credits Planned to Register at FAU</label>
+                </div>
+            </div>
+        
+            <hr>
+        
+            <div>
+                <h4>Select Applications Type to Export</h4>
+            </div>
+            <div class="fieldSelectionGrid">
+                <div>
+                    <input type="checkbox" id="allApplicationsCheckbox" checked>
+                    <label for="allApplicationsCheckbox">All Applicants</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="shortlistedApplicationsCheckbox">
+                    <label for="shortlistedApplicationsCheckbox">Shortlisted Applicants</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="selectedApplicationsCheckbox">
+                    <label for="selectedApplicationsCheckbox">Selected Applicants</label>
+                </div>
+            </div>
+        
+            <hr>
+        
+            <div class="buttons-container">
+                <button id="confirmSelectionBtn">Confirm</button>
+                <button id="cancelSelectionBtn">Cancel</button>
+            </div>
+        </div>
+
+        <div class="department_semester_container">
+            <div class="semester_title_container">
+                <span></span>
+            </div>
+            <div class="department_title_container">
+                <span></span>
+            </div>
+        </div>
+
+        <div class="navigation">
+    
+            <div class="sort_by_container">
+                <div class="title">
+                    <span>Sort By :</span>
+                </div>
+                <div class="sort_by_dropdown_container">
+                    <select id="sortApplicantsByDropdown" size="1">
+                        <option value="gpa">GPA</option>
+                        <option value="name">Name</option>
+                        <option value="programType">Program Type</option>
+                        <option value="applicationType">Application Type</option>
+                    </select>
+                </div>
+            </div>
+        
+        </div>
+
+        <div class="selected_applicants_container">
+        </div>
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <script src="/scripts/staff/staffDashboard.js" type="text/javascript"></script>
+    <script src="/scripts/staff/staffDepartments.js" type="text/javascript"></script>
+    <script src="/scripts/staff/staffSemesters.js" type="text/javascript"></script>
+    <script src="/scripts/staff/staffCourses.js" type="text/javascript"></script>
+    <script src="/scripts/staff/staffApplicants.js" type="text/javascript"></script>
+    <script src="/scripts/staff/staffSelectedApplicants.js" type="text/javascript"></script>
+
+</body>
+
+</html>

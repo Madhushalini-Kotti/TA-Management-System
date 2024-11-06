@@ -1,0 +1,388 @@
+.StaffCoursesContent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.StaffCoursesContent .department_semester_container {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 300px auto;
+    gap: 100px;
+}
+
+.department_title_container {
+    width: 100%;
+    height: 70px;
+    background-color: #ffff;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-right: 30px;
+}
+
+.department_title_container span {
+    font-size: 22px;
+    font-family: "Open Sans",sans-serif;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgb(131, 3, 3);
+}
+
+.StaffCoursesContent .semester_title_container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 5px;
+    margin-left: 30px;
+}
+
+.StaffCoursesContent .semester_title_container span {
+    font-size: 22px;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 300;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: rgb(131, 3, 3);
+}
+
+.search_course_manage_courses_containers {
+
+    width: 100%;
+    height: 60px;
+    background-color: rgb(129, 133, 138);
+    
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 50px;
+    
+    padding-left: 30px;
+    padding-right: 30px;
+
+}
+
+.search_course_container {
+    height: 70px;
+    display: inline-flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.search_course_container .value input {
+    width: 300px;
+}
+
+.search_course_container .title>span {
+    font-size: 16px;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.search_course_container .value>span {
+    font-size: 16px;
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+        color: #1e3a8a;
+        text-transform: uppercase;
+}
+
+
+.manage_courses_buttons_container {
+    height: 60px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0px;
+}
+
+.manage_courses_buttons_container button {
+    width: 130px;
+    height: 60px;
+    border: none;
+    border-radius: 1px;
+    padding: 0px;
+
+    background-color: rgb(129, 133, 138);
+
+    font-size: 14px;
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+        color: #fff;
+        text-transform: uppercase;
+        text-decoration-line: underline;
+        text-underline-offset: auto;
+}
+
+.manage_courses_buttons_container button:hover {
+    font-size: 16px;
+    color: rgb(131, 3, 3);
+}
+
+.manage_courses_buttons_container button.active {
+    color: rgb(131, 3, 3);
+    font-size: 16px;
+}
+
+.manage_courses_buttons_container button:nth-child(3) {
+    width: 80px;
+}
+
+.manage_courses_buttons_container button:nth-child(4) {
+    width: 150px;
+}
+
+.StaffCoursesContent .courses_list_container {
+    height: auto;
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 75px;
+    gap: 20px;
+
+    padding : 50px;
+
+    background-color: #eceff1;
+
+}
+
+.course_container {
+    background-color: #ffffff;
+    border: none;
+    width: fit-content;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 350px 50px 50px 200px 110px;
+    gap: 16px;
+    padding: 15px;
+    padding-right: 25px;
+}
+
+.course_container > div {
+    display: flex;
+    align-items: center;
+}
+
+.course_title span {
+    font-size: 20px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #003366;
+}
+
+.course_name span{
+    font-size: 16px;
+        font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+        color: #003366;
+}
+
+.course_number span{
+    font-size: 16px;
+        font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+        color: #003366;
+}
+
+.course_total_applications span {
+    font-size: 16px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: rgb(232, 128, 9);
+}
+
+.count_of_applications_btn {
+    align-items: center;
+    padding: 0px;
+    border: none;
+    background-color: #fff;
+}
+
+.edit_course_btn {
+    background-color: #ffffff;
+    align-items: center;
+    padding: 0px;
+}
+
+.delete_course_btn {
+    background-color: #81858a;
+}
+
+
+.CoursesFileUploadContainer {
+    height: 70px;
+    background-color: aliceblue;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.SingleCourseUploadContainer {
+    height: 70px;
+    background-color: aliceblue;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.SingleCourseDeleteContainer {
+    height: 70px;
+        background-color: aliceblue;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        padding-right: 20px;
+        padding-left: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Model Overlay */
+/* Overlay for modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Modal container */
+.confirm-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    border-radius: 5px;
+}
+
+/* Modal content */
+.modal-content {
+    text-align: center;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.modal-content button {
+    margin-bottom: 5px;
+}
+
+
+
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.applications-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    overflow: auto;
+    margin: 10px;
+    /* Allow scrolling if content exceeds modal height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.applications-modal .modal-content {
+    text-align: center;
+    margin: 10px;
+    width: 100%;
+    border: none;
+}
+
+.applications-modal h3 {
+    margin-bottom: 20px;
+}
+
+
+#closeApplicationsModalBtn {
+    margin-top: 15px;
+    padding: 5px 10px;
+    /* Add padding for the close button */
+    background-color: red;
+    /* Set button color to red */
+    color: white;
+    /* Text color for the button */
+    border: none;
+    border-radius: 5px;
+    /* Rounded corners for the button */
+    cursor: pointer;
+    /* Change cursor to pointer on hover */
+}
+
+#closeApplicationsModalBtn:hover {
+    background-color: darkred;
+    /* Darker color on hover */
+}

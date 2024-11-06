@@ -1,0 +1,208 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Horizontally centers content */
+    justify-content: center;
+    /* Vertically centers content */
+
+    background-image: url('/images/eecs-night.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    /* Full viewport height */
+    margin: 0;
+    /* Remove default margin */
+}
+
+.header {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: right;
+    align-items: center;
+
+    position: fixed;
+    top: 0;
+    z-index: 50;
+
+    height: 85px;
+    background-color: #003366;
+}
+
+.faulogo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    top: 15px;
+    left: 30px;
+    margin-left: 30px;
+}
+
+.faulogoimg {
+    height: 50px;
+}
+
+.tms {
+    position: fixed;
+    left: 170px;
+    display: inline-flex;
+}
+
+.tms button {
+    background-color: #003366;
+    border: none;
+
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 2px;
+}
+
+.login {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: right;
+    margin-right: 60px;
+    gap: 20px;
+    height: 85px;
+}
+
+.login button {
+    background-color: #003366;
+    border: none;
+
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+.login button:hover {
+    font-size: 18px;
+    border : 1px solid white;
+    border-radius: 0px 0px 1px 0px;
+}
+
+.loginBtn {
+    font-size: 20px;
+}
+
+.activeBtn {
+    background-color: #0a4dbf;
+}
+
+.login button.activeBtn {
+    /* background-color: rgb(131, 3, 3); */
+    /* Example: Red background for active buttons */
+    /* color: white; */
+    /* Optional: Change text color */
+
+    background-color: white;
+    color: #003366;
+    border: 3px solid white;
+}
+
+
+.login_container {
+    background-color: #003366;
+    height: 450px;
+    width: 450px;
+    position: fixed;
+    right: 100px;
+    bottom: 50px;
+    opacity: 0.8;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 30px;
+    padding: 30px;
+}
+
+
+.login_container .title span {
+    font-size: 30px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.login_container input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.loginBtn {
+    width: 45%;
+}
+
+/* Tagline */
+.submit_your_ta_application_tagline_container {
+    background-color: rgb(131, 3, 3);
+    height: 220px;
+    width: 500px;
+    position: fixed;
+    left: 50px;
+    bottom: 50px;
+    opacity: 0.8;
+    z-index: 50;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tagline {
+    padding: 20px 20px 20px 20px;
+    color: white;
+    align-items: center;
+
+    font-size: 30px;
+    text-align: center;
+    font-family: Avenir-Heavy
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

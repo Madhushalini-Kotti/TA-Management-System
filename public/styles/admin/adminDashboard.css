@@ -1,0 +1,130 @@
+body {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    height: 100vh;
+    width: 100%;
+}
+
+.navigation_bar {
+    float: left;
+    background-color: #003366;
+    height: auto;
+}
+
+.nav_bar_item {
+    width: 90%;
+    height: 100%;
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav_bar_item_btn {
+    border: none;
+    background: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.nav_bat_item_text {
+    font-size: 16px;
+    font-family: "GothamPro Medium", serif;
+    color: white;
+}
+
+#departments_btn span {
+    font-size: 14px;
+}
+
+
+
+
+
+
+
+
+.AdminDashboardContent {
+    height: 100vh;
+    width: 100%;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.dashboard_title_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: calc(100% - 100px);
+    height: 80px;
+    padding-bottom: 5px;
+}
+
+.dashboard_title {
+    color: #003366;
+    font-size: 30px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-bottom: 0px;
+}
+
+.dashboard_items_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 100px);
+    height: auto;
+    gap: 100px;
+    padding-bottom: 5px;
+    margin-top: 100px;
+}
+
+.dashboard_item {
+    height: 250px;
+    width: 280px;
+    border: 2px solid #003366;
+    border-radius: 5%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 58% 42%;
+}
+
+.dashboard_item.first>.top_part {
+    background-color: #927005;
+}
+
+.dashboard_item.first>.lower_part {
+    color: #927005;
+}
+
+.dashboard_item.second>.top_part {
+    background-color: #e1185c;
+}
+
+.dashboard_item.second>.lower_part {
+    color: #e1185c;
+}
+
+.top_part {
+    border-radius: 5%;
+    border-bottom-left-radius: 0%;
+    border-bottom-right-radius: 0%;
+}
+
+.lower_part {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lower_part>span {
+    font-size: 30px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+}

@@ -1,0 +1,267 @@
+<div class="StaffApplicationsContent" style="display: none">
+
+    <div class="overlay" style="display: none;"></div> <!-- Background overlay -->
+
+    <div class="pop_up_item" style="display: none;">
+
+        <div class="profile_container" style="display: none;">
+
+            <div class="profile_name">
+                <span>Name: </span><span>Madhushalini Kotti</span>
+            </div>
+            <div class="profile_znumber">
+                <span>Z Number</span><span>Z23744520</span>
+            </div>
+            <div class="profile_enrollement_status">
+                <span>Enrollement Status</span><span>Contuining Student</span>
+            </div>
+            <div class="profile_email">
+                <span>Email</span><span>mkotti2023@fau.edu</span>
+            </div>
+            <div class="profile_phonenumber">
+                <span>Mobile Number</span><span>5618878918</span>
+            </div>
+            <div class="profile_program_start_date">
+                <span>Program Start Date</span><span>Fall 2023</span>
+            </div>
+            <div class="profile_expected_graduation_date">
+                <span>Expected Graduation Date</span> <span>May 2025</span>
+            </div>
+            <div class="profile_credits_completed">
+                <span>Credits Completed at Fau</span><span>9</span>
+            </div>
+            <div class="profile_credits_will_register">
+                <span>Credits Planned to Register next Semester</span><span>3</span>
+            </div>
+            <div class="profile_program_type">
+                <span>Gratuate Program</span><span>MS Thesis</span>
+            </div>
+            <div class="profile_advisor_name">
+                <span>Advisor Name</span><span>Shashi Reddy</span>
+            </div>
+            <div class="profile_advisor_email">
+                <span>Advisor EMail</span><span>shashi@gmail.com</span>
+            </div>
+            <div class="profile_resume">
+                <a href="/resume/mkotti2023.pdf" target="_blank">
+                    <span>View Resume </span>
+                </a>
+            </div>
+            <div class="profile_transcripts">
+                <a href="/transcripts/mkotti2023.pdf" target="_blank">
+                    <span>View Transcripts </span>
+                </a>
+            </div>
+
+            <button class="close_profile_btn">close</button>
+
+        </div>
+
+    </div>
+
+    <!-- Field Selection Popup -->
+    <div class="applicationTypeAndfieldSelectionContainer" id="ApplicationTypeAndfieldSelectionPopup"
+        style="display: none;">
+        <div>
+            <h4>Select Fields to Print</h4>
+        </div>
+        <div class="fieldSelectionGrid">
+            <div>
+                <input type="checkbox" id="nameCheckbox" checked>
+                <label for="nameCheckbox">Name</label>
+            </div>
+            <div>
+                <input type="checkbox" id="netidCheckbox">
+                <label for="netidCheckbox">NetID</label>
+            </div>
+            <div>
+                <input type="checkbox" id="znumberCheckbox" checked>
+                <label for="znumberCheckbox">Z-Number</label>
+            </div>
+            <div>
+                <input type="checkbox" id="gpaCheckbox" checked>
+                <label for="gpaCheckbox">GPA</label>
+            </div>
+            <div>
+                <input type="checkbox" id="emailCheckbox" checked>
+                <label for="emailCheckbox">Email</label>
+            </div>
+            <div>
+                <input type="checkbox" id="phoneCheckbox">
+                <label for="phoneCheckbox">Phone Number</label>
+            </div>
+            <div>
+                <input type="checkbox" id="programTypeCheckbox" checked>
+                <label for="programTypeCheckbox">Program Type</label>
+            </div>
+            <div>
+                <input type="checkbox" id="startDateCheckbox" checked>
+                <label for="startDateCheckbox">Program Start Date</label>
+            </div>
+            <div>
+                <input type="checkbox" id="graduationDateCheckbox">
+                <label for="graduationDateCheckbox">Graduation Date</label>
+            </div>
+            <div>
+                <input type="checkbox" id="enrollmentStatusCheckbox">
+                <label for="enrollmentStatusCheckbox">Enrollment Status</label>
+            </div>
+            <div>
+                <input type="checkbox" id="citizenshipStatusCheckbox" checked>
+                <label for="citizenshipStatusCheckbox">Citizenship Status</label>
+            </div>
+            <div>
+                <input type="checkbox" id="creditsCompletedCheckbox">
+                <label for="creditsCompletedCheckbox">Credits Completed at FAU</label>
+            </div>
+            <div class="span-two-columns">
+                <input type="checkbox" id="creditsPlannedCheckbox">
+                <label for="creditsPlannedCheckbox">Credits Planned to Register at FAU</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <div>
+            <h4>Select Applications Type to Export</h4>
+        </div>
+        <div class="fieldSelectionGrid">
+            <div>
+                <input type="checkbox" id="allApplicationsCheckbox" checked>
+                <label for="allApplicationsCheckbox">All Applicants</label>
+            </div>
+            <div>
+                <input type="checkbox" id="shortlistedApplicationsCheckbox">
+                <label for="shortlistedApplicationsCheckbox">Shortlisted Applicants</label>
+            </div>
+            <div>
+                <input type="checkbox" id="selectedApplicationsCheckbox">
+                <label for="selectedApplicationsCheckbox">Selected Applicants</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="buttons-container">
+            <button id="confirmSelectionBtn">Confirm</button>
+            <button id="cancelSelectionBtn">Cancel</button>
+        </div>
+    </div>
+
+    <div class="department_semester_container">
+
+        <div class="semester_title_container">
+            <span>
+
+            </span>
+        </div>
+
+        <div class="department_title_container">
+            <span>
+
+            </span>
+        </div>
+
+        <div class="export_applications_btn_container">
+            <button class="export_applications_btn btn btn-link">Export Applications</button>
+        </div>
+
+    </div>
+
+    <div class="Application_type_btns_container">
+        <button id="allApplicationsBtn" class="active">
+            <span>All Applications</span>
+        </button>
+        <button id="shortlistedApplicationsBtn">
+            <span>Shortlisted Applications</span>
+        </button>
+        <button id="selectedApplicationsBtn">
+            <span>Selected Applications</span>
+        </button>
+    </div>
+
+    <div class="applications_container">
+
+        <div class="all_applications_container">
+
+            <div class="course_selection_sort_by_container">
+
+                <div class="course_selection_container">
+                    <div class="title">
+                        <span>Course : </span>
+                    </div>
+                    <div class="courses_dropdown_container">
+                        <select id="courseDropdown" size="1">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sort_by_container">
+                    <div class="title">
+                        <span>Sort By :</span>
+                    </div>
+                    <div class="sort_by_dropdown_container">
+                        <select id="sortByDropdown" size="1">
+                            <option value="gpa">GPA</option>
+                            <option value="name">Name</option>
+                            <option value="programType">Program Type</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="applications_list_container">
+
+                <div class="application_item" id="heading">
+                    <div><span>Name</span></div>
+                    <div><span>Netid</span></div>
+                    <div><span>GPA</span></div>
+                    <div class="programType"><span>Program Type</span></div>
+                    <div class="servedAsTa eligibility">
+                        <span>Served as TA</span>
+                        <input type="checkbox" id="servedAsTA" value="Served as TA">
+                    </div>
+                    <div class="eligibility">
+                        <span>A Grade</span>
+                        <input type="checkbox" id="securedAGrade" value="Secured A grade">
+                    </div>
+                    <div class="professionalExperience eligibility">
+                        <span>Experience</span>
+                        <input type="checkbox" id="professionalExperience" value="Professional Experience">
+                    </div>
+                    <div><span>Comments</span></div>
+                    <div>abc</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Shortlisted Applications -->
+        <div class="shortlisted_applications_container" style="display: none;">
+            <div class="navigation">
+                <div class="expand_collapse_btn_containers">
+                    <button id="expandAllCoursesBtnShortlisted" style="display: none;">Expand All Courses</button>
+                    <button id="collapseAllCoursesBtnShortlisted">Collapse all courses</button>
+                </div>
+            </div>
+            <div class="shortlistedApplications_list_container"></div>
+        </div>
+
+        <!-- Selected Applications -->
+        <div class="selected_applications_container" style="display:none;">
+            <div class="navigation">
+                <div class="expand_collapse_btn_containers">
+                    <button id="expandAllCoursesBtnSelected" style="display: none;">Expand All Courses</button>
+                    <button id="collapseAllCoursesBtnSelected">Collapse all courses</button>
+                </div>
+            </div>
+            <div class="selectedApplications_list_container"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
