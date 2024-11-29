@@ -1,3 +1,49 @@
+
+body {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    height: 100vh;
+    width: 100%;
+}
+
+.navigation_bar {
+    float: left;
+    background-color: #003366;
+    height: auto;
+}
+
+.nav_bar_item {
+    width: 90%;
+    height: 100%;
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav_bar_item_btn {
+    border: none;
+    background: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.nav_bat_item_text {
+    font-size: 16px;
+    font-family: "GothamPro Medium", serif;
+    color: white;
+}
+
+.applications>.nav_bat_item_text {
+    font-size: 14px;
+}
+
+/*End of Nav bar */
+
+
+
+
 /* Dashboard */
 
 .StudentAccountContent {

@@ -11,7 +11,6 @@ const no_svg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" f
 
 document.addEventListener('DOMContentLoaded', function () {
     setUpApplicantsMainBtn();
-    setUpSortApplicantsByDropdown();
 });
 
 let inWhichView = 'all';
@@ -20,116 +19,105 @@ function setUpApplicantsMainBtn() {
     const applicantsBtn = document.getElementById("applicants_btn");
 
     applicantsBtn.addEventListener('click', async function () {
-        await fetchApplicants();
+
+        await fetchAndRenderSemesters();
+        setUpSortApplicantsByDropdown();
         setUpApplicantTypebtns();
-        fetchCoursesListApplicants();
         setUpShorlistSelectBtns();
         setUpExportApplicantsBtn();
     });
 }
 
 
-function setUpExportApplicantsBtn() {
 
-    const exportApplicantsBtn = document.querySelector('#exportApplicants');
-    const confirmSelectionBtn = document.getElementById('confirmSelectionBtn');
-    const cancelSelectionBtn = document.getElementById('cancelSelectionBtn');
 
-    const overlay = document.createElement('div');
-    overlay.classList.add('overlay'); // Use the existing overlay class for styling
-    document.body.appendChild(overlay);
 
-    const selectionPopup = document.getElementById('ApplicantTypeAndfieldSelectionPopup');
-    overlay.appendChild(selectionPopup);
-
-    exportApplicantsBtn.addEventListener('click', function () {
-        overlay.style.display = 'block';
-        selectionPopup.style.display = 'grid';
-    });
-
-    confirmSelectionBtn.addEventListener('click', async function () {
-        hideFieldSelectionAndOverlay();
-        await exportApplicants();
-    });
-
-    cancelSelectionBtn.addEventListener('click', function () {
-        hideFieldSelectionAndOverlay();
-    });
-
-    function hideFieldSelectionAndOverlay() {
-        overlay.style.display = 'none';
-        selectionPopup.style.display = 'none';
-    }
-
-}
-
-async function exportApplicants() {
-
-    const selectedFields = {
-        name: document.getElementById('nameCheckbox').checked,
-        netid: document.getElementById('netidCheckbox').checked,
-        znumber: document.getElementById('znumberCheckbox').checked,
-        currentgpa: document.getElementById('gpaCheckbox').checked,
-        email: document.getElementById('emailCheckbox').checked,
-        mobilenumber: document.getElementById('phoneCheckbox').checked,
-        graduateprogram: document.getElementById('programTypeCheckbox').checked,
-        programstartdate: document.getElementById('startDateCheckbox').checked,
-        expectedgraduationdate: document.getElementById('graduationDateCheckbox').checked,
-        enrollementstatus: document.getElementById('enrollmentStatusCheckbox').checked,
-        citizenshipstatus: document.getElementById('citizenshipStatusCheckbox').checked,
-        creditscompletedatfau: document.getElementById('creditsCompletedCheckbox').checked,
-        creditsplannedtoregisterforupcomingsemester: document.getElementById('creditsPlannedCheckbox').checked,
-    };
-
-    const selectedApplicationTypes = {
-        allApplicants: document.getElementById('allApplicationsCheckbox').checked,
-        shortlistedApplicants: document.getElementById('shortlistedApplicationsCheckbox').checked,
-        selectedApplicants: document.getElementById('selectedApplicationsCheckbox').checked,
-    };
+async function fetchAndRenderSemesters() {
 
     try {
-        const response = await fetch('/exportApplicants', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ selectedFields , selectedApplicationTypes })
-        });
+        const semesterResponse = await fetch('/semesterList');
+        if (semesterResponse.ok) {
+            const semesters = await semesterResponse.json();
+            const semesterContainer = document.querySelector('.StaffApplicantsContent .semesters_container');
 
-        if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "applicant_data.xlsx";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            alert("Applicant data exported successfully. Check your downloads.");
+            semesterContainer.innerHTML = ''; 
+
+            // Render semester buttons and find the first active button
+            const buttons = semesters.map(semester => createSemesterButton(semester));
+            buttons.forEach(button => semesterContainer.appendChild(button));
+            await setUpSemesterBtns(buttons);
+
+            if (buttons.length > 0) buttons[0].click(); // Trigger a click on the first button if it exists
+
         } else {
-            alert("Error exporting applicant data.");
+            const errorData = await semesterResponse.json();
+            console.error('Error fetching active semester data:', errorData.error);
         }
     } catch (error) {
-        console.error("Error:", error);
-        alert("An error occurred while exporting the data.");
+        console.error("Error fetching active semester data:", error);
     }
+}
+
+function createSemesterButton(semester) {
+    const button = document.createElement('button');
+    const span = document.createElement('span');
+    span.textContent = semester.semester;
+    span.classList.add('semester-span');
+    button.appendChild(span);
+    button.classList.add('semester-button');
+    button.dataset.semester = semester.semester;
+    button.dataset.status = semester.status; 
+    return button;
+}
+
+async function setUpSemesterBtns(buttons) {
+    buttons.forEach(button => {
+        button.addEventListener('click', async () => {
+            buttons.forEach(btn => btn.classList.remove("active_semester_button"));
+            button.classList.add("active_semester_button");
+
+            inWhichView = 'all';
+            document.getElementById('allApplicantsBtn').click();
+
+            const courseDropdown = document.getElementById('courseDropdownApplicants');
+            courseDropdown.innerHTML = '';
+
+
+            await fetchCoursesListInApplicants(button.dataset.semester);
+            await fetchApplicantsBySemester(button.dataset.semester);
+        });
+    });
 }
 
 
 
-async function fetchApplicants() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async function fetchApplicantsBySemester(semester) {
     try {
-        const response = await fetch("/fetchApplicants", {
+        const response = await fetch(`/fetchApplicantsBySemester?semester=${semester}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
-        }); 
+        });
 
         if (response.redirected) {
-            window.location.href = '/?sessionExpired=true'; 
-            return; 
+            window.location.href = '/?sessionExpired=true';
+            return;
         }
 
         if (!response.ok) {
@@ -139,26 +127,33 @@ async function fetchApplicants() {
         const applicants = await response.json();
         displayApplicants(applicants);
         return applicants;
+
     } catch (error) {
         console.error("Error:", error);
         alert("Failed to fetch applicants. Please try again.");
-        return []; // Return an empty array on error to prevent further issues
+        return [];
     }
 }
 
 function displayApplicants(applicants) {
     const applicantsContainer = document.querySelector(".applicants_container");
     const heading = document.getElementById('ApplicantItemHeading');
-    applicantsContainer.innerHTML = ''; // Clear everything
-    applicantsContainer.appendChild(heading); // Re-add the heading
+    applicantsContainer.innerHTML = '';
+    applicantsContainer.appendChild(heading);
 
-    applicants.forEach(applicant => {
+    let filteredApplicants = applicants;
+    if (inWhichView !== 'all') {
+        filteredApplicants = applicants.filter(applicant => applicant.applicant_type === inWhichView);
+    }
+
+    filteredApplicants.forEach(applicant => {
         const applicantItem = document.createElement("div");
         applicantItem.className = "applicant_item";
         applicantItem.setAttribute('data-gpa', applicant.gpa);
         applicantItem.setAttribute('data-name', applicant.name);
         applicantItem.setAttribute('data-program-type', applicant.programtype);
         applicantItem.setAttribute('data-applicant-type', applicant.applicant_type);
+        applicantItem.setAttribute('data-semester', applicant.semester);
 
         let buttonHTML = '';
 
@@ -167,10 +162,10 @@ function displayApplicants(applicants) {
                 buttonHTML = `
                     <button type="button" class="shortlist_btn" 
                         data-applicant-id="${applicant.applicant_id}" 
-                        data-name="${applicant.name}"></button>
-                    <button type="button" class="select_btn_from_new" 
+                        data-name="${applicant.name}">Shortlist</button>
+                    <button type="button" class="select_btn" 
                         data-applicant-id="${applicant.applicant_id}" 
-                        data-name="${applicant.name}"></button>
+                        data-name="${applicant.name}">Select</button>
                 `;
             } else if (applicant.applicant_type === 'shortlisted') {
                 buttonHTML = `
@@ -187,22 +182,21 @@ function displayApplicants(applicants) {
             }
         } else if (inWhichView === 'shortlisted') {
             buttonHTML = `
-                <button type="button" class="remove_shortlisted_btn" 
+                <button type="button" class="unshortlist_btn" 
                     data-applicant-id="${applicant.applicant_id}" 
-                    data-name="${applicant.name}"></button>
-                <button type="button" class="select_btn_from_shortlisted" 
+                    data-name="${applicant.name}">Unshortlist</button>
+                <button type="button" class="select_btn" style="background-color:#4cae4c"
                     data-applicant-id="${applicant.applicant_id}" 
-                    data-name="${applicant.name}"></button>
+                    data-name="${applicant.name}">Select</button>
             `;
         } else if (inWhichView === 'selected') {
             buttonHTML = `
-                <button type="button" class="remove_selected_btn" 
+                <button type="button" class="unselect_btn" 
                     data-applicant-id="${applicant.applicant_id}" 
-                    data-name="${applicant.name}"></button>
+                    data-name="${applicant.name}">UnSelect</button>
             `;
         }
 
-        // Create a string to display courses
         let coursesHTML = '';
 
         const courseListHeading = `
@@ -216,7 +210,7 @@ function displayApplicants(applicants) {
                     <span>Comments</span>
                 </div>
             `;
-        
+
         if (Array.isArray(applicant.courses) && applicant.courses.length > 0) {
             coursesHTML += courseListHeading;
             coursesHTML += applicant.courses.map(course => `
@@ -231,7 +225,7 @@ function displayApplicants(applicants) {
                 </div>
             `).join('');
         } else {
-            coursesHTML = '<div>No courses available</div>';
+            coursesHTML = '<div>Applicant has not applied to any courses yet</div>';
         }
 
         applicantItem.innerHTML = `
@@ -258,38 +252,32 @@ function displayApplicants(applicants) {
         const toggleCoursesBtn = applicantItem.querySelector(".toggle_courses_btn");
         const coursesList = applicantItem.querySelector(".applicant_applied_courses_list");
 
-        // Toggle visibility with smooth transitions
         toggleCoursesBtn.addEventListener("click", () => {
             toggleCoursesBtn.classList.toggle("active");
 
             if (coursesList.classList.contains("show")) {
-                // Slide up (hide)
-                coursesList.style.maxHeight = "0"; // Start collapsing
+                coursesList.style.maxHeight = "0";
 
                 coursesList.addEventListener('transitionend', function handleTransitionEnd() {
-                    coursesList.classList.remove("show"); // Remove "show" class after transition
-                    coursesList.style.display = 'none'; // Fully hide the element
-                    coursesList.removeEventListener('transitionend', handleTransitionEnd); // Clean up listener
+                    coursesList.classList.remove("show");
+                    coursesList.style.display = 'none';
+                    coursesList.removeEventListener('transitionend', handleTransitionEnd);
                 });
 
-                // Change button text back to "View Courses"
                 toggleCoursesBtn.textContent = "View Courses";
             } else {
-                // Slide down (show)
-                coursesList.style.display = 'block'; // Make it visible for height calculation
-                const scrollHeight = coursesList.scrollHeight; // Get full content height
-                coursesList.style.maxHeight = scrollHeight + "px"; // Set to expand height
-                coursesList.classList.add("show"); // Add "show" class
+                coursesList.style.display = 'block';
+                const scrollHeight = coursesList.scrollHeight;
+                coursesList.style.maxHeight = scrollHeight + "px";
+                coursesList.classList.add("show");
 
-                // Change button text to "Hide Courses"
                 toggleCoursesBtn.textContent = "Hide Courses";
             }
         });
 
-        // Recalculate maxHeight on window resize to adjust for responsive changes
         window.addEventListener("resize", () => {
             if (coursesList.classList.contains("show")) {
-                coursesList.style.maxHeight = coursesList.scrollHeight + "px"; // Recalculate height
+                coursesList.style.maxHeight = coursesList.scrollHeight + "px";
             }
         });
 
@@ -299,227 +287,9 @@ function displayApplicants(applicants) {
     setUpShorlistSelectBtns();
 }
 
-
-
-
-
-
-function setUpApplicantTypebtns() {
-    const allApplicantsBtn = document.getElementById('allApplicantsBtn');
-    const shortlistedApplicantsBtn = document.getElementById('shortlistedApplicantsBtn');
-    const selectedApplicantsBtn = document.getElementById('selectedApplicantsBtn');
-
-    allApplicantsBtn.addEventListener('click', async function (event) {
-        handleApplicantTypeBtnClick(event);
-        inWhichView = 'all';
-        const applicants = await fetchApplicants(); // Await the fetched data
-        displayApplicants(applicants); // Display all applicants
-    });
-
-    shortlistedApplicantsBtn.addEventListener('click', async function (event) {
-        handleApplicantTypeBtnClick(event);
-        inWhichView = 'shortlisted';
-        const applicants = await fetchApplicants(); // Await the fetched data
-        const shortlisted = applicants.filter(applicant => applicant.applicant_type === 'shortlisted');
-        displayApplicants(shortlisted);
-    });
-
-    selectedApplicantsBtn.addEventListener('click', async function (event) {
-        handleApplicantTypeBtnClick(event);
-        inWhichView = 'selected';
-        const applicants = await fetchApplicants(); // Await the fetched data
-        const selected = applicants.filter(applicant => applicant.applicant_type === 'selected');
-        displayApplicants(selected);
-    }); 
-}
-
-function handleApplicantTypeBtnClick(event) {
-    const buttons = document.querySelectorAll('.Applicant_type_btns_container button');
-    buttons.forEach(button => {
-        button.classList.remove('active');
-    });
-    event.currentTarget.classList.add('active');
-}
-
-
-
-
-function setUpSortApplicantsByDropdown() {
-    const sortByDropdown = document.getElementById('sortApplicantsByDropdown');
-    sortByDropdown.addEventListener('change', function () {
-        sortApplicants(); 
-    });
-}
-
-function sortApplicants() {
-    const container = document.querySelector('.applicants_container');
-    const applicantItems = Array.from(container.querySelectorAll('.applicant_item'));
-
-    const applicantsToSort = applicantItems.slice(1);
-
-    if (applicantItems.length <= 1) {
-        return; // If there are fewer than 2 applicants, no sorting is needed
-    }
-
-    const criterion = document.getElementById('sortApplicantsByDropdown').value;
-
-    applicantsToSort.sort((a, b) => {
-        if (criterion === 'gpa') {
-            return parseFloat(b.getAttribute('data-gpa')) - parseFloat(a.getAttribute('data-gpa')); // Sort by GPA (highest first)
-        } else if (criterion === 'name') {
-            return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name')); // Sort alphabetically by name
-        } else if (criterion === 'programType') {
-            // Custom sort order for program type
-            const programOrder = {
-                'ms non thesis': 1,
-                'ms thesis': 2,
-                'phd thesis' : 3
-            };
-            const aProgram = a.getAttribute('data-program-type').toLowerCase();
-            const bProgram = b.getAttribute('data-program-type').toLowerCase();
-            return programOrder[aProgram] - programOrder[bProgram];
-        } else if (criterion === 'applicationType') {
-            const typeOrder = {
-                'new': 1,
-                'shortlisted': 2,
-                'selected': 3
-            };
-            const aType = a.getAttribute('data-applicant-type').toLowerCase();
-            const bType = b.getAttribute('data-applicant-type').toLowerCase();
-            return typeOrder[aType] - typeOrder[bType];
-        }
-    });
-
-    // Clear the container and re-append sorted items
-    const heading = document.getElementById('ApplicantItemHeading');
-    container.innerHTML = ''; // Clear everything
-    container.appendChild(heading); // Re-add the heading
-    applicantsToSort.forEach(item => container.appendChild(item)); // Append sorted items
-
-}
-
-
-
-
-async function fetchCoursesListApplicants() {
-    try {
-        const response = await fetch('/coursesListDeptSemesterStaff');
-
-        if (response.redirected) {
-            alert("Your session has expired. You have been logged out.");
-            window.location.href = '/';
-            return;
-        }
-         
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const courses = await response.json();
-        const courseDropdown = document.getElementById('courseDropdownApplicants');
-
-        // Store the currently selected value
-        const previouslySelectedValue = courseDropdown.value;
-
-        // Clear previous options
-        courseDropdown.innerHTML = '';
-
-        const option = document.createElement('option');
-        option.value = "select here";
-        option.textContent = "Select Here";
-        courseDropdown.appendChild(option);
-
-        // Populate new options
-        courses.forEach(course => {
-            const option = document.createElement('option');
-            option.value = course.course_number; // Assuming each course has an 'id'
-            option.setAttribute('data-course-name', course.course_name); // Add custom data attribute for course_name
-            option.textContent = `${course.course_title} (${course.course_name}) (${course.course_number})`; // Customize as needed
-            courseDropdown.appendChild(option);
-        });
-
-        // Re-select the previously selected value if it exists in the new options
-        if (previouslySelectedValue) {
-            courseDropdown.value = previouslySelectedValue; // This will select the previously chosen course
-        } else if (courseDropdown.options.length > 0) {
-            courseDropdown.selectedIndex = 0; // If no previous selection, select the first option
-        }
-
-        setUpCourseDropdownApplicants();
-
-    } catch (error) {
-        console.error('Error fetching courses:', error);
-    }
-}
-
-function setUpCourseDropdownApplicants() {
-    const courseDropdown = document.getElementById('courseDropdownApplicants');
-    courseDropdown.addEventListener('change', function () {
-        filterApplicantsByCourse(courseDropdown.value);
-    });
-}
-
-async function filterApplicantsByCourse(selectedCourse) {
-    const applicantsContainer = document.querySelector('.applicants_container');
-    await fetchApplicants(); 
-    const applicantItems = applicantsContainer.querySelectorAll('.applicant_item');
-
-    // Convert NodeList to an array
-    const applicantsToSort = Array.from(applicantItems).slice(1);
-
-    // Clear the container and re-append heading
-    const heading = document.getElementById('ApplicantItemHeading');
-    applicantsContainer.innerHTML = ''; // Clear everything
-    applicantsContainer.appendChild(heading); // Re-add the heading
-
-    // If the selected course is empty or 'Select here', show all applicants
-    if (!selectedCourse || selectedCourse === 'select here') {
-        applicantsToSort.forEach(item => {
-            item.style.display = 'grid'; // Show all applicants
-            applicantsContainer.appendChild(item); // Append all items back to the container
-        });
-        return; // Exit the function early
-    }
-
-    // Keep track of whether any applicants are visible
-    let hasVisibleApplicants = false;
-
-    applicantsToSort.forEach(item => {
-        const courses = Array.from(item.querySelectorAll('.course_item span'));
-        // Sanitize course names by trimming spaces
-        const courseNames = courses.map(course => course.innerText.trim().toLowerCase());
-
-        // Check if the selected course is included in the applicant's courses
-        if (courseNames.includes(selectedCourse.trim().toLowerCase())) {
-            item.style.display = 'grid'; // Show applicant if it matches the selected course
-            hasVisibleApplicants = true; // Set flag to true if at least one applicant is visible
-        } else {
-            item.style.display = 'none'; // Hide applicant if it doesn't match
-        }
-    });
-
-    if (hasVisibleApplicants) {
-        // Append visible applicants if any
-        applicantsToSort.forEach(item => {
-            if (item.style.display === 'grid') {
-                applicantsContainer.appendChild(item); // Append sorted items
-            }
-        });
-    } else {
-        // Create and append the 'No Applicants' message
-        const noApplicantsMessage = document.createElement('p');
-        noApplicantsMessage.textContent = 'No Applicants Have Applied to this Course';
-        applicantsContainer.appendChild(noApplicantsMessage);
-    }
-}
-
-
-
-
 function setUpViewProfileEventListener() {
     const viewProfileBtns = document.querySelectorAll('.view_profile_btn');
 
-    // Add event listeners for dynamically created "View Profile" buttons
     viewProfileBtns.forEach(button => {
         button.addEventListener('click', async function () {
             const applicantNetId = this.getAttribute('data-applicant-netid');
@@ -530,22 +300,21 @@ function setUpViewProfileEventListener() {
 
 async function viewProfile(applicantNetid) {
     try {
-        // Fetch profile data for the selected application ID
         const response = await fetch(`/fetchApplicantDetails?ApplicantNetid=${applicantNetid}`);
         const ApplicantProfileData = await response.json();
 
         if (ApplicantProfileData) {
-            await createProfileContainer(ApplicantProfileData); // Dynamically create and show the profile container with fetched data
+            await createProfileContainer(ApplicantProfileData);
 
             const programTypetext = document.querySelector(".programTypeValue").textContent;
             const advisorNameDiv = document.querySelector(".profile_advisor_name");
             const advisorEmailDiv = document.querySelector(".profile_advisor_email");
 
-            // Handle "MS - Non Thesis" scenario
-            if (programTypetext === "MS Non Thesis") {
+            if (programTypetext !== "MS Thesis" && programTypetext !== "PHD Thesis") {
                 advisorNameDiv.remove();
                 advisorEmailDiv.remove();
             }
+
         } else {
             console.error('Profile data not found for the selected applicant.');
         }
@@ -554,19 +323,16 @@ async function viewProfile(applicantNetid) {
     }
 }
 
-// Function to create the Profile container when view profile is clicked
 async function createProfileContainer(profileData) {
 
-    // Remove any existing profile container
     const existingProfileContainer = document.querySelector('.profile_container');
     if (existingProfileContainer) {
         existingProfileContainer.remove();
     }
 
-    // Dynamically create a new profile container with the received profileData
     const profileContainer = document.createElement('div');
     profileContainer.classList.add('profile_container');
-    profileContainer.style.display = 'block';  // Make it visible
+    profileContainer.style.display = 'block';
 
     profileContainer.innerHTML = `
         <div class="profile_name">
@@ -628,12 +394,10 @@ async function createProfileContainer(profileData) {
     const overlay = document.createElement('div');
     overlay.classList.add('modal-overlay');
 
-    // Append the newly created profile container to the body and overlay
     document.body.appendChild(overlay);
     document.body.appendChild(profileContainer);
 
     setUpCloseProfileOverlayEventListeners();
-
 }
 
 function setUpCloseProfileOverlayEventListeners() {
@@ -641,11 +405,9 @@ function setUpCloseProfileOverlayEventListeners() {
     const closeProfileBtn = profileContainer.querySelector('.close_profile_btn');
     const overlay = document.querySelector('.modal-overlay');
 
-    // Remove event listeners if they already exist, just to be safe
     closeProfileBtn.removeEventListener('click', closeProfilePopup);
     overlay.removeEventListener('click', closeProfilePopup);
 
-    // Add event listeners for both the button and overlay click
     closeProfileBtn.addEventListener('click', closeProfilePopup);
     overlay.addEventListener('click', closeProfilePopup);
 }
@@ -654,7 +416,6 @@ function closeProfilePopup() {
     const profileContainer = document.querySelector('.profile_container');
     const overlay = document.querySelector('.modal-overlay');
 
-    // Remove the profile container and the overlay from the DOM
     if (profileContainer) profileContainer.remove();
     if (overlay) overlay.remove();
 }
@@ -664,58 +425,232 @@ function closeProfilePopup() {
 
 
 
+
+function setUpSortApplicantsByDropdown() {
+    const sortByDropdown = document.getElementById('sortApplicantsByDropdown');
+    sortByDropdown.addEventListener('change', function () {
+        sortApplicants();
+    });
+}
+
+function sortApplicants() {
+    const container = document.querySelector('.applicants_container');
+    const applicantItems = Array.from(container.querySelectorAll('.applicant_item'));
+
+    const applicantsToSort = applicantItems.slice(1);
+
+    if (applicantItems.length <= 1) {
+        return;
+    }
+
+    const criterion = document.getElementById('sortApplicantsByDropdown').value;
+
+    applicantsToSort.sort((a, b) => {
+        if (criterion === 'gpa') {
+            return parseFloat(b.getAttribute('data-gpa')) - parseFloat(a.getAttribute('data-gpa'));
+        } else if (criterion === 'name') {
+            return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+        } else if (criterion === 'programType') {
+            const programOrder = {
+                'combined bs/ms': 1,
+                'phd thesis': 2,
+                'phd thesis ( advisor unknown )': 3,
+                'ms thesis': 4,
+                'ms thesis ( advisor unknown )': 5,
+                'ms non thesis': 6,
+                'undergraduate (ug)': 7
+            };
+            const aProgram = a.getAttribute('data-program-type').toLowerCase();
+            const bProgram = b.getAttribute('data-program-type').toLowerCase();
+            return programOrder[aProgram] - programOrder[bProgram];
+        } 
+    });
+
+    const heading = document.getElementById('ApplicantItemHeading');
+    container.innerHTML = '';
+    container.appendChild(heading);
+    applicantsToSort.forEach(item => container.appendChild(item));
+
+}
+
+
+
+function setUpApplicantTypebtns() {
+    const allApplicantsBtn = document.getElementById('allApplicantsBtn');
+    const shortlistedApplicantsBtn = document.getElementById('shortlistedApplicantsBtn');
+    const selectedApplicantsBtn = document.getElementById('selectedApplicantsBtn');
+
+    allApplicantsBtn.addEventListener('click', async function (event) {
+        handleApplicantTypeBtnClick(event);
+        inWhichView = 'all';
+        const course = getSelectedCourse();
+        await filterApplicantsByCourse(course);
+    });
+
+    shortlistedApplicantsBtn.addEventListener('click', async function (event) {
+        handleApplicantTypeBtnClick(event);
+        inWhichView = 'shortlisted';
+        const course = getSelectedCourse();
+        await filterApplicantsByCourse(course);
+    });
+
+    selectedApplicantsBtn.addEventListener('click', async function (event) {
+        handleApplicantTypeBtnClick(event);
+        inWhichView = 'selected';
+        const course = getSelectedCourse();
+        await filterApplicantsByCourse(course);
+    });
+}
+
+function handleApplicantTypeBtnClick(event) {
+    const buttons = document.querySelectorAll('.Applicant_type_btns_container button');
+    buttons.forEach(button => {
+        button.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+}
+
+function getActiveSemester() {
+    const activeButton = document.querySelector('.semester-button.active_semester_button');
+    return activeButton ? activeButton.dataset.semester : null;
+}
+
+function getSelectedCourse() {
+    const courseDropdown = document.getElementById('courseDropdownApplicants');
+    return courseDropdown ? courseDropdown.value : null;
+}
+
+
+
+
+
+
+async function fetchCoursesListInApplicants(semester) {
+
+    try {
+        const response = await fetch(`/CoursesListBySemester?semester=${semester}`);
+
+        if (response.redirected) {
+            alert("Your session has expired. You have been logged out.");
+            window.location.href = '/';
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const courses = await response.json();
+        const courseDropdown = document.getElementById('courseDropdownApplicants');
+
+        const previouslySelectedValue = courseDropdown.value;
+
+        courseDropdown.innerHTML = '';
+
+        const option = document.createElement('option');
+        option.value = "select here";
+        option.textContent = "Select Here";
+        courseDropdown.appendChild(option);
+
+        courses.forEach(course => {
+            const option = document.createElement('option');
+            option.value = course.course_number;
+            option.setAttribute('data-course-name', course.course_name);
+            option.textContent = `${course.course_title} (${course.course_name}) (${course.course_number}) (${course.semester})`;
+            courseDropdown.appendChild(option);
+        });
+
+        if (previouslySelectedValue) {
+            courseDropdown.value = previouslySelectedValue;
+        } else if (courseDropdown.options.length > 0) {
+            courseDropdown.selectedIndex = 0;
+        }
+
+        setUpCourseDropdownApplicants();
+
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+    }
+}
+
+function setUpCourseDropdownApplicants() {
+    const courseDropdown = document.getElementById('courseDropdownApplicants');
+    courseDropdown.addEventListener('change', function () {
+        filterApplicantsByCourse(courseDropdown.value);
+    });
+}
+
+async function filterApplicantsByCourse(selectedCourse) {
+    const applicantsContainer = document.querySelector('.applicants_container');
+    const semester = getActiveSemester();
+    const applicants = await fetchApplicantsBySemester(semester);
+
+    const heading = document.getElementById('ApplicantItemHeading');
+    applicantsContainer.innerHTML = '';
+    applicantsContainer.appendChild(heading);
+
+    let filteredApplicants = applicants;
+    if (selectedCourse !== 'select here' && selectedCourse) {
+        filteredApplicants = applicants.filter(applicant =>
+            applicant.courses.some(course => course.course_number === selectedCourse)
+        );
+    }
+
+    if (inWhichView !== 'all') {
+        filteredApplicants = filteredApplicants.filter(applicant => applicant.applicant_type === inWhichView);
+    }
+
+    if (filteredApplicants.length > 0) {
+        displayApplicants(filteredApplicants);
+    } else {
+        const noApplicantsMessage = document.createElement('p');
+        noApplicantsMessage.textContent = 'No Applicants Found for this Course and View';
+        applicantsContainer.appendChild(noApplicantsMessage);
+    }
+
+}
+
+
+
+
+
+
+
 function setUpShorlistSelectBtns() {
     const shortlistBtns = document.querySelectorAll('.shortlist_btn');
-    const selectBtnsFromNew = document.querySelectorAll('.select_btn_from_new');
-    const selectBtnsFromShortlisted = document.querySelectorAll('.select_btn_from_shortlisted');
-    const removeShortlistedBtns = document.querySelectorAll('.remove_shortlisted_btn');
-    const removeSelectedBtns = document.querySelectorAll('.remove_selected_btn');
+    const selectBtn= document.querySelectorAll('.select_btn');
+    const unshortlistBtn = document.querySelectorAll('.unshortlist_btn');
+    const unselectBtn = document.querySelectorAll('.unselect_btn');
 
     shortlistBtns.forEach(button => {
         button.addEventListener('click', async function () {
-
             const applicantId = this.getAttribute('data-applicant-id');
             const applicantName = this.getAttribute('data-name');
             await shortlistApplicant(applicantId, applicantName);
-            document.getElementById("applicants_btn").click();
         });
     });
 
-    selectBtnsFromNew.forEach(button => {
+    selectBtn.forEach(button => {
         button.addEventListener('click', async function () {
             const applicantId = this.getAttribute('data-applicant-id');
             const applicantName = this.getAttribute('data-name');
             await selectApplicant(applicantId, applicantName);
-            document.getElementById("applicants_btn").click();
         });
     });
 
-    selectBtnsFromShortlisted.forEach(button => {
+    unshortlistBtn.forEach(button => {
         button.addEventListener('click', async function () {
-            const applicantId = this.getAttribute('data-applicant-id');
-            const applicantName = this.getAttribute('data-name');
-            await selectApplicant(applicantId, applicantName);
-            document.getElementById("shortlistedApplicantsBtn").click();
-        });
-    });
-
-    removeShortlistedBtns.forEach(button => {
-        button.addEventListener('click', async function () {
-
             const applicantId = this.getAttribute('data-applicant-id');
             const applicantName = this.getAttribute('data-name');
             await unShortlistApplicant(applicantId, applicantName);
-            document.getElementById("shortlistedApplicantsBtn").click();
         });
     });
 
-    removeSelectedBtns.forEach(button => {
+    unselectBtn.forEach(button => {
         button.addEventListener('click', async function () {
-
             const applicantId = this.getAttribute('data-applicant-id');
             const applicantName = this.getAttribute('data-name');
             await unSelectApplicant(applicantId, applicantName);
-            document.getElementById("selectedApplicantsBtn").click();
         });
     });
 }
@@ -725,7 +660,9 @@ async function shortlistApplicant(applicantId, applicantName) {
 
     if (userConfirmed) {
         try {
-            const response = await fetch(`/shortlistApplicant?applicantId=${applicantId}`);
+            const semester = getActiveSemester();
+
+            const response = await fetch(`/shortlistApplicant?applicantId=${applicantId}&semester=${semester}`);
 
             if (response.redirected) {
                 window.location.href = '/?sessionExpired=true';
@@ -734,8 +671,13 @@ async function shortlistApplicant(applicantId, applicantName) {
 
             if (response.ok) {
                 const result = await response.json();
-                alert(result.message); // Success message
-                fetchApplicants(); // Refresh the applicants list after shortlisting
+                alert(result.message);
+
+                const activeSemesterButton = document.querySelector(`.semester-button[data-semester="${semester}"]`);
+                if (activeSemesterButton) {
+                    activeSemesterButton.click(); 
+                }
+
             } else {
                 const errorData = await response.json();
                 alert(errorData.message || "Failed to shortlist the applicant.");
@@ -752,7 +694,8 @@ async function selectApplicant(applicantId, applicantName) {
 
     if (userConfirmed) {
         try {
-            const response = await fetch(`/selectApplicant?applicantId=${applicantId}`);
+            const semester = getActiveSemester();
+            const response = await fetch(`/selectApplicant?applicantId=${applicantId}&semester=${semester}`);
 
             if (response.redirected) {
                 window.location.href = '/?sessionExpired=true';
@@ -761,8 +704,12 @@ async function selectApplicant(applicantId, applicantName) {
 
             if (response.ok) {
                 const result = await response.json();
-                alert(result.message); // Success message
-                fetchApplicants(); // Refresh the applicants list after shortlisting
+                alert(result.message);
+
+                const activeSemesterButton = document.querySelector(`.semester-button[data-semester="${semester}"]`);
+                if (activeSemesterButton) {
+                    activeSemesterButton.click();
+                }
             } else {
                 const errorData = await response.json();
                 alert(errorData.message || "Failed to select the applicant.");
@@ -779,7 +726,9 @@ async function unShortlistApplicant(applicantId, applicantName) {
 
     if (userConfirmed) {
         try {
-            const response = await fetch(`/unShortlistApplicant?applicantId=${applicantId}`);
+            const semester = getActiveSemester();
+            const response = await fetch(`/unShortlistApplicant?applicantId=${applicantId}&semester=${semester}`);
+
 
             if (response.redirected) {
                 window.location.href = '/?sessionExpired=true';
@@ -788,8 +737,13 @@ async function unShortlistApplicant(applicantId, applicantName) {
 
             if (response.ok) {
                 const result = await response.json();
-                alert(result.message); // Success message
-                fetchApplicants(); // Refresh the applicants list after shortlisting
+                alert(result.message);
+                
+                const activeSemesterButton = document.querySelector(`.semester-button[data-semester="${semester}"]`);
+                if (activeSemesterButton) {
+                    activeSemesterButton.click();
+                }
+
             } else {
                 const errorData = await response.json();
                 alert(errorData.message || "Failed to Un Shortlist the applicant.");
@@ -806,7 +760,9 @@ async function unSelectApplicant(applicantId, applicantName) {
 
     if (userConfirmed) {
         try {
-            const response = await fetch(`/unSelectApplicant?applicantId=${applicantId}`);
+            const semester = getActiveSemester();
+            const response = await fetch(`/unSelectApplicant?applicantId=${applicantId}&semester=${semester}`);
+
 
             if (response.redirected) {
                 window.location.href = '/?sessionExpired=true';
@@ -815,8 +771,13 @@ async function unSelectApplicant(applicantId, applicantName) {
 
             if (response.ok) {
                 const result = await response.json();
-                alert(result.message); // Success message
-                fetchApplicants(); // Refresh the applicants list after shortlisting
+                alert(result.message);
+                
+                const activeSemesterButton = document.querySelector(`.semester-button[data-semester="${semester}"]`);
+                if (activeSemesterButton) {
+                    activeSemesterButton.click();
+                }
+
             } else {
                 const errorData = await response.json();
                 alert(errorData.message || "Failed to un Select the applicant.");
@@ -827,9 +788,6 @@ async function unSelectApplicant(applicantId, applicantName) {
         }
     }
 }
-
-
-
 
 function showConfirmationModal(applicantName, actionText) {
     const modal = document.getElementById('confirmationModal') || createConfirmationModal();
@@ -852,7 +810,6 @@ function showConfirmationModal(applicantName, actionText) {
     });
 }
 
-// Function to hide the modal
 function hideConfirmationModal() {
     const modal = document.getElementById('confirmationModal');
     if (modal) {
@@ -860,7 +817,6 @@ function hideConfirmationModal() {
     }
 }
 
-// Function to create the confirmation modal
 function createConfirmationModal() {
     const overlay = document.createElement('div');
     overlay.id = 'confirmationModal';
@@ -896,9 +852,110 @@ function createConfirmationModal() {
 
 
 
+function setUpExportApplicantsBtn() {
+    const exportApplicantsBtn = document.querySelector('#exportApplicants');
+    const confirmSelectionBtn = document.getElementById('confirmSelectionBtn');
+    const cancelSelectionBtn = document.getElementById('cancelSelectionBtn');
 
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
 
+    const selectionPopup = document.getElementById('ApplicantTypeAndfieldSelectionPopup');
 
+    if (selectionPopup) {
+        overlay.appendChild(selectionPopup);
+    } else {
+        console.error('ApplicantTypeAndfieldSelectionPopup not found in the DOM');
+    }
 
+    exportApplicantsBtn.addEventListener('click', function () {
+        overlay.style.display = 'block';
+        if (selectionPopup) {
+            selectionPopup.style.display = 'grid';
+        }
+    });
 
+    confirmSelectionBtn.addEventListener('click', async function () {
+        await exportApplicants();
+    });
+
+    cancelSelectionBtn.addEventListener('click', function () {
+        hideFieldSelectionAndOverlay();
+    });
+
+    function hideFieldSelectionAndOverlay() {
+        overlay.style.display = 'none';
+        if (selectionPopup) {
+            selectionPopup.style.display = 'none';
+        }
+    }
+}
+
+async function exportApplicants() {
+    const fileName = document.getElementById('fileNameInput').value.trim();
+
+    if (!fileName) {
+        alert("Please enter a file name.");
+        return;
+    }
+
+    const selectedFields = {
+        name: document.getElementById('nameCheckbox').checked,
+        netid: document.getElementById('netidCheckbox').checked,
+        znumber: document.getElementById('znumberCheckbox').checked,
+        currentgpa: document.getElementById('gpaCheckbox').checked,
+        department: document.getElementById('departmentCheckbox').checked,
+        courseprogram: document.getElementById('courseProgramCheckbox').checked,
+        email: document.getElementById('emailCheckbox').checked,
+        mobilenumber: document.getElementById('phoneCheckbox').checked,
+        graduateprogram: document.getElementById('programTypeCheckbox').checked,
+        programstartdate: document.getElementById('startDateCheckbox').checked,
+        expectedgraduationdate: document.getElementById('graduationDateCheckbox').checked,
+        enrollementstatus: document.getElementById('enrollmentStatusCheckbox').checked,
+        citizenshipstatus: document.getElementById('citizenshipStatusCheckbox').checked,
+        creditscompletedatfau: document.getElementById('creditsCompletedCheckbox').checked,
+        creditsplannedtoregisterforupcomingsemester: document.getElementById('creditsPlannedCheckbox').checked,
+        workedforfau: document.getElementById('workedForFauCheckbox').checked,
+        externalwork: document.getElementById('externalWorkCheckbox').checked,
+        hoursofexternalwork: document.getElementById('hoursOfExternalWorkFauCheckbox').checked,
+    };
+
+    const selectedApplicationTypes = {
+        allApplicants: document.getElementById('allApplicationsCheckbox').checked,
+        shortlistedApplicants: document.getElementById('shortlistedApplicationsCheckbox').checked,
+        selectedApplicants: document.getElementById('selectedApplicationsCheckbox').checked,
+    };
+
+    try {
+        const response = await fetch('/exportApplicants', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fileName, selectedFields, selectedApplicationTypes })
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${fileName}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            alert("Applicant data exported successfully. Check your downloads.");
+
+            document.querySelector('.overlay').style.display = 'none';
+            document.getElementById('ApplicantTypeAndfieldSelectionPopup').style.display = 'none';
+        } else {
+            alert("Error exporting applicant data.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while exporting the data.");
+    }
+}
 

@@ -49,26 +49,23 @@
 }
 
 .departments_list_container {
-    width: 80%;
+    width: 85%;
     padding: 50px;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 60px;
+    grid-template-rows: auto;
     row-gap: 20px;
 }
 
 .departments_list_container .dept_item {
-    height: 60px;
-    width: 100%;
-    background-color: rgb(236, 239, 241);
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 4fr 1.5fr 1fr;
     gap: 20px;
-    padding: 3px 50px 3px 50px;
-}
-
-.departments_list_container .dept_item .delete_dept_btn {
-    margin-left: auto;
+    align-items: center;
+    padding: 10px;
+    background-color: rgb(236, 239, 241);
+    background-color: #fff;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
 
 .departments_list_container .dept_item span {
@@ -84,4 +81,47 @@
 .departments_list_container .dept_item .dept_abbre span {
     text-transform: uppercase;
     font-weight: 500;
+}
+
+.departments_list_container .dept_item .programs_list {
+    grid-column: span 4;
+    display: none;
+    padding: 15px 10px;
+    background-color: rgb(220, 220, 220);
+    margin-top: 10px;
+    gap: 15px;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.departments_list_container .dept_item .program_item {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    background-color: #fff;
+    width: 90%;
+    padding: 10px 10px 10px 30px;
+    margin: 0px 30px 15px auto;
+    display: grid;
+    grid-template-columns: 1fr 5fr 2fr;
+    grid-template-rows: 1fr;
+}
+
+.departments_list_container .dept_item .program_item .no_courses_available {
+    column-span: 4;
+    width: 100%;
+}
+
+.departments_list_container .dept_item .program_item .no_courses_available {
+    grid-column: span 4;
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.departments_list_container .add_program_container {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 10px 5px 15px 5px
 }

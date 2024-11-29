@@ -1,14 +1,315 @@
 document.addEventListener('DOMContentLoaded', function () {
-    setUpManageCoursesBtns();
     setUpCoursesMainBtns();
 });
 
 function setUpCoursesMainBtns() {
     const coursesBtn = document.getElementById("courses_btn");
-    coursesBtn.addEventListener("click", function () {
-        fetchCoursesList();
+    coursesBtn.addEventListener("click",async function () {
+        await fetchAndRenderSemestersInCourses();
+        setUpManageCoursesBtns();
     });
 }
+
+
+
+
+
+
+
+
+async function getActiveSemesterInCourses() {
+    const activeButton = document.querySelector('.semester-button-in-courses.active_semester_button_in_courses');
+    return activeButton ? activeButton.dataset.semester : null;
+}
+
+async function fetchAndRenderSemestersInCourses() {
+    try {
+        const semesterResponse = await fetch('/semesterList');
+        if (semesterResponse.ok) {
+            const semesters = await semesterResponse.json();
+            const semesterContainer = document.querySelector('.StaffCoursesContent .semesters_container');
+
+            semesterContainer.innerHTML = '';
+
+            // Render semester buttons and find the first active button
+            const buttons = semesters.map(semester => createSemesterButtonInCourses(semester));
+            buttons.forEach(button => semesterContainer.appendChild(button));
+            await setUpSemesterBtnsInCourses(buttons);
+
+            if (buttons.length > 0) buttons[0].click(); // Trigger a click on the first button if it exists
+
+        } else {
+            const errorData = await semesterResponse.json();
+            console.error('Error fetching active semester data:', errorData.error);
+        }
+    } catch (error) {
+        console.error("Error fetching active semester data:", error);
+    }
+}
+
+function createSemesterButtonInCourses(semester) {
+    const button = document.createElement('button');
+    const span = document.createElement('span');
+    span.textContent = semester.semester;
+    span.classList.add('semester-span');
+    button.appendChild(span);
+    button.classList.add('semester-button-in-courses');
+    button.dataset.semester = semester.semester;
+    button.dataset.status = semester.status;
+    return button;
+}
+
+async function setUpSemesterBtnsInCourses(buttons) {
+    buttons.forEach(button => {
+        button.addEventListener('click', async () => {
+            buttons.forEach(btn => btn.classList.remove("active_semester_button_in_courses"));
+            button.classList.add("active_semester_button_in_courses");
+            await fetchCoursesListBySemester(button.dataset.semester);
+        });
+    });
+}
+
+
+
+
+
+async function fetchCoursesListBySemester(semester) {
+    try {
+        const response = await fetch(`/CoursesListBySemester?semester=${semester}`);
+
+        if (response.redirected) {
+            window.location.href = '/?sessionExpired=true';
+            return;
+        }
+
+        if (response.ok) {
+            const courses = await response.json();
+            console.log(courses);
+            updateCoursesList(courses);
+        } else {
+            console.error('Failed to fetch courses.');
+            showNoCoursesMessage(); // Show 'No courses available' if request fails
+        }
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+        showNoCoursesMessage();
+    }
+}
+
+function updateCoursesList(courses) {
+    const coursesListContainer = document.querySelector('.courses_list_container');
+    coursesListContainer.innerHTML = ''; // Clear the current list
+
+    const courseHeadingContainer = document.createElement('div');
+    courseHeadingContainer.classList.add('course_heading_container');
+    courseHeadingContainer.innerHTML = `
+        <div class="course_details">
+        </div>
+        <div class="course_sections"><span>Sections</span></div>
+        <div class="course_total_ta_hours"><span>Total TA Hours</span></div>
+        <div class="course_ta_hours_assigned"><span>TA Hours Assigned</span></div>
+        <div class="course_ta_details"><span>TA Details</span></div>
+        <div></div>
+        <div></div>
+    `;
+    coursesListContainer.appendChild(courseHeadingContainer);
+
+    if (courses.length > 0) {
+        courses.forEach(course => {
+            const courseContainer = createCourseContainer(course);
+            coursesListContainer.appendChild(courseContainer);
+
+            // Edit button toggle
+            const editThisCourseBtn = courseContainer.querySelector('.edit_this_course_btn');
+            const editCourseContainerDiv = courseContainer.querySelector('.edit_course_container');
+
+            editThisCourseBtn.addEventListener("click", () => {
+                const isVisible = editCourseContainerDiv.style.display === 'grid';
+                editCourseContainerDiv.style.display = isVisible ? 'none' : 'grid';
+                editThisCourseBtn.textContent = isVisible ? 'Edit' : 'Cancel';
+            });
+
+            // Only attach one event listener for update
+            const updateBtn = courseContainer.querySelector('.update_course_btn');
+
+            if (!updateBtn.hasListener) {
+                updateBtn.addEventListener('click', async () => {
+                    
+                    await updateCourse(course.course_number, course.course_name, courseContainer);
+                    
+                    editCourseContainerDiv.style.display = 'none'; 
+                    editThisCourseBtn.textContent = 'Edit';
+
+                    const activeSemester = await getActiveSemesterInCourses();
+                    await fetchCoursesListBySemester(activeSemester);
+                    
+                });
+
+                updateBtn.hasListener = true; // Mark that the listener is attached
+            }
+
+            // Toggle TA details
+            const toggleTaBtn = courseContainer.querySelector('.toggle_ta_btn');
+            const taListDiv = courseContainer.querySelector('.applicant_ta_list');
+
+            toggleTaBtn.addEventListener("click", () => {
+                toggleTaBtn.classList.toggle("active");
+
+                if (taListDiv.classList.contains("show")) {
+                    taListDiv.style.maxHeight = "0";
+                    taListDiv.addEventListener('transitionend', function handleTransitionEnd() {
+                        taListDiv.classList.remove("show");
+                        taListDiv.style.display = 'none';
+                        taListDiv.removeEventListener('transitionend', handleTransitionEnd);
+                    });
+                    toggleTaBtn.textContent = "TAs";
+                } else {
+                    taListDiv.style.display = 'block';
+                    const scrollHeight = taListDiv.scrollHeight;
+                    taListDiv.style.maxHeight = scrollHeight + "px";
+                    taListDiv.classList.add("show");
+                    toggleTaBtn.textContent = "TAs";
+                }
+            });
+
+            // Window resize for dynamic TA list height adjustment
+            window.addEventListener("resize", () => {
+                if (taListDiv.classList.contains("show")) {
+                    taListDiv.style.maxHeight = taListDiv.scrollHeight + "px";
+                }
+            });
+        });
+        setUpdeleteThisCourseBtn();
+        setUpViewProfileEventListener();
+    } else {
+        showNoCoursesMessage();
+    }
+}
+
+function createCourseContainer(course) {
+
+    const courseContainer = document.createElement('div');
+    courseContainer.classList.add('course_container');
+    courseContainer.dataset.semester = course.semester;
+
+    // Determine and assign the appropriate class based on TA hours for visibility
+    if (course.ta_hours_assigned === 0) {
+        courseContainer.classList.add('ta_selection_process_not_started');
+    } else if (course.ta_hours_assigned > 0 && course.ta_hours_assigned < course.ta_hours_total) {
+        courseContainer.classList.add('ta_selection_process_in_process');
+    } else if (course.ta_hours_assigned >= course.ta_hours_total) {
+        courseContainer.classList.add('ta_selection_process_completed');
+    }
+
+    let taHTML = generateTaHTML(course);
+
+    courseContainer.innerHTML = `
+                <div class="course_name">
+                    <span class="value">${course.course_name}</span>
+                </div>
+                <div class="course_number">
+                    <span class="value">${course.course_number}</span>
+                </div>
+                <div class="course_title">
+                    <span class="value">${course.course_title}</span>
+                </div>
+                <div class="course_sections">
+                    <span class="value">${course.sections}</span>
+                </div>
+                <div class="ta_hours_total">
+                    <span class="value">${course.ta_hours_total}</span>
+                </div>
+                <div class="ta_hours_assigned">
+                    <span class="value">${course.ta_hours_assigned}</span>
+                </div>
+                <div class="view_tas_assigned">
+                    <button type="button" class="toggle_ta_btn btn btn-link" ${course.tas.length === 0 ? 'disabled' : ''}> TAs </button>
+                </div>
+                <button class="edit_this_course_btn btn btn-secondary" data-course-number="${course.course_number}" data-course-name="${course.course_name}" data-course-semester="${course.semester}">
+                    <span>Edit</span>
+                </button>
+                <button class="delete_this_course_btn btn btn-secondary" data-course-number="${course.course_number}" data-course-name="${course.course_name}" data-course-semester="${course.semester}">
+                    <span>Delete</span>
+                </button>
+                <div class="edit_course_container" style="display: none">
+                    <div>
+                        <label for="total_ta_hours">Total TA Hours Available:</label>
+                        <input type="number" id="total_ta_hours" class="edit_input" value="${course.ta_hours_total}" min="0">
+                    </div>
+
+                    <div>
+                        <label for="number_of_sections">Number of Sections:</label>
+                        <input type="number" id="number_of_sections" class="edit_input" value="${course.sections}" min="1">
+                    </div>
+
+                    <button type="button" class="update_course_btn btn btn-primary">Update</button>
+                </div>
+                <div class="applicant_ta_list" style="display: none;">
+                    ${taHTML}
+                </div>
+            `;
+
+    return courseContainer;
+}
+
+function generateTaHTML(course) {
+    if (Array.isArray(course.tas) && course.tas.length > 0) {
+        return `
+            <div class="ta_details_title"><span>TAs Assigned</span></div>
+            ${course.tas.map(ta => `
+                <div class="ta_item">
+                    <button type="button" class="view_profile_btn" data-applicant-netid="${ta.applicant_netid}" >${ta.name} - ${ta.applicant_netid} ( ${ta.ta_hours} Hours )</button>
+                </div>
+            `).join('')}
+            <div class="more_details_of_ta">
+                <span>For more details about applicants and TA assignments, please check the selected Applicants List</span>
+            </div>`;
+    } else {
+        return '<div class="no_tas_assigned">NO TAs are Assigned for this course</div>';
+    }
+}
+
+
+async function updateCourse(courseNumber, courseName, courseContainer) {
+    const totalTaHours = courseContainer.querySelector('#total_ta_hours').value;
+    const numberOfSections = courseContainer.querySelector('#number_of_sections').value;
+
+    if (isNaN(totalTaHours) || isNaN(numberOfSections) || totalTaHours < 0 || numberOfSections < 0) {
+        alert('Please enter valid numbers for both fields.');
+        return;
+    }
+
+    const semester = await getActiveSemesterInCourses();
+
+    try {
+        const response = await fetch(`/updateCourse/${courseNumber}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                course_name: courseName,
+                course_number: courseNumber,
+                semester: semester,
+                ta_hours_total: totalTaHours,
+                sections: numberOfSections,
+            }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Course updated successfully!');
+        } else {
+            alert('Failed to update course.');
+        }
+    } catch (error) {
+        console.error('Error updating course:', error);
+        alert('An error occurred while updating the course.');
+    }
+}
+
+
+
 
 function setUpdeleteThisCourseBtn() {
     const delete_this_course_btn = document.querySelectorAll('.delete_this_course_btn');
@@ -16,162 +317,13 @@ function setUpdeleteThisCourseBtn() {
         button.addEventListener('click', async function () {
             const courseName = button.getAttribute('data-course-name');
             const courseNumber = button.getAttribute('data-course-number');
-            showConfirmDeleteSingleCourseModal(courseNumber,courseName);
+            showConfirmDeleteSingleCourseModal(courseNumber, courseName);
         });
     });
 }
 
-async function deleteSingleCourse(courseNumber, courseName) {
-    try {
+function showConfirmDeleteSingleCourseModal(courseNumber, courseName) {
 
-        const response = await fetch('/staff/delete_single_course', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json' // Ensures the server recognizes the content as JSON
-            },
-            body: JSON.stringify({
-                courseNumber: courseNumber,  // Make sure these are not undefined
-                courseName: courseName,      // Make sure these are not undefined
-            })
-        });
-
-        const result = await response.json(); // Parse the JSON response
-
-        if (response.ok) {
-            // Success: Handle the successful deletion case
-            alert("Course deleted successfully!");
-            fetchCoursesList(); // Refresh the courses list
-        } else {
-            // Failure: Show a failure message
-            alert(`Failed to delete course: ${result.message || 'Unknown error'}`);
-        }
-
-    } catch (error) {
-        // Network or other errors
-        console.error('Error deleting course:', error);
-        alert('An error occurred while deleting the course. Please try again later.');
-    }
-}
-
-function setUpManageCoursesBtns() {
-    const addMultipleCoursesBtn = document.getElementById('addMultipleCoursesBtn');
-    const coursesFileUploadContainer = document.querySelector('.CoursesFileUploadContainer');
-    const uploadCsvBtn = document.getElementById('uploadCsvBtn');
-    const cancleFileUploadBtn = document.getElementById('cancleFileUploadBtn');
-
-    const addSingleCourseBtn = document.getElementById('addSingleCourseBtn');
-    const singleCourseUploadContainer = document.querySelector('.SingleCourseUploadContainer');
-    const uploadSingleCourseBtn = document.getElementById('uploadSingleCourseBtn');
-    const cancelSingleCourseUploadBtn = document.getElementById('cancelSingleCourseUploadBtn');
-
-    const deleteSingleCourseBtn = document.getElementById('deleteSingleCourseBtn');
-    const singleCourseDeleteContainer = document.querySelector('.SingleCourseDeleteContainer');
-    const deleteCourseBtn = document.getElementById('deleteCourseBtn');
-    const cancelDeletelSingleCourseBtn = document.getElementById('cancelDeletelSingleCourseBtn');
-
-    // Toggle the visibility of the CoursesFileUploadContainer
-    addMultipleCoursesBtn.addEventListener('click', function () {
-        if (coursesFileUploadContainer.style.display === 'none' || coursesFileUploadContainer.style.display === '') {
-            coursesFileUploadContainer.style.display = 'flex'; // Show the container
-            addMultipleCoursesBtn.classList.add('active'); // Add "active" class
-        } else {
-            coursesFileUploadContainer.style.display = 'none'; // Hide the container
-            addMultipleCoursesBtn.classList.remove('active'); // Remove "active" class
-        }
-    });
-
-    // Hide the CoursesFileUploadContainer when "Cancel" button is clicked
-    cancleFileUploadBtn.addEventListener('click', function () {
-        coursesFileUploadContainer.style.display = 'none'; // Hide the container
-        addMultipleCoursesBtn.classList.remove('active'); // Remove "active" class
-    });
-
-    // Logic for uploading the CSV file 
-    uploadCsvBtn.addEventListener('click',async function () {
-
-        const fileInput = document.getElementById('csvFileInput');
-        const file = fileInput.files[0];
-
-        if (file) {
-            showConfirmUploadFileModal(); // Show confirmation modal before upload
-            addMultipleCoursesBtn.classList.remove('active'); // Remove "active" class
-            coursesFileUploadContainer.style.display = 'none'; // Hide the container
-        } else {
-            alert('Please select a CSV file before uploading.');
-        }
-    });
-
-    addSingleCourseBtn.addEventListener('click', function () {
-        if (singleCourseUploadContainer.style.display === 'none' || singleCourseUploadContainer.style.display === '') {
-            singleCourseUploadContainer.style.display = 'flex'; // Show the container
-            addSingleCourseBtn.classList.add('active'); // Add "active" class
-        } else {
-            singleCourseUploadContainer.style.display = 'none'; // Hide the container
-            addSingleCourseBtn.classList.remove('active'); // Remove "active" class
-        }
-    });
-
-    // Hide the SingleCourseUploadContainer when "Cancel" button is clicked
-    cancelSingleCourseUploadBtn.addEventListener('click', function () {
-        singleCourseUploadContainer.style.display = 'none'; // Hide the container
-        addSingleCourseBtn.classList.remove('active'); // Remove "active" class
-    });
-
-    // Logic for uploading single Course
-    uploadSingleCourseBtn.addEventListener('click', function () {
-        const courseTitle = document.getElementById('courseTitle').value.trim();
-        const courseName = document.getElementById('courseName').value.trim();
-        const courseNumber = document.getElementById('courseNumber').value.trim();
-
-        // Check if all fields are filled
-        if (!courseTitle || !courseName || !courseNumber) {
-            alert("Please fill in all fields before uploading the course.");
-            return;
-        }
-
-        showConfirmUploadSingleCourseModal();
-        addSingleCourseBtn.classList.remove('active'); // Hide the container
-        singleCourseUploadContainer.style.display = 'none'; // Remove "active" class
-    });
-
-    deleteSingleCourseBtn.addEventListener('click', function () {
-        if (singleCourseDeleteContainer.style.display === 'none' || singleCourseDeleteContainer.style.display === '') {
-            singleCourseDeleteContainer.style.display = 'flex'; // Show the container
-            deleteSingleCourseBtn.classList.add('active'); // Add "active" class
-        } else {
-            singleCourseDeleteContainer.style.display = 'none'; // Hide the container
-            deleteSingleCourseBtn.classList.remove('active'); // Remove "active" class
-        }
-    });
-
-    // Hide the "SingleCourseDeleteContainer" when "Cancel" button is clicked
-    cancelDeletelSingleCourseBtn.addEventListener('click', function () {
-        singleCourseDeleteContainer.style.display = 'none'; // Hide the container
-        deleteSingleCourseBtn.classList.remove('active'); // Remove "active" class
-    });
-
-    // Logic for deleting single Course
-    deleteCourseBtn.addEventListener('click', function () {
-        const courseNumber = document.getElementById('courseNumberDelete').value.trim();
-        const courseName = document.getElementById('courseNameDelete').value.trim();
-
-        // Check if all fields are filled
-        if (!courseNumber || !courseName) {
-            alert("Please enter Course Number and Course Name to delete the course.");
-            return;
-        }
-
-        showConfirmDeleteSingleCourseModal(courseNumber, courseName);
-        singleCourseDeleteContainer.style.display = 'none'; // Hide the container
-        deleteSingleCourseBtn.classList.remove('active'); // Remove "active" class
-    });
-
-}
-
-// Confirmation modal function
-function showConfirmDeleteSingleCourseModal(courseNumber, courseName) { 
-    // Create the overlay
     const overlay = document.createElement('div');
     overlay.classList.add('modal-overlay');
 
@@ -185,28 +337,135 @@ function showConfirmDeleteSingleCourseModal(courseNumber, courseName) {
         </div>
     `;
 
-    // Append the modal and overlay to the body
     document.body.appendChild(overlay);
     document.body.appendChild(confirmModal);
 
-    // Handle Yes (Confirm delete)
     document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
-        deleteSingleCourse(courseNumber, courseName); // Call the upload function
-        document.body.removeChild(confirmModal); // Close modal
-        document.body.removeChild(overlay); // Remove overlay
+        deleteSingleCourse(courseNumber, courseName);
+        document.body.removeChild(confirmModal);
+        document.body.removeChild(overlay);
     });
 
-    // Handle No (Cancel Delete)
     document.getElementById('cancelDeleteBtn').addEventListener('click', function () {
-        document.body.removeChild(confirmModal); // Close modal
-        document.body.removeChild(overlay); // Remove overlay
+        document.body.removeChild(confirmModal);
+        document.body.removeChild(overlay);
+    });
+}
+
+async function deleteSingleCourse(courseNumber, courseName) {
+    try {
+
+        const semester = await getActiveSemesterInCourses();
+        const response = await fetch('/delete_single_course', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                courseNumber: courseNumber,
+                courseName: courseName,
+                semester: semester,
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("Course deleted successfully!");
+            const semester = await getActiveSemesterInCourses();
+            await fetchCoursesListBySemester(semester);
+        } else {
+            alert(`Failed to delete course: ${result.message || 'Unknown error'}`);
+        }
+
+    } catch (error) {
+        console.error('Error deleting course:', error);
+        alert('An error occurred while deleting the course. Please try again later.');
+    }
+}
+
+
+
+
+
+function setUpManageCoursesBtns() {
+
+    const addMultipleCoursesBtn = document.getElementById('addMultipleCoursesBtn');
+    const coursesFileUploadContainer = document.querySelector('.CoursesFileUploadContainer');
+    const uploadCsvBtn = document.getElementById('uploadCsvBtn');
+    const cancleFileUploadBtn = document.getElementById('cancleFileUploadBtn');
+
+    const addSingleCourseBtn = document.getElementById('addSingleCourseBtn');
+    const singleCourseUploadContainer = document.querySelector('.SingleCourseUploadContainer');
+    const uploadSingleCourseBtn = document.getElementById('uploadSingleCourseBtn');
+    const cancelSingleCourseUploadBtn = document.getElementById('cancelSingleCourseUploadBtn');
+
+    addMultipleCoursesBtn.addEventListener('click', function () {
+        if (coursesFileUploadContainer.style.display === 'none' || coursesFileUploadContainer.style.display === '') {
+            coursesFileUploadContainer.style.display = 'flex'; 
+            addMultipleCoursesBtn.classList.add('active');
+        } else {
+            coursesFileUploadContainer.style.display = 'none';
+            addMultipleCoursesBtn.classList.remove('active');
+        }
+    });
+
+    cancleFileUploadBtn.addEventListener('click', function () {
+        coursesFileUploadContainer.style.display = 'none'; 
+        addMultipleCoursesBtn.classList.remove('active');
+    });
+
+    uploadCsvBtn.addEventListener('click',async function () {
+
+        const fileInput = document.getElementById('csvFileInput');
+        const file = fileInput.files[0];
+
+        if (file) {
+            showConfirmUploadFileModal(); 
+            addMultipleCoursesBtn.classList.remove('active'); 
+            coursesFileUploadContainer.style.display = 'none'; 
+        } else {
+            alert('Please select a CSV file before uploading.');
+        }
+    });
+
+    addSingleCourseBtn.addEventListener('click', function () {
+        if (singleCourseUploadContainer.style.display === 'none' || singleCourseUploadContainer.style.display === '') {
+            singleCourseUploadContainer.style.display = 'grid'; 
+            addSingleCourseBtn.classList.add('active');
+        } else {
+            singleCourseUploadContainer.style.display = 'none'; 
+            addSingleCourseBtn.classList.remove('active');
+        }
+    });
+
+    cancelSingleCourseUploadBtn.addEventListener('click', function () {
+        singleCourseUploadContainer.style.display = 'none';
+        addSingleCourseBtn.classList.remove('active');
+    });
+
+    uploadSingleCourseBtn.addEventListener('click', function () {
+        const courseTitle = document.getElementById('courseTitle').value.trim();
+        const courseName = document.getElementById('courseName').value.trim();
+        const courseNumber = document.getElementById('courseNumber').value.trim();
+        const sections = document.getElementById('sections').value.trim();
+        const taHoursTotal = document.getElementById('taHoursTotal').value.trim();
+
+        if (!courseTitle || !courseName || !courseNumber || !sections || !taHoursTotal) {
+            alert("Please fill in all fields before uploading the course.");
+            return;
+        }
+
+        showConfirmUploadSingleCourseModal();
+        addSingleCourseBtn.classList.remove('active');
+        singleCourseUploadContainer.style.display = 'none';
     });
 
 }
 
-// Confirmation modal function
 function showConfirmUploadFileModal() {
-    // Create the overlay
+
     const overlay = document.createElement('div');
     overlay.classList.add('modal-overlay');
 
@@ -220,26 +479,22 @@ function showConfirmUploadFileModal() {
         </div>
     `;
 
-    // Append the modal and overlay to the body
     document.body.appendChild(overlay);
     document.body.appendChild(confirmModal);
 
-    // Handle Yes (Confirm Upload)
     document.getElementById('confirmUploadBtn').addEventListener('click', async function () {
-        uploadCourseListFile(); // Call the upload function
-        document.body.removeChild(confirmModal); // Close modal
-        document.body.removeChild(overlay); // Remove overlay
+        uploadCourseListFile(); 
+        document.body.removeChild(confirmModal);
+        document.body.removeChild(overlay); 
     });
 
-    // Handle No (Cancel Upload)
     document.getElementById('cancelUploadBtn').addEventListener('click', function () {
-        document.body.removeChild(confirmModal); // Close modal
-        document.body.removeChild(overlay); // Remove overlay
+        document.body.removeChild(confirmModal); 
+        document.body.removeChild(overlay);
     });
 }
 
 function showConfirmUploadSingleCourseModal() {
-    // Create the overlay
     const overlay = document.createElement('div');
     overlay.classList.add('modal-overlay');
 
@@ -253,21 +508,18 @@ function showConfirmUploadSingleCourseModal() {
         </div>
     `;
 
-    // Append the modal and overlay to the body
     document.body.appendChild(overlay);
     document.body.appendChild(confirmModal);
 
-    // Handle Yes (Confirm Upload)
     document.getElementById('confirmUploadBtn').addEventListener('click', async function () {
-        uploadSingleCourse(); // Call the upload function
-        document.body.removeChild(confirmModal); // Close modal
-        document.body.removeChild(overlay); // Remove overlay
+        uploadSingleCourse();
+        document.body.removeChild(confirmModal);
+        document.body.removeChild(overlay);
     });
 
-    // Handle No (Cancel Upload)
     document.getElementById('cancelUploadBtn').addEventListener('click', function () {
-        document.body.removeChild(confirmModal); // Close modal
-        document.body.removeChild(overlay); // Remove overlay
+        document.body.removeChild(confirmModal);
+        document.body.removeChild(overlay);
     });
 }
 
@@ -276,35 +528,43 @@ async function uploadSingleCourse() {
     const courseTitle = document.getElementById('courseTitle').value.trim();
     const courseName = document.getElementById('courseName').value.trim();
     const courseNumber = document.getElementById('courseNumber').value.trim();
+    const sections = parseInt(document.getElementById('sections').value.trim(), 10);
+    const taHoursTotal = parseInt(document.getElementById('taHoursTotal').value.trim(), 10);
+    const semester = await getActiveSemesterInCourses();
 
-    // Check if all fields are filled before proceeding
-    if (!courseTitle || !courseName || !courseNumber) {
+    if (!courseTitle || !courseName || !courseNumber || isNaN(sections) || isNaN(taHoursTotal)) {
         alert("Please fill in all fields before uploading the course.");
         return;
     }
 
     try { 
 
-        const response = await fetch('/staff/add_single_course', {
+        const response = await fetch('/add_single_course', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                courseTitle: courseTitle,
-                courseName: courseName,
-                courseNumber: courseNumber
+                courseTitle,
+                courseName,
+                courseNumber,
+                sections,
+                taHoursTotal,
+                semester,
             })
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            // Handle success
             alert("Course uploaded successfully!");
-            fetchCoursesList(); 
+            fetchCoursesListBySemester(semester); 
+            document.getElementById('courseTitle').value = '';
+            document.getElementById('courseName').value = '';
+            document.getElementById('courseNumber').value = '';
+            document.getElementById('sections').value = '';
+            document.getElementById('taHoursTotal').value = '';
         } else {
-            // Handle failure, perhaps display an error message
             alert(`Failed to upload course: ${result.message || 'Unknown error'}`);
         }
     } catch (error) {
@@ -317,26 +577,28 @@ async function uploadSingleCourse() {
 async function uploadCourseListFile() {
 
     const fileInput = document.getElementById('csvFileInput');
-    const file = fileInput.files[0]; // Get the file from input
+    const file = fileInput.files[0]; 
+    const semester = await getActiveSemesterInCourses();
 
     if (!file) {
         alert('Please select a CSV file before uploading.');
         return;
     }
 
-    // Create FormData object to send the file
     const formData = new FormData();
-    formData.append('csvFile', file); // Append the file to the FormData
+    formData.append('csvFile', file);
+    formData.append('semester', semester);
 
     try {
-        const response = await fetch('/staff/add_multiple_courses', {
+        const response = await fetch('/add_multiple_courses', {
             method: 'POST',
             body: formData
         });
 
         if (response.ok) {
             alert("File uploaded successfully!");
-            fetchCoursesList();
+            const semester = await getActiveSemesterInCourses();
+            fetchCoursesListBySemester(semester);
         } else {
             alert("Error uploading file.");
         }
@@ -347,126 +609,13 @@ async function uploadCourseListFile() {
     
 }
 
-async function fetchCoursesList() {
-
-    try {
-
-        const response = await fetch(`/coursesListDeptSemesterStaff`);
-
-        if (response.redirected) {
-            window.location.href = '/?sessionExpired=true'; 
-            return; 
-        }
-
-        if (response.ok) {
-            const courses = await response.json();
-            updateCoursesList(courses);
-        } else {
-            console.error('Failed to fetch courses.');
-            showNoCoursesMessage(); // Show 'No courses available' if request fails
-        }
-    } catch (error) {
-        console.error('Error fetching courses:', error);
-        showNoCoursesMessage();
-    }
-}
-
-// Function to update the DOM with fetched courses
-function updateCoursesList(courses) {
-    const coursesListContainer = document.querySelector('.courses_list_container');
-    coursesListContainer.innerHTML = ''; // Clear the current list
-
-    if (courses.length > 0) {
-        courses.forEach(course => {
-            const courseContainer = document.createElement('div');
-            courseContainer.classList.add('course_container');
-            courseContainer.dataset.semester = course.semester;
-
-            courseContainer.innerHTML = `
-                <div class="course_title">
-                    <span>${course.course_title}</span>
-                </div>
-                <div class="course_name">
-                    <span class="value">${course.course_name}</span>
-                </div>
-                <div class="course_number">
-                    <span class="value">${course.course_number}</span>
-                </div>
-                <div class="course_total_applications" style="display:none">
-                    <button class="count_of_applications_btn btn-link" type="button" data-course-title="${course.course_title}" data-total-applications="${course.total_applications}" data-shortlisted-applications="${course.shortlisted_applications}" data-selected-applications="${course.selected_applications}" data-notified-applications="${course.notified_applications}"><span class="value">Total Applications: ${course.total_applications}</span></button>
-                </div>
-                <button class="delete_this_course_btn btn btn-secondary" data-course-number="${course.course_number}" data-course-name="${course.course_name}">
-                    <span>Delete</span>
-                </button>
-            `;
-            coursesListContainer.appendChild(courseContainer);
-        });
-        setUpdeleteThisCourseBtn();
-        setUpCountOfApplicationsBtn();
-    } else {
-        showNoCoursesMessage();
-    }
-}
-
-function setUpCountOfApplicationsBtn() {
-    const count_of_applications_btns = document.querySelectorAll('.count_of_applications_btn');
-    count_of_applications_btns.forEach(button => {
-        button.addEventListener('click', function () {
-            const courseTitle = button.getAttribute('data-course-title');
-            const totalApplications = button.getAttribute('data-total-applications');
-            const shortlistedApplications = button.getAttribute('data-shortlisted-applications');
-            const selectedApplications = button.getAttribute('data-selected-applications');
-            const notifiedApplications = button.getAttribute('data-notified-applications');
-
-            // Call the modal function with course title and application counts
-            showNoOfApplicationsForCourseModal(courseTitle, totalApplications, shortlistedApplications, selectedApplications, notifiedApplications);
-        });
-    });
-}
-
-
-function showNoOfApplicationsForCourseModal(courseTitle, totalApplications, shortlistedApplications, selectedApplications, notifiedApplications) {
-    // Create the overlay
-    const overlay = document.createElement('div');
-    overlay.classList.add('modal-overlay');
-
-    // Create the modal container
-    const applicationsModal = document.createElement('div');
-    applicationsModal.classList.add('applications-modal');
-    applicationsModal.innerHTML = `
-        <div class="modal-content">
-            <h3 style="white-space: nowrap;">${courseTitle}</h3>
-            <div class="application-details">
-                <p>Total Applications Received: ${totalApplications}</p>
-                <p>Shortlisted Applications: ${shortlistedApplications}</p>
-                <p>Selected Applications: ${selectedApplications}</p>
-                <p>Notified Applications: ${notifiedApplications}</p>
-            </div>
-            <button id="closeModalBtn" class="btn btn-danger" style="float: right; padding-right: 10px;">Close</button>
-        </div>
-    `;
-
-    // Append the modal and overlay to the body
-    document.body.appendChild(overlay);
-    document.body.appendChild(applicationsModal);
-
-    // Handle Close button click
-    document.getElementById('closeModalBtn').addEventListener('click', function () {
-        document.body.removeChild(applicationsModal); // Close modal
-        document.body.removeChild(overlay); // Remove overlay
-    });
-
-    // Handle overlay click to close the modal
-    overlay.addEventListener('click', function () {
-        document.body.removeChild(applicationsModal); // Close modal
-        document.body.removeChild(overlay); // Remove overlay
-    });
-}
 
 
 
 
-// Function to show 'No courses available' message
+
+
+
 function showNoCoursesMessage() {
     const coursesListContainer = document.querySelector('.courses_list_container');
     coursesListContainer.innerHTML = '<p>No courses available. Please upload csv File to Upload the courses List</p>';

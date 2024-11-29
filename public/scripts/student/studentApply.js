@@ -7,53 +7,145 @@ document.addEventListener("DOMContentLoaded", () => {
 function setUpApplyMainBtn() {
     const applyBtn = document.getElementById("apply_btn");
 
-    applyBtn.addEventListener("click", () => {
-        fetchDepartmentsApply();
-        fetchSemestersApply();
-        fetchCourses();
+    applyBtn.addEventListener("click",async () => {
+        await fetchAndRenderSemestersInApply();
     });
 }
 
 
-// Fetch and populate departments
-async function fetchDepartmentsApply() {
+function getActiveSemesterInApply() {
+    const activeButton = document.querySelector('.semester-button-in-apply.active_semester_button_in_apply');
+    return activeButton ? activeButton.dataset.semester : null;
+}
+
+async function fetchAndRenderSemestersInApply() {
     try {
-        const response = await fetch('/departmentList');
-        const departments = await response.json();
+        const semesterResponse = await fetch('/semesterList');
+        if (semesterResponse.ok) {
+            const semesters = await semesterResponse.json();
+            const semesterContainer = document.querySelector('.StudentApplyContent .semesters_container');
 
-        const dropdown = document.getElementById('departmentDropdownApply');
-        dropdown.innerHTML = '<option value="">All Departments</option>';
+            semesterContainer.innerHTML = '';
 
-        departments.forEach(dept => {
-            const option = document.createElement('option');
-            option.value = dept.department_abbre;
-            option.textContent = `${dept.department_abbre} - ${dept.department_name}`;
-            dropdown.appendChild(option);
-        });
+            // Render semester buttons and find the first active button
+            const buttons = semesters.map(semester => createSemesterButtonInApply(semester));
+            buttons.forEach(button => semesterContainer.appendChild(button));
+            await setUpSemesterBtnsInApply(buttons);
+
+            if (buttons.length > 0) buttons[0].click(); // Trigger a click on the first button if it exists
+
+        } else {
+            const errorData = await semesterResponse.json();
+            console.error('Error fetching active semester data:', errorData.error);
+        }
     } catch (error) {
-        console.error("Error fetching departments:", error);
+        console.error("Error fetching active semester data:", error);
     }
 }
 
-// Fetch and populate semesters
-async function fetchSemestersApply() {
-    try {
-        const response = await fetch('/semesterList');
-        const semesters = await response.json();
+function createSemesterButtonInApply(semester) {
+    const button = document.createElement('button');
+    const span = document.createElement('span');
+    span.textContent = semester.semester;
+    span.classList.add('semester-span');
+    button.appendChild(span);
+    button.classList.add('semester-button-in-apply');
+    button.dataset.semester = semester.semester;
+    button.dataset.status = semester.status;
+    return button;
+}
 
-        const dropdown = document.getElementById('semesterDropdownApply');
-        dropdown.innerHTML = '<option value="">All Semesters</option>';
-
-        semesters.forEach(sem => {
-            const option = document.createElement('option');
-            option.value = sem.semester;
-            option.textContent = `${sem.semester} ${sem.semester_status === 'Active' ? '(Active)' : ''}`;
-            dropdown.appendChild(option);
+async function setUpSemesterBtnsInApply(buttons) {
+    buttons.forEach(button => {
+        button.addEventListener('click', async () => {
+            buttons.forEach(btn => btn.classList.remove("active_semester_button_in_apply"));
+            button.classList.add("active_semester_button_in_apply");
+            await fetchCoursesListBySemester(button.dataset.semester);
         });
+    });
+}
+
+
+
+
+
+
+// Fetch and populate courses
+async function fetchCoursesListBySemester(semester) {
+    try {
+        const response = await fetch(`/CoursesListBySemesterInStudent?semester=${semester}`);
+        const courses = await response.json();
+
+        const semesterStatusResponse = await fetch(`/SemesterStatus?semester=${semester}`);
+        const semesterStatus = await semesterStatusResponse.json();
+
+        const container = document.getElementById('coursesContainer');
+        container.innerHTML = '';
+
+        if (semesterStatus.status !== 'active') {
+            const notAcceptingApplications = document.createElement('div'); // Create a new div
+            notAcceptingApplications.classList.add('not_accepting');
+            notAcceptingApplications.innerHTML = `<span>Applications are not being accepted for this semester at the moment.</span>`;
+            container.appendChild(notAcceptingApplications);
+        }
+
+        courses.forEach(course => {
+            const courseContainer = document.createElement('div');
+            courseContainer.classList.add('course_item');
+            courseContainer.dataset.department = course.dept_name.toLowerCase().trim();
+            courseContainer.dataset.semester = course.semester.toLowerCase().trim();
+            courseContainer.dataset.applied = course.applied;
+
+            let btnInnerHTML = ``;
+
+            if (semesterStatus.status === 'inactive') {
+                btnInnerHTML = `
+        <div class="apply_btn_container">
+            <button type="button" class="ApplyNowBtn" disabled>Unavailable</button>
+        </div>`;
+            } else if (course.applied) {
+                btnInnerHTML = `
+        <div class="applied_btn_container">
+            <button type="button" class="AppliedBtn" disabled>Applied</button>
+        </div>`;
+            } else {
+                btnInnerHTML = `
+        <div class="apply_btn_container">
+            <button type="button" class="ApplyNowBtn">Apply now</button>
+        </div>`;
+            }
+
+            courseContainer.innerHTML = `
+                <div class="course_title"><span>${course.course_title}</span></div>
+                <div class="course_name"><span class="value">${course.course_name}</span></div>
+                <div class="course_number"><span class="value">${course.course_number}</span></div>
+                <div class="department_name"><span class="value">${course.dept_name}</span></div>
+                <div class="semester_name"><span class="value">${course.semester}</span></div>
+                ${btnInnerHTML}
+            `;
+            container.appendChild(courseContainer);
+        });
+
+        if (semesterStatus.status !== 'active') {
+            container.classList.add('disabled');
+        } else {
+            container.classList.remove('disabled');
+        }
+
+        setupApplyButtons();
+
     } catch (error) {
-        console.error("Error fetching semesters:", error);
+        console.error("Error fetching courses:", error);
     }
 }
+
+
+
+
+
+
+
+
 
 // Setup event listeners for Apply buttons
 function setupApplyButtons() {
@@ -69,7 +161,7 @@ function setupApplyButtons() {
 
     document.querySelectorAll(".apply_btn_container button").forEach(button => {
         button.addEventListener("click", function () {
-            const courseContainer = this.closest(".course_container");
+            const courseContainer = this.closest(".course_item");
 
             // Populate the new application form with course data
             courseTitleSpan.textContent = courseContainer.querySelector(".course_title span").textContent;
@@ -104,31 +196,67 @@ function setupSubmitCancelApplicationBtns() {
     // Handle form submission
     newSubmitApplicationBtn.addEventListener("click", async function (event) {
         event.preventDefault();
-        const formData = collectFormData(newApplicationContainer);
 
-        try {
-            const response = await fetch('/submitNewApplication', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+        const eligibilityCheckboxes = document.querySelectorAll('.eligibility_criteria_container .checkbox');
+        let eligibilitySelected = false;
+
+        eligibilityCheckboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                eligibilitySelected = true;
+            }
+        });
+
+        if (!eligibilitySelected) {
+            event.preventDefault();
+
+            let overlay = document.createElement('div');
+            overlay.className = 'error-overlay';
+
+            let errorMessageContainer = document.createElement('div');
+            errorMessageContainer.classList.add('error_message_container');
+            errorMessageContainer.innerHTML = `
+            <span>You are not eligible to apply for this course. Please select another course that you are eligible for.</span>
+            <button class="okay-button">Okay</button>
+        `;
+            
+            overlay.appendChild(errorMessageContainer);
+            document.body.appendChild(overlay);
+
+            document.querySelector('.okay-button').addEventListener('click', function () {
+                overlay.style.display = 'none';
             });
 
-            if (response.ok) {
-                const result = await response.json();
-                alert(result.message); // Success message
-                closePopup(newApplicationContainer, popupOverlay);
-            } else {
-                const errorData = await response.json();
-                alert(errorData.message || "Failed to submit application.");
+        } else {
+            const formData = collectFormData(newApplicationContainer);
+
+            try {
+                const response = await fetch('/submitNewApplication', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showSuccessMessageOverlay(result.message);
+                    closePopup(newApplicationContainer, popupOverlay);
+                } else {
+                    const errorData = await response.json();
+                    showFailureMessageOverlay(errorData.message || "Failed to submit application.");
+                    closePopup(newApplicationContainer, popupOverlay);
+                }
+
+                const semester = getActiveSemesterInApply();
+                await fetchCoursesListBySemester(semester);
+
+            } catch (error) {
+                console.error("Error submitting application:", error);
+                alert("An error occurred. Please try again later.");
                 closePopup(newApplicationContainer, popupOverlay);
             }
-            document.getElementById("apply_btn").click(); // Refresh courses
-
-        } catch (error) {
-            console.error("Error submitting application:", error);
-            alert("An error occurred. Please try again later.");
-            closePopup(newApplicationContainer, popupOverlay);
         }
+
+        
     });
 
     // Handle cancel button click
@@ -137,49 +265,78 @@ function setupSubmitCancelApplicationBtns() {
     });
 }
 
+function showSuccessMessageOverlay(successMessage) {
 
-// Submit or Cancel application form
-function setupSubmitCancelApplicationBtns2() {
-    const newApplicationContainer = document.querySelector(".new_application_container");
-    const popupOverlay = document.querySelector(".overlay");
+    // Create the overlay container
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay'); // Add a class for styling
 
-    const submitApplicationBtn = document.querySelector(".submit_application_btn");
-    const cancleApplicationBtn = document.querySelector(".cancel_application_btn");
+    // Create the message container
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message-container');
 
-    // Handle form submission
-    submitApplicationBtn.addEventListener("click", async function (event) {
-        event.preventDefault();
-        const formData = collectFormData(newApplicationContainer);
+    // Create a paragraph to hold the message
+    const messageText = document.createElement('p');
+    messageText.classList.add('message-text');
+    messageText.classList.add('success-message');
+    messageText.textContent = successMessage;
 
-        try {
-            const response = await fetch('/submitNewApplication', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
+    // Create a button to close the overlay
+    const closeButton = document.createElement('button');
+    closeButton.classList.add('close-overlay-btn');
+    closeButton.textContent = 'Close';
 
-            if (response.ok) {
-                const result = await response.json();
-                alert(result.message); // Success message
-                closePopup(newApplicationContainer, popupOverlay);
-            } else {
-                const errorData = await response.json();
-                alert(errorData.message || "Failed to submit application.");
-                closePopup(newApplicationContainer, popupOverlay);
-            }
-            document.getElementById("apply_btn").click();
-
-        } catch (error) {
-            console.error("Error submitting application:", error);
-            alert("An error occurred. Please try again later.");
-            closePopup(newApplicationContainer, popupOverlay);
-        }
+    // Close the overlay when the button is clicked
+    closeButton.addEventListener('click', function () {
+        overlay.remove();
     });
 
-    // Handle cancel button click
-    cancleApplicationBtn.addEventListener("click", function () {
-        closePopup(newApplicationContainer, popupOverlay);
+    // Append the message text and close button to the message container
+    messageContainer.appendChild(messageText);
+    messageContainer.appendChild(closeButton);
+
+    // Append the message container to the overlay
+    overlay.appendChild(messageContainer);
+
+    // Append the overlay to the body of the document
+    document.body.appendChild(overlay);
+}
+
+function showFailureMessageOverlay(successMessage) {
+
+    // Create the overlay container
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay'); // Add a class for styling
+
+    // Create the message container
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message-container');
+
+    // Create a paragraph to hold the message
+    const messageText = document.createElement('p');
+    messageText.classList.add('message-text');
+    messageText.classList.add('failure-message');
+    messageText.textContent = successMessage;
+
+    // Create a button to close the overlay
+    const closeButton = document.createElement('button');
+    closeButton.classList.add('close-overlay-btn');
+    closeButton.textContent = 'Close';
+
+    // Close the overlay when the button is clicked
+    closeButton.addEventListener('click', function () {
+        overlay.remove();
     });
+
+    // Append the message text and close button to the message container
+    messageContainer.appendChild(messageText);
+    messageContainer.appendChild(closeButton);
+
+    // Append the message container to the overlay
+    overlay.appendChild(messageContainer);
+
+    // Append the overlay to the body of the document
+    document.body.appendChild(overlay);
 }
 
 // Collect form data for submission
@@ -211,77 +368,3 @@ function resetForm(container) {
     });
     container.querySelector("textarea[name='additional_comments']").value = "";
 }
-
-// Handle filter dropdowns
-function setupFilterDropdowns() {
-    const departmentDropdownApply = document.getElementById("departmentDropdownApply");
-    const semesterDropdownApply = document.getElementById("semesterDropdownApply");
-    const statusDropdown = document.getElementById("statusDropdown");
-
-    departmentDropdownApply.addEventListener("change", filterCourses);
-    semesterDropdownApply.addEventListener("change", filterCourses);
-    statusDropdown.addEventListener("change", filterCourses);
-}
-
-// Filter courses based on department, semester, and status
-function filterCourses() {
-    const department = document.getElementById("departmentDropdownApply").value.toLowerCase().trim();
-    const semester = document.getElementById("semesterDropdownApply").value.toLowerCase().trim();
-    const status = document.getElementById("statusDropdown").value.toLowerCase().trim();
-
-    document.querySelectorAll(".course_container").forEach(course => {
-        const courseDept = course.getAttribute("data-department").toLowerCase().trim();
-        const courseSem = course.getAttribute("data-semester").toLowerCase().trim();
-        const courseStatus = course.getAttribute("data-status").toLowerCase().trim();
-
-        const matchesDept = !department || courseDept === department;
-        const matchesSem = !semester || courseSem === semester;
-        const matchesStatus = !status || courseStatus === status;
-
-        course.style.display = (matchesDept && matchesSem && matchesStatus) ? "inline-flex" : "none";
-    });
-}
-
-// Fetch and populate courses
-async function fetchCourses() {
-    try {
-        const response = await fetch('/allCoursesStudent');
-        const courses = await response.json();
-        
-        const container = document.getElementById('coursesListContainer');
-        container.innerHTML = '';
-
-        courses.forEach(course => {
-            const courseContainer = document.createElement('div');
-            courseContainer.classList.add('course_container');
-            courseContainer.dataset.department = course.dept_name.toLowerCase().trim();
-            courseContainer.dataset.semester = course.semester.toLowerCase().trim();
-            courseContainer.dataset.status = course.course_status.toLowerCase().trim();
-            courseContainer.dataset.applied = course.applied;
-
-            let btnInnerHTML = ``;
-            if (course.applied) {
-                btnInnerHTML = `<div class="applied_btn_container"><button type="button" class="AppliedBtn" disabled>Applied</button></div>`;
-            } else {
-                btnInnerHTML = `<div class="apply_btn_container"><button type="button">Apply now</button></div>`;
-            }
-
-            courseContainer.innerHTML = `
-                <div class="course_title"><span>${course.course_title}</span></div>
-                <div class="course_name"><span class="heading">Course Name</span><span class="value">${course.course_name}</span></div>
-                <div class="course_number"><span class="heading">Course Number</span><span class="value">${course.course_number}</span></div>
-                <div class="department_name"><span class="heading">Department</span><span class="value">${course.dept_name}</span></div>
-                <div class="semester_name"><span class="heading">Semester</span><span class="value">${course.semester}</span></div>
-                ${btnInnerHTML}
-            `;
-            container.appendChild(courseContainer);
-        });
-
-        setupApplyButtons();
-        setupFilterDropdowns()
-
-    } catch (error) {
-        console.error("Error fetching courses:", error);
-    }
-}
-

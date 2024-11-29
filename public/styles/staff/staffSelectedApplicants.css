@@ -1,87 +1,86 @@
 .StaffSelectedApplicantsContent {
     width: 100%;
     display: grid;
-    grid-template-rows: 70px 60px 60px auto;
-    grid-template-columns: 100%;
-    row-gap: 1px;
-    background-color: #fff;
-}
-
-.StaffSelectedApplicantsContent .department_semester_container {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 200px auto 200px;
-    background-color: #fff;
-    gap: 30px;
+    grid-template-columns: 200px auto;
+    grid-template-rows: 60px 10px auto;
 }
 
 .StaffSelectedApplicantsContent .department_title_container {
     width: 100%;
+    height: 100%;
     background-color: #fff;
-
     display: flex;
     align-items: center;
     justify-content: center;
 
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 .StaffSelectedApplicantsContent .department_title_container span {
-    font-size: 22px;
-    font-family: "Open Sans", sans-serif;
-    font-weight: 300;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: rgb(131, 3, 3);
-}
-
-.StaffSelectedApplicantsContent .semester_title_container {
-
-    width: 100%;
-    background-color: #fff;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.StaffSelectedApplicantsContent .semester_title_container span {
-    font-size: 22px;
-    font-family: "Open Sans", sans-serif;
-    font-weight: 300;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: rgb(131, 3, 3);
-}
-
-.StaffSelectedApplicantsContent .export_applicants_btn_container {
-    width: 100%;
-    background-color: #fff;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.StaffSelectedApplicantsContent .export_applicants_btn {
-    background-color: #fff;
-    border: none;
-
     font-size: 20px;
     font-family: "Open Sans", sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgb(131, 3, 3);
 }
 
 
 
+.StaffSelectedApplicantsContent .semesters_container {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    grid-row-start: 2;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    box-shadow: 8px 0px 8px rgba(0, 0, 0, 0.5);
+}
 
+.StaffSelectedApplicantsContent .semester-button-in-selected-applicants {
+    border: none;
+    background-color: white;
+    color: #0056b3;
+    cursor: pointer;
+    font-size: 14px;
+    height: 50px;
+    width: 100%;
+    padding: 10px 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
+.StaffSelectedApplicantsContent .semester-button-in-selected-applicants.active_semester_button_in_selected_applicants {
+    background-color: #0056b3;
+    background-color: rgb(131, 3, 3);
+    color: white;
+}
+
+.StaffSelectedApplicantsContent .semester-button-in-selected-applicants span {
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
 
 
 
 .StaffSelectedApplicantsContent .navigation {
+    grid-row: 2;
+    grid-column: 2;
+
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 15px;
     background-color: rgb(129, 133, 138);
 }
 
@@ -94,6 +93,21 @@
     letter-spacing: 1px;
 }
 
+.StaffSelectedApplicantsContent .navigation select {
+
+    font-size: 18px;
+    color: #333;
+    text-transform: capitalize;
+    font-weight: 400;
+    letter-spacing: 1px;
+
+    height: 30px;
+    width: 400px;
+    border: 1px solid rgb(131, 3, 3);
+    border-radius: 5px;
+    overflow-y: hidden;
+}
+
 .StaffSelectedApplicantsContent .navigation .sort_by_container select {
     width: 170px;
 }
@@ -101,7 +115,7 @@
 .StaffSelectedApplicantsContent .sort_by_container {
     display: inline-flex;
     gap: 7px;
-    padding-right: 80px;
+    padding-right: 40px;
 }
 
 .StaffSelectedApplicantsContent option {
@@ -114,36 +128,31 @@
 
 
 
-
-.selected_applicants_container {
+.StaffSelectedApplicantsContent .selected_applicants_container {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
+    gap: 40px;
     padding: 50px;
-    height: auto;
-
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    padding-top: 30px;
 }
 
-.selected_applicants_container .selected_applicant_item {
+.StaffSelectedApplicantsContent .selected_applicants_container .selected_applicant_item {
     display: grid;
     align-items: center;
     justify-content: flex-start;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 50px auto;
+    grid-template-columns: 7fr 1fr 1fr 1fr;
+    gap: 10px;
     background-color: #fff;
-    width: 70%;
+    width: 98%;
     padding: 10px 20px;
-    padding-right: 50px;
-    min-height: 80px;
     height: auto;
-    background-color: rgb(236, 239, 241);
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
 
-.selected_applicants_container .selected_applicant_item span {
+.selected_applicant_item span {
     font-size: 17px;
     color: #333;
     font-weight: 400px;
@@ -153,81 +162,188 @@
     text-align: center;
 }
 
-.selected_applicants_container .selected_applicant_item .view_profile_btn_selected_applicants {
-    background-color: rgb(236, 239, 241);
+.selected_applicant_item button {
+    line-height: 1.2;
+    background-color: #fff;
     border: none;
+    font-size: 15px;
 }
 
-.view_profile_btn_selected_applicants {
+.selected_applicant_item button:hover {
+    font-size: 16px;
+}
+
+.selected_applicant_item .applicant_applied_courses_list {
+    grid-row: 3 /4;
+    column-span: 3;
+    margin-top: 10px;
+}
+
+.selected_applicant_item .applicant_applied_courses_list .coursesListAppliedHeading {
+    background-color: #fff;
+    margin-bottom: 10px;
+    height: 40px;
+    align-items: center;
+}
+
+.selected_applicant_item .applicant_applied_courses_list .coursesListAppliedHeading span {
+    color: #e04848;
+}
+
+
+
+
+
+.selected_applicant_item .applicant_assigned_courses_list {
+    column-span: 3;
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    justify-content: center;
+    width: 90%;
+    margin-top: 30px;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list > span {
+    color: #e04848;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list .assigned_course_item {
+    margin-left: 30px;
+    width: 90%;
+    display: grid;
+    grid-template-columns: 4.5fr 1fr 1fr 3fr 1fr 1fr 1fr;
+    gap: 5px;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list .assigned_course_item span {
+    text-align: left;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list .edit_assigned_course_btn {
+    background-color: rgb(108, 117, 125);
+    height: 25px;
+    width: 100%;
+    color: white;
+    border-radius: 5px;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list .cancel_edit_assigned_course_btn {
+    background-color: rgb(108, 117, 125);
+    height: 25px;
+    width: 100%;
+    color: white;
+    border-radius: 5px;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list .update_course_assignment_btn {
+    background-color: rgb(108, 117, 125);
+    height: 25px;
+    width: 100%;
+    color: white;
+    border-radius: 5px;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list .cancel_edit_assigned_course_btn:hover {
+    background-color: grey;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list .remove_assigned_course_btn {
+    background-color: rgb(108, 117, 125);
+    height: 25px;
+    width: 100%;
+    color: white;
+    border-radius: 5px;
+}
+
+.selected_applicant_item .applicant_assigned_courses_list .remove_assigned_course_btn:hover {
+    background-color: grey;
+}
+
+
+
+.active_btn_in_applicant {
+    color: red;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+.selected_applicant_item .assigned_course_info,
+.selected_applicant_item .assign_course_info {
+    grid-column: 1 / -1;
+    grid-row: 2 / 3;
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: calc(100% - 60px);
+    margin-left: 30px;
+}
+
+.selected_applicant_item .course_assignment_details {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    width: calc(100% - 60px);
+    margin-left: 30px;  
+    background-color: #f0f0f0;
+    height: 50px;
+    padding-left: 50px;
+}
+
+.selected_applicant_item .course_assignment_details select {
+    width: 40%;
+}
+
+.selected_applicant_item .course_assignment_details select,input {
+    height: 30px;
+}
+
+.selected_applicant_item .course_assignment_details button {
+    background-color: #f0f0f0;
+}
+
+
+
+
+
+.cancel_assign_course_btn {
+    background-color: #e04848;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+.selected_applicant_item .view_profile_btn {
     border: none;
     background-color: white;
     color: #157be1;
     font-size: 17px;
-    width: 100%;
     margin: 0px;
-    text-align: left;
-    justify-content: center;
     padding: 0;
-}
-
-.view_profile_btn_selected_applicants:hover {
-    color: #e04848;
-}
-
-/* Default styling for the "Selected" button */
-.selected_applicant_item .remove_selected_btn_selected_applicants {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    position: relative;
-}
-
-/* Adjust the button styling during hover */
-.selected_applicant_item .remove_selected_btn_selected_applicants:hover {
-    background-color: #b54642;
-    color: white;
-}
-
-.selected_applicant_item .notified_applicant_btn {
-    background-color: #e19d15;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        font-size: 14px;
-        cursor: pointer;
-        position: relative;
-        width: 70%;
-}
-
-.selected_applicant_item .notify_applicant_btn {
-    background-color: #157be1;
-    color: white;
-        border: none;
-        padding: 10px 15px;
-        font-size: 14px;
-        cursor: pointer;
-        position: relative;
-        width: 70%;
-}
-
-/* Adjust the button styling during hover */
-.selected_applicant_item .notify_applicant_btn:hover {
-    background-color: #126fcd;
-    color: white;
-}
-
-.selected_applicant_item .release_offer_letter {
-    background-color: rgb(236, 239, 241);
-    color: black;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    position: relative;
     width: 100%;
+    text-align: left;
+    justify-content: start;
+    transition: color 0.3s ease;
+}
+
+.view_profile_btn:hover {
+    color: #e04848;
+    box-shadow: none;
 }
 
 
@@ -244,79 +360,43 @@
 
 
 
-/* General Modal Styling */
-.notifyMessageModal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1001;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
-/* Overlay Styling */
-#NotifyMessageOverlay {
+
+.email-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Input and Textarea Styling */
-#messageTitle,
-#messageContent {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    resize: none;
-    /* Prevent textarea resize */
+.email-message-container {
+    width: 70%;
+    height: 75%;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
 }
 
-/* Button Styling */
-.notifyMessageModal button {
-    padding: 10px 15px;
-    margin: 10px 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-#notifyBtn {
-    background-color: #4CAF50;
-    /* Green color for Notify */
-    color: white;
-}
-
-#cancleNotifyBtn {
+.email-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
     background-color: #f44336;
-    /* Red color for Cancel */
     color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
-/* Add hover effects */
-.notifyMessageModal button:hover {
-    opacity: 0.9;
-}
-
-/* Modal title styling */
-.notifyMessageModal h3 {
-    margin-bottom: 15px;
-    font-size: 18px;
-    color: #333;
-}
 
 

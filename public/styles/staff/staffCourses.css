@@ -1,51 +1,86 @@
 .StaffCoursesContent {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.StaffCoursesContent .department_semester_container {
     display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 300px auto;
-    gap: 100px;
+    grid-template-columns: 200px auto;
+    grid-template-rows: 60px auto;
 }
 
-.department_title_container {
+.StaffCoursesContent .department_title_container {
     width: 100%;
-    height: 70px;
-    background-color: #ffff;
+    height: 100%;
+    background-color: #fff;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding-right: 30px;
+    justify-content: center;
+
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
-.department_title_container span {
-    font-size: 22px;
-    font-family: "Open Sans",sans-serif;
-    font-weight: 300;
+.StaffCoursesContent .department_title_container span {
+    font-size: 20px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: rgb(131, 3, 3);
 }
 
-.StaffCoursesContent .semester_title_container {
-    display: inline-flex;
+.StaffCoursesContent .semesters_container {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 5px;
-    margin-left: 30px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    box-shadow: 8px 0px 8px rgba(0, 0, 0, 0.5);
 }
 
-.StaffCoursesContent .semester_title_container span {
-    font-size: 22px;
-        font-family: "Open Sans", sans-serif;
-        font-weight: 300;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: rgb(131, 3, 3);
+.StaffCoursesContent .semester-button-in-courses {
+    border: none;
+    background-color: white;
+    color: #0056b3;
+    cursor: pointer;
+    font-size: 14px;
+    height: 50px;
+    width: 100%;
+    padding: 10px 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.StaffCoursesContent .semester-button-in-courses.active_semester_button_in_courses {
+    background-color: #0056b3;
+    background-color: rgb(131, 3, 3);
+    color: white;
+}
+
+.StaffCoursesContent .semester-button-in-courses span {
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.staffCoursesDataContent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(236, 239, 241);
+
+    grid-row-start: 2;
+    grid-row-end: 3;
+
+    grid-column-start: 2;
+    grid-column-end: 3;
 }
 
 .search_course_manage_courses_containers {
@@ -56,13 +91,24 @@
     
     display: inline-flex;
     align-items: center;
-    justify-content: flex-end;
-
+    justify-content: flex-start;
     gap: 50px;
     
     padding-left: 30px;
     padding-right: 30px;
+}
 
+.search_course_manage_courses_containers .ta_assignment_details_labels_container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    color: white;
+}
+
+.manage_courses_buttons_container {
+    margin-left: auto;
 }
 
 .search_course_container {
@@ -142,32 +188,76 @@
     width: 150px;
 }
 
-.StaffCoursesContent .courses_list_container {
-    height: auto;
+.StaffCoursesDataContent .courses_list_container {
     width: 100%;
 
     display: grid;
-    grid-template-columns: 1fr;
-    grid-auto-rows: 75px;
-    gap: 20px;
-
+    grid-template-columns: 100%;
+    grid-auto-rows: 60px;
     padding : 50px;
 
     background-color: #eceff1;
+}
 
+.course_heading_container {
+    border: none;
+    width: 93%;
+    height: 60px;
+
+    display: grid;
+    grid-template-columns: auto 80px 80px 80px 80px 80px 80px;
+    align-items: flex-start;
+
+    gap: 10px;
+    padding: 15px;
+    padding-right: 25px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+
+.course_heading_container > div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.course_heading_container > div span {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .course_container {
     background-color: #ffffff;
     border: none;
-    width: fit-content;
-    height: 100%;
+    width: 93%;
 
     display: grid;
-    grid-template-columns: 350px 50px 50px 200px 110px;
-    gap: 16px;
+    grid-template-columns: 50px 50px auto 80px 80px 80px 80px 80px 80px;
+    gap: 10px;
     padding: 15px;
     padding-right: 25px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    margin-top: 20px;
+
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+}
+
+.course_container.ta_selection_process_not_started {
+    border-left: 5px solid red;
+}
+
+.course_container.ta_selection_process_completed {
+    border-left: 10px solid green;
+}
+
+.course_container.ta_selection_process_in_process {
+    border-left: 5px solid orange;
 }
 
 .course_container > div {
@@ -175,12 +265,86 @@
     align-items: center;
 }
 
-.course_title span {
-    font-size: 20px;
+.course_container .course_sections, .ta_hours_total, .ta_hours_assigned{
+    align-items: center;
+    justify-content: center;
+}
+
+.course_container .edit_course_container {
+    display: grid;
+    width: 90%;
+    grid-template-columns: 40% 40% 20%;
+    grid-template-rows: 1fr;
+    grid-column: 1 / -1;
+}
+
+
+.course_container .applicant_ta_list {
+    grid-column: 1 / -1;
+}
+
+.applicant_ta_list {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+}
+
+.applicant_ta_list.show {
+    max-height: 1000px;
+}
+
+.applicant_ta_list .ta_item {
+    margin-left: 50px;
+    margin-bottom: 20px;
+}
+
+.applicant_ta_list .ta_item button {
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    color: #0056b3;
+}
+
+.applicant_ta_list .ta_item button:hover{
+    color: red;
+}
+
+.applicant_ta_list .ta_item span {
+    font-size: 16px;
     font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 400;
     letter-spacing: 1px;
-    color: #003366;
+    color: rgb(131, 3, 3);
+    color: #0056b3;
+}
+
+.applicant_ta_list .ta_details_title {
+    margin: 0px 0px 20px 50px;
+}
+
+.applicant_ta_list .ta_details_title span {
+    font-size: 16px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+    border-bottom: 1px solid black;
+}
+
+.applicant_ta_list .more_details_of_ta {
+    margin-left: 50px;
+}
+
+.applicant_ta_list .no_tas_assigned {
+    margin-left: 50px;
+}
+
+
+.course_container .value {
+    font-size: 16px;
+        font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        letter-spacing: 1px;
+        color: #003366;
 }
 
 .course_name span{
@@ -197,6 +361,15 @@
         font-weight: 400;
         letter-spacing: 1px;
         color: #003366;
+}
+
+.course_semester span {
+    font-size: 16px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #003366;
+    text-transform: capitalize;
 }
 
 .course_total_applications span {
@@ -227,14 +400,56 @@
 
 .CoursesFileUploadContainer {
     height: 70px;
-    background-color: aliceblue;
+    background-color: #fff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 30px;
+    z-index: 3000;
 }
 
 .SingleCourseUploadContainer {
+    width: 99.99%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: auto;
+    grid-gap: 20px;
+    align-items: center;
+    justify-items: center;
+    padding: 20px;
+    background-color: #fff;
+    z-index: 3000;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.SingleCourseUploadContainer button {
+    width: 150px;
+    align-items: center;
+}
+
+.SingleCourseUploadContainer #courseTitle {
+    grid-column: span 2;
+}
+
+.SingleCourseUploadContainer #uploadSingleCourseBtn,
+.SingleCourseUploadContainer #cancelSingleCourseUploadBtn,
+.SingleCourseUploadContainer #taHoursTotal {
+    grid-column: span 1;
+}
+
+.SingleCourseUploadContainer #taHoursTotal {
+    grid-column: 2 / 3;
+}
+
+.SingleCourseUploadContainer #uploadSingleCourseBtn {
+    grid-column: 3 / 4;
+}
+
+.SingleCourseUploadContainer #cancelSingleCourseUploadBtn {
+    grid-column: 4 / 5;
+}
+
+.SingleCourseDeleteContainer {
     height: 70px;
     background-color: aliceblue;
     display: inline-flex;
@@ -245,16 +460,7 @@
     padding-left: 20px;
 }
 
-.SingleCourseDeleteContainer {
-    height: 70px;
-        background-color: aliceblue;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 30px;
-        padding-right: 20px;
-        padding-left: 20px;
-}
+
 
 
 

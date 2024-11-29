@@ -1,19 +1,18 @@
 document.addEventListener("DOMContentLoaded", async function () {
 
-    try {
+    window.history.pushState({}, "", "/staff");
 
-        // Check if semester and department are set in session
-        const response = await fetch("/checkDeptSemester");
-        const sessionData = await response.json();
+    setUpDashboardBtn();
+    setUpDepartmentsBtn();
+    setUpSemestersBtn();
+    setUpManageUsersBtn();
+    setUpCoursesBtn();
+    setUpApplicantsBtn();
+    setUpSelectedApplicantsBtn();
+    setUpLogoutBtn();
 
-        if (sessionData.allSet) {
-            hideOverlayAndSemesterDepartmentModel();
-        } else {
-            showOverlayAndSemesterDepartmentModel();
-        }
-    } catch (error) {
-        console.error("Error checking session:", error);
-    }
+    document.getElementById("dashboard_btn").click();
+    
 });
 
 // Utility function to populate a dropdown
@@ -55,54 +54,6 @@ async function updateDepartmentSemesterOptionsInOverlay() {
     } catch (error) {
         console.error('Error fetching semester list:', error);
     }
-}
-
-async function hideOverlayAndSemesterDepartmentModel() {
-
-    const overlay = document.getElementById("initial-overlay");
-
-    overlay.style.display = "none";
-    window.history.pushState({}, "", "/staff");
-
-    setUpDashboardBtn();
-    setUpDepartmentsBtn();
-    setUpSemestersBtn();
-    setUpManageUsersBtn();
-    setUpCoursesBtn();
-    setUpApplicantsBtn();
-    setUpSelectedApplicantsBtn();
-    setUpLogoutBtn();
-    await setUpSemesterDepartmentTitles();
-
-    document.getElementById("dashboard_btn").click();
-
-}
-
-async function showOverlayAndSemesterDepartmentModel() {
-    const overlay = document.getElementById("initial-overlay");
-    overlay.style.display = "flex";
-
-    await updateDepartmentSemesterOptionsInOverlay();
-
-    const semesterSelect = document.getElementById('semester');
-    const departmentSelect = document.getElementById('department');
-
-
-    const submitButton = document.getElementById('submitSelection');
-
-    function enableSubmitButton() {
-        if (semesterSelect.value && departmentSelect.value) {
-            submitButton.disabled = false;
-        } else {
-            submitButton.disabled = true;
-        }
-    }
-
-    semesterSelect.addEventListener('change', enableSubmitButton);
-    departmentSelect.addEventListener('change', enableSubmitButton);
-
-    submitButton.addEventListener('click', setUpSubmitBtn);
-
 }
 
 async function setUpSubmitBtn() {
@@ -149,39 +100,75 @@ async function setUpSubmitBtn() {
 
 
 
+async function checkSession() {
+    try {
+        const response = await fetch('/check-session', { method: 'GET', credentials: 'include' });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data.sessionActive; 
+        } else {
+            return false; 
+        }
+    } catch (error) {
+        console.error("Error checking session:", error);
+        return false;
+    }
+}
+
+
+
 function setUpDashboardBtn() {
     const dashboardBtn = document.getElementById("dashboard_btn");
     const dashboardContent = document.querySelector(".StaffDashboardContent");
 
-    dashboardBtn.addEventListener("click", () => {
-        hideAllContents();
-        dashboardContent.style.display = "flex";
-        resetButtonStyles();
-        setActiveButton(dashboardBtn);
-    });
-}
+    dashboardBtn.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            dashboardContent.style.display = "flex";
+            resetButtonStyles();
+            setActiveButton(dashboardBtn);
+        } else {
+            window.location.href = "/?sessionExpired=true"; 
+        }
+    });  
+}  
 
 function setUpDepartmentsBtn() {
     const departmentsBtn = document.getElementById("departments_btn");
     const departmentsContent = document.querySelector(".StaffDepartmentsContent");
 
-    departmentsBtn.addEventListener("click", () => {
-        hideAllContents();
-        departmentsContent.style.display = "grid";
-        resetButtonStyles();
-        setActiveButton(departmentsBtn);
+    departmentsBtn.addEventListener("click", async () => {
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            departmentsContent.style.display = "grid";
+            resetButtonStyles();
+            setActiveButton(departmentsBtn);
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
     });
-}
+}  
 
 function setUpSemestersBtn() {
     const semestersBtn = document.getElementById("semesters_btn");
     const semestersContent = document.querySelector(".StaffSemestersContent");
 
-    semestersBtn.addEventListener("click", () => {
-        hideAllContents();
-        semestersContent.style.display = "grid";
-        resetButtonStyles();
-        setActiveButton(semestersBtn);
+    semestersBtn.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            semestersContent.style.display = "grid";
+            resetButtonStyles();
+            setActiveButton(semestersBtn);
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+
     });
 }
 
@@ -189,11 +176,18 @@ function setUpManageUsersBtn() {
     const manageUsersBtn = document.getElementById("manageUsers_btn");
     const manageUsersContent = document.querySelector(".StaffManageUsersContent");
 
-    manageUsersBtn.addEventListener('click', () => {
-        hideAllContents();
-        manageUsersContent.style.display = "grid";
-        resetButtonStyles();
-        setActiveButton(manageUsersBtn);
+    manageUsersBtn.addEventListener('click', async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            manageUsersContent.style.display = "grid";
+            resetButtonStyles();
+            setActiveButton(manageUsersBtn);
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+        
     });
 }
 
@@ -202,19 +196,33 @@ function setUpCoursesBtn() {
     const coursesBtnDashboard = document.getElementById("courses_btn_dashboard");
     const coursesContent = document.querySelector(".StaffCoursesContent");
 
-    coursesBtn.addEventListener("click", () => {
-        hideAllContents();
-        coursesContent.style.display = "inline-flex";
-        resetButtonStyles();
-        setActiveButton(coursesBtn);
+    coursesBtn.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            coursesContent.style.display = "grid";
+            resetButtonStyles();
+            setActiveButton(coursesBtn);
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+
     });
 
-    coursesBtnDashboard.addEventListener("click", () => {
-        hideAllContents();
-        coursesContent.style.display = "inline-flex";
-        resetButtonStyles();
-        setActiveButton(coursesBtn);
-        coursesBtn.click();
+    coursesBtnDashboard.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            coursesContent.style.display = "inline-flex";
+            resetButtonStyles();
+            setActiveButton(coursesBtn);
+            coursesBtn.click();
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+        
     });
 }
 
@@ -223,19 +231,33 @@ function setUpApplicantsBtn() {
     const applicantsBtnDashboard = document.getElementById("applicants_btn_dashboard");
     const applicantsContent = document.querySelector(".StaffApplicantsContent");
 
-    applicantsBtn.addEventListener("click", () => {
-        hideAllContents();
-        applicantsContent.style.display = "grid";
-        resetButtonStyles();
-        setActiveButton(applicantsBtn);
+    applicantsBtn.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            applicantsContent.style.display = "grid";
+            resetButtonStyles();
+            setActiveButton(applicantsBtn);
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+        
     });
 
-    applicantsBtnDashboard.addEventListener("click", () => {
-        hideAllContents();
-        applicantsContent.style.display = "grid";
-        resetButtonStyles();
-        setActiveButton(applicantsBtn);
-        applicantsBtn.click();
+    applicantsBtnDashboard.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            applicantsContent.style.display = "grid";
+            resetButtonStyles();
+            setActiveButton(applicantsBtn);
+            applicantsBtn.click();
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+
     });
 }
 
@@ -244,20 +266,34 @@ function setUpSelectedApplicantsBtn() {
     const selectedApplicantsBtnDashboard = document.getElementById("selectedApplicants_btn_dashboard");
     const selectedApplicantsContent = document.querySelector(".StaffSelectedApplicantsContent");
 
-    selectedApplicantsBtn.addEventListener("click", () => {
-        hideAllContents();
-        selectedApplicantsContent.style.display = "grid";
-        resetButtonStyles();
-        setActiveButton(selectedApplicantsBtn);
+    selectedApplicantsBtn.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            selectedApplicantsContent.style.display = "grid";
+            resetButtonStyles();
+            setActiveButton(selectedApplicantsBtn);
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+        
     });
 
-    selectedApplicantsBtnDashboard.addEventListener("click", () => {
-        hideAllContents();
-        selectedApplicantsContent.style.display = "grid";
-        resetButtonStyles();
-        setActiveButton(selectedApplicantsBtn);
-        selectedApplicantsBtn.click();
-    }); 
+    selectedApplicantsBtnDashboard.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            selectedApplicantsContent.style.display = "grid";
+            resetButtonStyles();
+            setActiveButton(selectedApplicantsBtn);
+            selectedApplicantsBtn.click();
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+        
+    });
 }
 
 function setUpLogoutBtn() {
@@ -296,58 +332,21 @@ function resetButtonStyles() {
 
     const buttons = [dashboardBtn, departmentsBtn, semestersBtn, manageUsersBtn, coursesBtn, applicantsBtn, selectedApplicantsBtn];
     buttons.forEach(btn => {
-        btn.style.backgroundColor = "#003366"; // Reset background color
+        btn.style.backgroundColor = "#003366";
         const svg = btn.querySelector('svg');
-        if (svg) svg.setAttribute('fill', "white"); // Reset SVG color
+        if (svg) svg.setAttribute('fill', "white");
         const span = btn.querySelector('span');
-        if (span) span.style.color = "white"; // Reset text color
+        if (span) span.style.color = "white";
         btn.classList.remove("disabled_btn");
     });
 }
 
 function setActiveButton(button) {
-    // Set the active button styles
-    button.classList.add("disabled_btn"); // Add the disabled class to the active button
-    button.style.backgroundColor = "white"; // white color for the active button
+    button.classList.add("disabled_btn"); 
+    button.style.backgroundColor = "white"; 
     const svg = button.querySelector('svg');
     if (svg) svg.setAttribute('fill', "#003366");
     const span = button.querySelector('span');
     if (span) span.style.color = "#003366";
 
-}
-
-async function setUpSemesterDepartmentTitles() {
-    try {
-        const response = await fetch('/semester');
-        if (response.ok) {
-            const semester = await response.json();
-            const semesterTitles = document.querySelectorAll('.department_semester_container .semester_title_container span');
-            // Update each span with the fetched semester title
-            semesterTitles.forEach(semesterTitle => {
-                semesterTitle.innerHTML = `<span>${semester}</span>`; // Assuming 'semester' is a string; adjust if it's an array
-            });
-        } else {
-            const errorData = await response.json();
-            console.error('Error fetching semester data:', errorData.error);
-        }
-    } catch (error) {
-        console.error("Error fetching semester data:", error);
-    }
-
-    try {
-        const response = await fetch('/department');
-        if (response.ok) {
-            const department = await response.json();
-            const departmentTitles = document.querySelectorAll('.department_semester_container .department_title_container span');
-            // Update each span with the fetched department title
-            departmentTitles.forEach(departmentTitle => {
-                departmentTitle.innerHTML = `<span>${department}</span>`; // Assuming 'department' is a string; adjust if it's an array
-            });
-        } else {
-            const errorData = await response.json();
-            console.error('Error fetching department data:', errorData.error);
-        }
-    } catch (error) {
-        console.error("Error fetching department data:", error);
-    }
 }

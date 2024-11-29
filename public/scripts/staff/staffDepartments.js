@@ -13,60 +13,100 @@ function setUpDepartmentsMainBtns() {
 
 async function fetchAllDepartments() {
     try {
-        // Fetch the department data
         const departmentResponse = await fetch('/departmentList');
         const departmentData = await departmentResponse.json();
         console.log("Fetched Departments are", departmentData);
 
-        // Get the container where department items will be appended
         const departmentsContainer = document.querySelector('.departments_list_container');
         departmentsContainer.innerHTML = ''; // Clear existing department items
 
-        // Loop through each department and create the HTML structure
         departmentData.forEach(item => {
-            const department_abbre = item.department_abbre;
-            const department_name = item.department_name;
-
-            // Create dept_item div
-            const deptItemDiv = document.createElement('div');
-            deptItemDiv.classList.add('dept_item');
-
-            // Create dept_abbre div
-            const deptAbbreDiv = document.createElement('div');
-            deptAbbreDiv.classList.add('dept_abbre');
-            deptAbbreDiv.innerHTML = `<span>${department_abbre}</span>`;
-
-            // Create dept_name div
-            const deptNameDiv = document.createElement('div');
-            deptNameDiv.classList.add('dept_name');
-            deptNameDiv.innerHTML = `<span>${department_name}</span>`;
-
-            // Create delete button
-            const deleteBtn = document.createElement('div');
-            deleteBtn.classList.add('delete_dept_btn');
-            const button = document.createElement('button');
-            button.id = "deleteDeptBtn"; // It's good to have unique IDs, consider using a class instead
-            button.type = "button";
-            button.classList.add('btn');
-            button.classList.add('btn-secondary');
-            button.dataset.deptAbbre = department_abbre; // Use data attribute for department abbreviation
-            button.textContent = "Delete";
-            deleteBtn.appendChild(button);
-
-            // Append dept_abbre and dept_name to dept_item
-            deptItemDiv.appendChild(deptAbbreDiv);
-            deptItemDiv.appendChild(deptNameDiv);
-            deptItemDiv.appendChild(deleteBtn);
-
-            // Append dept_item to the container
+            const deptItemDiv = createDepartmentItem(item);
             departmentsContainer.appendChild(deptItemDiv);
 
-            setUpDeleteDeptEventListener(deleteBtn, department_abbre);
+            const viewProgramsBtn = deptItemDiv.querySelector('.view_programs_btn');
+            const deleteBtn = deptItemDiv.querySelector('.delete_dept_btn');
+            const programsListDiv = deptItemDiv.querySelector('.programs_list');
+
+            setUpViewProgramsEventListener(viewProgramsBtn, programsListDiv, item.course_programs, item.department_abbre);
+            setUpDeleteDeptEventListener(deleteBtn, item.department_abbre);
         });
 
     } catch (error) {
         console.error("Error fetching departments:", error);
     }
+}
+
+function createDepartmentItem(item) {
+    const deptItemDiv = document.createElement('div');
+    deptItemDiv.classList.add('dept_item');
+
+    const deptAbbreDiv = document.createElement('div');
+    deptAbbreDiv.classList.add('dept_abbre');
+    deptAbbreDiv.innerHTML = `<span>${item.department_abbre}</span>`;
+
+    const deptNameDiv = document.createElement('div');
+    deptNameDiv.classList.add('dept_name');
+    deptNameDiv.innerHTML = `<span>${item.department_name}</span>`;
+
+    const viewProgramsBtn = document.createElement('button');
+    viewProgramsBtn.classList.add('view_programs_btn', 'btn', 'btn-secondary');
+    viewProgramsBtn.textContent = "View Programs";
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('delete_dept_btn', 'btn', 'btn-secondary');
+    deleteBtn.textContent = "Delete";
+
+    const programsList = document.createElement('div');
+    programsList.classList.add('programs_list');
+    programsList.style.display = 'none';
+
+    deptItemDiv.append(deptAbbreDiv, deptNameDiv, viewProgramsBtn, deleteBtn, programsList);
+    return deptItemDiv;
+}
+
+function setUpViewProgramsEventListener(button, programsList, coursePrograms, dept_name) {
+    button.addEventListener('click', async () => {
+
+        programsList.innerHTML = '';
+
+        programsList.innerHTML = `
+            <div class="add_program_container">
+                <input type="text" class="program_abbr_input" placeholder="Program Abbreviation" />
+                <input type="text" class="program_name_input" placeholder="Program Name" />
+                <button type="button" class="add_program_btn btn btn-primary">Add Program</button>
+            </div>
+        `;
+
+        if (coursePrograms.length === 0) {
+            programsList.innerHTML += `
+                <div class="program_item">
+                    <span class="no_courses_available">No Course Programs Available</span>
+                </div>
+            `;
+        } else {
+            coursePrograms.forEach(program => {
+                programsList.innerHTML += `
+                    <div class="program_item">
+                        <span class="program_name">${program.courseprogram_abbre}</span>
+                        <span class="program_duration">${program.courseprogram_name}</span>
+                        <button type="button" class="delete_program_btn btn btn-danger" data-program-abbre="${program.courseprogram_abbre}">Delete Program</button>
+                    </div>
+                `;
+            });
+        }
+
+        programsList.style.display = programsList.style.display === 'none' ? 'block' : 'none';
+        button.textContent = programsList.style.display === 'block' ? "Hide Programs" : "View Programs";
+
+        const addProgramButton = programsList.querySelector('.add_program_btn');
+        addProgramButton.addEventListener('click', () => handleAddProgram(programsList, dept_name));
+
+        const deleteProgramBtns = programsList.querySelectorAll('.delete_program_btn');
+        deleteProgramBtns.forEach(deleteBtn => {
+            setUpDeleteProgramEventListener(deleteBtn, dept_name);
+        });
+    });
 }
 
 function setUpAddNewDepartmentBtn() {
@@ -142,6 +182,73 @@ function setUpDeleteDeptEventListener(deleteBtn, department_abbre) {
         }
     });
 
+}
+
+async function handleAddProgram(programsList, deptAbbre) {
+    const programAbbrInput = programsList.querySelector('.program_abbr_input');
+    const programNameInput = programsList.querySelector('.program_name_input');
+    const programAbbr = programAbbrInput.value.trim();
+    const programName = programNameInput.value.trim();
+
+    // Check if both fields are filled
+    if (!programAbbr || !programName) {
+        alert("Please fill in both fields.");
+        return;
+    }
+
+    const requestData = {
+        dept_abbre: deptAbbre,  // Assuming deptAbbre is passed as a parameter
+        courseprogram_abbre: programAbbr,
+        courseprogram_name: programName
+    };
+
+    try {
+        // Send a request to the backend to add the new program
+        const response = await fetch('/addNewProgram', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("Program added successfully.");
+            await fetchAllDepartments();
+        } else {
+            alert(result.message);
+        }
+    } catch (error) {
+        console.error("Error adding program:", error);
+        alert("An error occurred while adding the program. Please try again.");
+    }
+}
+
+function setUpDeleteProgramEventListener(deleteBtn, deptAbbre) {
+    deleteBtn.addEventListener('click', async () => {
+        const programAbbre = deleteBtn.getAttribute('data-program-abbre');
+        const confirmed = confirm(`Are you sure you want to delete the program "${programAbbre}"?`);
+
+        if (confirmed) {
+            try {
+                const deleteResponse = await fetch(`/deleteProgram?dept_name=${deptAbbre}&programAbbre=${programAbbre}`, {
+                    method: 'DELETE',
+                });
+
+                const deleteResult = await deleteResponse.json();
+                if (deleteResult.success) {
+                    alert("Program deleted successfully.");
+                    await fetchAllDepartments(); // Refresh the department list
+                } else {
+                    alert(deleteResult.message); // Display error message if deletion fails
+                }
+            } catch (error) {
+                console.error("Error deleting program:", error);
+                alert("An error occurred while deleting the program. Please try again.");
+            }
+        }
+    });
 }
 
 

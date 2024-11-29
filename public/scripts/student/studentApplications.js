@@ -6,57 +6,87 @@ function setUpApplicationsMainBtn() {
     const applicationsBtn = document.getElementById("applications_btn");
 
     applicationsBtn.addEventListener("click",async () => {
-        fetchDepartmentsApplications();
-        fetchSemestersApplications();
-        await fetchApplications();
-        setUpFilterDropdownsForApplications();
+        await fetchAndRenderSemestersInApplications();
     });
 }
 
-async function fetchDepartmentsApplications() {
-    // Fetching departments (already implemented)
-    const departmentResponse = await fetch('/departmentList');
-    const departments = await departmentResponse.json();
 
-    const departmentDropdown = document.getElementById('departmentDropdownApplications');
-    departmentDropdown.innerHTML = '<option value="" selected>All Departments</option>';
 
-    departments.forEach(department => {
-        const option = document.createElement('option');
-        option.value = department.department_abbre;
-        option.textContent = `${department.department_abbre} - ${department.department_name}`;
-        departmentDropdown.appendChild(option);
-    });
+
+
+
+function getActiveSemesterInApplications() {
+    const activeButton = document.querySelector('.semester-button-in-applications.active_semester_button_in_applications');
+    return activeButton ? activeButton.dataset.semester : null;
 }
 
-async function fetchSemestersApplications() {
-    // Fetching semesters (already implemented)
-    const semesterResponse = await fetch('/semesterList');
-    const semesters = await semesterResponse.json();
-    const semesterDropdown = document.getElementById('semesterDropdownApplications');
-    semesterDropdown.innerHTML = '<option value="" selected>All Semesters</option>';  // Reset dropdown
+async function fetchAndRenderSemestersInApplications() {
+    try {
+        const semesterResponse = await fetch('/semesterList');
+        if (semesterResponse.ok) {
+            const semesters = await semesterResponse.json();
+            const semesterContainer = document.querySelector('.StudentApplicationsContent .semesters_container');
 
-    semesters.forEach(semester => {
-        const option = document.createElement('option');
-        option.value = semester.semester;
-        option.textContent = semester.semester;
-        if (semester.semester_status === 'Active') {
-            option.textContent += ' (Active)';
+            semesterContainer.innerHTML = '';
+
+            // Render semester buttons and find the first active button
+            const buttons = semesters.map(semester => createSemesterButtonInApplications(semester));
+            buttons.forEach(button => semesterContainer.appendChild(button));
+            await setUpSemesterBtnsInApplications(buttons);
+
+            if (buttons.length > 0) buttons[0].click(); // Trigger a click on the first button if it exists
+
+        } else {
+            const errorData = await semesterResponse.json();
+            console.error('Error fetching active semester data:', errorData.error);
         }
-        semesterDropdown.appendChild(option);
+    } catch (error) {
+        console.error("Error fetching active semester data:", error);
+    }
+}
+
+function createSemesterButtonInApplications(semester) {
+    const button = document.createElement('button');
+    const span = document.createElement('span');
+    span.textContent = semester.semester;
+    span.classList.add('semester-span');
+    button.appendChild(span);
+    button.classList.add('semester-button-in-applications');
+    button.dataset.semester = semester.semester;
+    button.dataset.status = semester.status;
+    return button;
+}
+
+async function setUpSemesterBtnsInApplications(buttons) {
+    buttons.forEach(button => {
+        button.addEventListener('click', async () => {
+            buttons.forEach(btn => btn.classList.remove("active_semester_button_in_applications"));
+            button.classList.add("active_semester_button_in_applications");
+            await fetchApplicationsListBySemester(button.dataset.semester);
+        });
     });
 }
 
-async function fetchApplications() {
 
-    // Fetch notified message for the student
-    await fetchNotifiedMessages();
 
-    const applicationsResponse = await fetch(`/applicationsByStudentNetid`);
+
+
+async function fetchApplicationsListBySemester(semester) {
+    const applicationsResponse = await fetch(`/ApplicationsListBySemesterInStudent?semester=${semester}`);
     const applications = await applicationsResponse.json();
+
+    const semesterStatusResponseInApplications = await fetch(`/SemesterStatus?semester=${semester}`);
+    const semesterStatusInApplications = await semesterStatusResponseInApplications.json();
 
     const applicationsListContainer = document.getElementById('applicationsListContainer');
     applicationsListContainer.innerHTML = '';  // Clear previous list
+
+    if (semesterStatusInApplications.status !== 'active') {
+        const cannotEditApplications = document.createElement('div'); // Create a new div
+        cannotEditApplications.classList.add('cannot_edit_application');
+        cannotEditApplications.innerHTML = `<span>You Cannot Edit You're applications anymore </span>`;
+        applicationsListContainer.appendChild(cannotEditApplications);
+    }
 
     applications.forEach(application => {
 
@@ -66,56 +96,19 @@ async function fetchApplications() {
         applicationContainer.dataset.department = application.dept_name.toLowerCase().trim();
         applicationContainer.dataset.semester = application.semester.toLowerCase().trim();
 
-        let courseStatusInnerHtml = ``;
-        let applicationStatus = ``;
-
-        if (application.application_status === 'selected' && application.notified_applicant === true) {
-            courseStatusInnerHtml = `
-                <span class="status_title">Status :</span><button class="view_message_btn btn" data-application-id="${application.id}" data-course-title="${application.course_title}"><span class="selected_status"> Selected</span><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="RED" class="bi bi-chat-right-text" viewBox="0 0 16 16">
-  <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
-  <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
-</svg> </button>
-        `;
-            applicationStatus = "Selected";
-        } else {
-            // Otherwise, update with the original status
-            courseStatusInnerHtml = `
-            <span class="status_title">Status :</span><span class="under_review_status">Under Review </span>
-        `;
-            applicationStatus = "Under Review";
-        }
-
-
-        applicationContainer.dataset.status = applicationStatus;
-
         applicationContainer.innerHTML = `
-            <div class="course_title_status_container">
+            <div class="course_details_container">
                 <div class="course_title">
                     <span>${application.course_title}</span>
                 </div>
-                <div class="course_status">
-                ${courseStatusInnerHtml}
+                <div class="course_name">
+                    <span>${application.course_name}</span>
                 </div>
-                
-            </div>
-            <div class="course_name_number_department_semester_container">
-                <div>
-                    <div class="title"><span>Course Name</span></div>
-                    <div class="value"><span>${application.course_name}</span></div>
-                </div>
-                <div>
-                    <div class="title"><span>Course Number</span></div>
-                    <div class="value"><span>${application.course_number}</span></div>
-                </div>
-                <div>
-                    <div class="title"><span>Department</span></div>
-                    <div class="value"><span>${application.dept_name}</span></div>
-                </div>
-                <div>
-                    <div class="title"><span>Semester</span></div>
-                    <div class="value"><span>${application.semester}</span></div>
+                <div class="course_number">
+                    <span>${application.course_number}</span>
                 </div>
             </div>
+
             <div class="eligibility_criteria_items_container">
                 <div class="select_that_apply"><span>Select all that apply</span></div>
                 <div class="eligibility_criteria_item">
@@ -158,8 +151,18 @@ async function fetchApplications() {
         setUpApplicationButtons(application);
     });
 
-    setUpFilterDropdownsForApplications();
+    if (semesterStatusInApplications.status !== 'active') {
+        applicationsListContainer.classList.add('disabled');
+    } else {
+        applicationsListContainer.classList.remove('disabled');
+    }
+
 }
+
+
+
+
+
 
 async function fetchNotifiedMessages() {
     const response = await fetch('/fetchNotifiedMessageOfStudent');
@@ -212,6 +215,14 @@ function filterApplications() {
         application.style.display = (matchesDept && matchesSem && matchesStatus) ? "grid" : "none";
     });
 }
+
+
+
+
+
+
+
+
 
 function setUpApplicationButtons(application) {
     const applicationContainer = document.getElementById(`application-${application.id}`);
@@ -351,6 +362,7 @@ function deleteApplication(applicationId) {
                     // Remove the application container from the DOM
                     const container = document.getElementById(`application-${applicationId}`);
                     container.remove();
+                    alert("Application deleted Successfully");
                 } else {
                     alert('Error deleting application');
                 }
@@ -361,7 +373,8 @@ function deleteApplication(applicationId) {
             });
     }
 
-    fetchApplications();
+    const semester = getActiveSemesterInApplications();
+    fetchApplicationsListBySemester(semester);
 }
 
 async function showMessageContainer(applicationId, courseTitle) {

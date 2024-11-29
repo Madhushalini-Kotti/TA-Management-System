@@ -45,6 +45,13 @@
     padding: 3px;
 }
 
+.StaffSemestersContent .add_semester_container .end_date_span {
+    color: #fff;
+    font-size: 22px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+}
+
 .semesters_list_container {
     width: 80%;
     padding: 50px;
@@ -57,15 +64,12 @@
 .semesters_list_container .semester_item {
     height: 60px;
     width: 100%;
-    background-color: rgb(236, 239, 241);
-    display: flex;
+    background-color: #fff;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr 3fr 0.75fr 0.75fr;
     align-items: center;
-    gap: 20px;
-    padding: 3px 50px 3px 50px;
-}
-
-.semesters_list_container .semester_item .change_status_btn {
-    margin-left: auto;
+    padding: 3px 10px 3px 50px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
 }
 
 .semesters_list_container .semester_item span {
@@ -78,7 +82,53 @@
     text-transform: capitalize;
 }
 
-.semester_item.activeSemester span {
-    color: rgb(131, 3, 3);
-    font-size: 21px;
+.semesters_list_container .semester_item button {
+    margin-left: 10px;
+    width: 80%;
 }
+
+.semester_item.activeSemester {
+    border-left: 10px solid green;
+}
+
+.semester_item.activeSemester span {
+    color: green;
+}
+
+.edit_row { 
+    width: 100%;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit_row_content {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 5%;
+    gap: 30px;
+}
+
+.edit_row_content > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.edit_row_content span {
+    font-size: 18px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    color: red;
+}
+
+.edit_row_content button {
+    margin-right: 20%;
+}
+

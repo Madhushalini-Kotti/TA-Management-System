@@ -1,177 +1,193 @@
 /* Application content */
 
+
 .StudentApplicationsContent {
-    display: flex;
-    height: auto;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    background-color: aliceblue;
     width: 100%;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 60px 10px auto;
+    background-color: #fff;
+
 }
 
-.department_semester_status_container {
-
-    background-color: aliceblue;
-
-    height: 90px;
+.StudentApplicationsContent .department_title_container {
     width: 100%;
-    border: 1px solid #003366;
-    border-width: 0px 0px 1px 0px;
-
-    display: grid;
-    grid-template-columns: 50% 30% 20%;
+    height: 60px;
+    background-color: rgb(236, 239, 241);
+    background-color: #fff;
+    display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: center;
+
+    grid-column: 1 / 3;
+}
+
+.StudentApplicationsContent .department_title_container span {
+    font-size: 20px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgb(131, 3, 3);
 }
 
 
-.department_container {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 160px calc(100% - 160px);
-    column-gap: 6px;
-    margin-left: 25px;
-}
-
-.department_semester_status_container .title,
-.value {
-    display: flex;
+.StudentApplicationsContent .semesters_container {
+    width: 200px;
     height: 100%;
+    background-color: white;
+    display: inline-flex;
     align-items: center;
     justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    grid-row: 2 / 4;
+    box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.2);
 }
 
-.department_semester_status_container .title>span {
-    font-size: 18px;
-    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 500;
-    letter-spacing: 1px;
-    color: #003366;
+.StudentApplicationsContent .semester-button-in-applications {
+    border: none;
+    background-color: white;
+    color: #0056b3;
+    cursor: pointer;
+    font-size: 14px;
+    height: 50px;
+    width: 100%;
+    padding: 10px 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.StudentApplicationsContent .semester-button-in-applications.active_semester_button_in_applications {
+    background-color: #0056b3;
+    background-color: rgb(131, 3, 3);
+    color: white;
+}
+
+.StudentApplicationsContent .semester-button-in-applications span {
     text-transform: uppercase;
-}
-
-.department_semester_status_container .value>span {
     font-size: 16px;
-    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 500;
     letter-spacing: 1px;
-    color: #003366;
-    text-transform: uppercase;
-}
-
-.semester_container {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 150px calc(100% - 150px);
-}
-
-.status_container {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 110px calc(100% - 110px);
 }
 
 
 
 
+.StudentApplicationsContent .applications_sort_container {
+    height: 10px;
+    background-color: rgb(129, 133, 138);
+}
 
 
 
 
+.StudentApplicationsContent .applications_list_container {
+    padding: 50px;
 
+    background-color: #e7e7e7;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 30px;
+}
 
-.applications_list_container {
-    height: auto;
-    width: calc(100% - 200px);
-    background-color: aliceblue;
-
-    margin: 100px;
-    margin-top: 50px;
-
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto;
-    gap: 50px;
+.applications_list_container.disabled {
+    pointer-events: none;
+    /* Prevents any interaction */
+    opacity: 0.5;
+    /* Makes the container look grayed out */
+    background-color: #f1f3f5;
+    /* Optional: Change background color */
 }
 
 .application_container {
     width: 90%;
-    background-color: #c1d8f6;
-    border-radius: 10px;
+    background-color: #fff;
     padding-left: 30px;
     padding-top: 20px;
     padding-right: 20px;
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 50px 50px 170px 170px 70px;
+    grid-template-rows: 50px 170px 170px 70px;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 20px;
+    gap: 10px;
+
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }
 
 
-.course_title_status_container {
+.application_container:hover {
+    transform: scale(1.009);
+}
+
+.StudentApplicationsContent .cannot_edit_application {
+    background-color: #f1f3f5;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 50px;
+    padding-left: 50px;
+}
+
+.StudentApplicationsContent .cannot_edit_application span {
+    color: red;
+    font-size: 20px;
+}
+
+.course_details_container {
     height: 100%;
     width: 100%;
 
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 1fr;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
 }
 
-.course_title_status_container .course_title {
+.course_details_container .course_title, .course_name, .course_number {
     height: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
 
-.course_title_status_container .course_title span {
-
-    font-size: 25px;
+.course_details_container .course_title span {
+    font-size: 22px;
     font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 500;
     letter-spacing: 1px;
-    color: #003366;
+    color: rgb(131, 3, 3);
+    color: ;
 }
 
-.course_title_status_container .course_status {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.course_title_status_container .status_title {
-    font-size: 20px;
-        font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 400;
-        letter-spacing: 1px;
-        color: #003366;
-}
-
-.course_title_status_container .course_status .under_review_status {
-    font-size: 20px;
-    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 400;
-    letter-spacing: 1px;
-    color: rgb(232, 128, 9);
-    margin-left: 10px;
-}
-
-.course_title_status_container .course_status .selected_status {
+.course_details_container .course_number span {
     font-size: 20px;
     font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 500;
     letter-spacing: 1px;
-    color: green;
-    margin-right: 4PX;
+    color: rgb(131, 3, 3);
+}
+
+.course_details_container .course_name span {
+    font-size: 20px;
+    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: rgb(131, 3, 3);
 }
 
 
-.course_title_status_container .navigation_btn {
+
+
+
+.course_details_container .navigation_btn {
     display: flex;
     height: 100%;
     align-items: center;
@@ -180,45 +196,10 @@
     padding: 0px;
 }
 
-.course_title_status_container .navigation_btn button {
+.course_details_container .navigation_btn button {
     border: none;
     background-color: #c1d8f6;
 }
-
-
-
-
-.course_name_number_department_semester_container {
-    height: 100%;
-    width: 100%;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 50px;
-}
-
-.course_name_number_department_semester_container>div {
-    display: inline-flex;
-    gap: 8px;
-}
-
-.course_name_number_department_semester_container .title span {
-    font-size: 18px;
-    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 400;
-    letter-spacing: 1px;
-    color: #003366;
-}
-
-.course_name_number_department_semester_container .value span {
-    font-size: 18px;
-    font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 500;
-    letter-spacing: 1px;
-    color: #003366;
-}
-
 
 
 .eligibility_criteria_items_container {
@@ -282,7 +263,7 @@
 .comments .value {
     width: 95%;
     height: 120px;
-    background-color: white;
+    background-color: #e7e7e7;
     border-radius: 10px;
     margin-top: 10px;
 
@@ -306,6 +287,7 @@
     resize: none;
     border: none;
     border-radius: 10px;
+    background-color: #e7e7e7;
 }
 
 .application_container .edit_delete_save_cancel_btns_container {

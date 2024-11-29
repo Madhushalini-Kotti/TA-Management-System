@@ -1,59 +1,95 @@
 .StaffApplicantsContent {
     width: 100%;
     display: grid;
-    grid-template-rows: 70px 60px 60px auto;
-    grid-template-columns: 100%;
-    row-gap: 1px;
-    background-color: rgb(236, 239, 241);
-}
-
-.StaffApplicantsContent .department_semester_container {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 200px auto 200px;
-    background-color: #fff;
-    gap: 30px;
+    grid-template-columns: 200px auto;
+    grid-template-rows: 60px auto;
 }
 
 .StaffApplicantsContent .department_title_container {
     width: 100%;
+    height: 100%;
     background-color: #fff;
-
     display: flex;
     align-items: center;
     justify-content: center;
 
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 .StaffApplicantsContent .department_title_container span {
-    font-size: 22px;
+    font-size: 20px;
     font-family: "Open Sans", sans-serif;
-    font-weight: 300;
+    font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: rgb(131, 3, 3);
 }
 
-.StaffApplicantsContent .semester_title_container {
 
+
+.StaffApplicantsContent .semesters_container {
     width: 100%;
-    background-color: #fff;
-
-    display: inline-flex;
+    height: 100%;
+    background-color: white;
+    display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    box-shadow: 8px 0px 8px rgba(0, 0, 0, 0.5);
 }
 
-.StaffApplicantsContent .semester_title_container span {
-    font-size: 22px;
-    font-family: "Open Sans", sans-serif;
-    font-weight: 300;
-    letter-spacing: 1px;
+.StaffApplicantsContent .semester-button {
+    border: none;
+    background-color: white;
+    color: #0056b3;
+    cursor: pointer;
+    font-size: 14px;
+    height: 50px;
+    width: 100%;
+    padding: 10px 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.StaffApplicantsContent .semester-button.active_semester_button {
+    background-color: #0056b3;
+    background-color: rgb(131, 3, 3);
+    color: white;
+}
+
+.StaffApplicantsContent .semester-button span {
     text-transform: uppercase;
-    color: rgb(131, 3, 3);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
 }
 
-.StaffApplicantsContent .export_applicants_btn_container {
+
+.staffApplicantsDataContent {
+    width: 100%;
+    display: grid;
+    grid-template-rows: 50px 50px auto;
+    grid-template-columns: 100%;
+    row-gap: 1px;
+    background-color: rgb(236, 239, 241);
+
+    grid-row-start: 2;
+    grid-row-end: 3;
+    
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+
+.staffApplicantsDataContent .export_applicants_btn_container {
     width: 100%;
     background-color: #fff;
 
@@ -62,7 +98,7 @@
     justify-content: flex-start;
 }
 
-.StaffApplicantsContent .export_applicants_btn {
+.staffApplicantsDataContent .export_applicants_btn {
     background-color: #fff;
     border: none;
 
@@ -70,12 +106,7 @@
     font-family: "Open Sans", sans-serif;
 }
 
-
-
-
-
-
-.StaffApplicantsContent .Applicant_type_btns_container {
+.staffApplicantsDataContent .Applicant_type_btns_container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -101,6 +132,8 @@
     color: white;
     font-size: 20px;
 }
+
+
 
 .StaffApplicantsContent .navigation {
     display: inline-flex;
@@ -178,12 +211,23 @@
     margin: 5px;
 }
 
+
+
+
+
+
+
+
+
+
+
 .applicants_container {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
     padding: 50px;
+    padding-top: 30px;
 }
 
 .applicants_container .applicant_item {
@@ -191,14 +235,13 @@
     align-items: center;
     justify-content: flex-start;
     grid-template-rows: 1fr;
-    grid-template-columns: 2fr 1.25fr 0.65fr 1.40fr 1fr 1.5fr;
+    grid-template-columns: 2fr 1.25fr 0.65fr 1.40fr 1fr 1fr;
     gap: 20px;
     background-color: #fff;
-    width: 95%;
+    width: 98%;
     padding: 10px 20px;
     min-height: 95px;
     height: auto;
-    /* Adjust height based on content */
 
 }
 
@@ -220,74 +263,29 @@
 
 .applicants_container > div {
     border: 1px solid black;
-        border-width: 0px 0px 1px 0px;
+    border-width: 0px 0px 1px 0px;
 }
 
 .applicants_container #ApplicantItemHeading span {
     color: rgb(131, 3, 3)
 }
 
-.applicant_item .view_profile_btn {
-    background-color: white;
+
+
+
+
+
+.applicant_item button {
+    width: 100px;
+    margin-bottom: 2px;
 }
 
-.view_profile_btn {
-    border: none;
-    background-color: white;
-    color: #157be1;
-    font-size: 17px;
-    width: 100%;
-    margin: 0px;
-    text-align: left;
-    justify-content: center;
-    padding: 0;
+.applicant_item .application_management_btns button:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-
-.view_profile_btn:hover {
-    color: #e04848;
-}
-
-
-
-
 
 .applicant_item .shortlist_btn {
     background-color: rgb(129, 133, 138);
-        /* Light blue for Shortlist */
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        font-size: 14px;
-        cursor: pointer;
-        position: relative;
-}
-
-.applicant_item .shortlist_btn::before {
-    content: 'Shortlist';
-}
-
-/* Change the text when hovered for Shortlist button */
-.applicant_item .shortlist_btn:hover::before {
-    content: 'Shortlist this Applicant';
-    background-color: #4cae4c;
-    /* Darker blue on hover */
-}
-
-.applicant_item .shortlist_btn:hover {
-    background-color: #4cae4c;
-    color: white;
-}
-
-
-
-
-
-
-
-/* Default styling for the "Shortlisted" button */
-.applicant_item .remove_shortlisted_btn {
-    background-color: #f0ad4e;
-    /* Orange for Shortlisted */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -296,31 +294,18 @@
     position: relative;
 }
 
-/* Set the default text using content for Shortlisted button */
-.applicant_item .remove_shortlisted_btn::before {
-    content: 'Shortlisted';
-}
-
-/* Change the text when hovered for Remove from Shortlist */
-.applicant_item .remove_shortlisted_btn:hover::before {
-    content: 'Remove from Shortlist';
-    background-color: #d9534f;
-    /* Red on hover */
-}
-
-/* Adjust the button styling during hover */
-.applicant_item .remove_shortlisted_btn:hover {
-    background-color: #d9534f;
+.applicant_item .select_btn {
+    background-color: rgb(129, 133, 138);
     color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
 }
-
-
-
-
 
 .applicant_item .shortlisted_btn {
     background-color: #f0ad4e;
-    /* Orange for Shortlisted */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -328,116 +313,57 @@
     cursor: not-allowed;
 }
 
-
-
-
-.applicant_item .select_btn_from_new {
-    background-color: rgb(129, 133, 138);
-        /* Green for Select */
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        font-size: 14px;
-        cursor: pointer;
-        position: relative;
-}
-
-/* Set the default text using content for Select button */
-.applicant_item .select_btn_from_new::before {
-    content: 'Select';
-}
-
-/* Change the text when hovered for Select button */
-.applicant_item .select_btn_from_new:hover::before {
-    content: 'Select this Applicant';
-    background-color: #4cae4c;
-    /* Darker green on hover */
-}
-
-.applicant_item .select_btn_from_new:hover {
-    background-color: #4cae4c;
-    color: white;
-}
-
-
-
-
-.applicant_item .select_btn_from_shortlisted {
-    background-color: rgb(129, 133, 138);
-    /* Green for Select */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    position: relative;
-}
-
-/* Set the default text using content for Select button */
-.applicant_item .select_btn_from_shortlisted::before {
-    content: 'Select';
-}
-
-/* Change the text when hovered for Select button */
-.applicant_item .select_btn_from_shortlisted:hover::before {
-    content: 'Select this Applicant';
-    background-color: #4cae4c;
-    /* Darker green on hover */
-}
-
-.applicant_item .select_btn_from_shortlisted:hover {
-    background-color: #4cae4c;
-    color: white;
-}
-
-
-
-
-
-/* Default styling for the "Selected" button */
-.applicant_item .remove_selected_btn {
-    background-color: #4cae4c;
-    /* Light blue for Selected */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    cursor: pointer;
-    position: relative;
-}
-
-/* Set the default text using content for Selected button */
-.applicant_item .remove_selected_btn::before {
-    content: 'Selected';
-}
-
-/* Change the text when hovered for Remove from Select */
-.applicant_item .remove_selected_btn:hover::before {
-    content: 'Remove from Select';
-    background-color: #d9534f;
-    /* Darker blue on hover */
-}
-
-/* Adjust the button styling during hover */
-.applicant_item .remove_selected_btn:hover {
-    background-color: #d9534f;
-    color: white;
-}
-
-
-
-
 .applicant_item .selected_btn {
     background-color: #4cae4c;
-        /* Light blue for Selected */
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        font-size: 14px;
-        cursor: not-allowed;
-        position: relative;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: not-allowed;
+    position: relative;
 }
 
+
+.applicant_item .unshortlist_btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+.applicant_item .unselect_btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+
+
+
+.applicant_item .view_profile_btn {
+    border: none;
+    background-color: white;
+    color: #157be1;
+    font-size: 17px;
+    margin: 0px;
+    padding: 0;
+    width: 100%;
+    text-align: left;
+    justify-content: start;
+    transition: color 0.3s ease;
+}
+
+.view_profile_btn:hover {
+    color: #e04848;
+    box-shadow: none;
+}
 
 
 
@@ -520,6 +446,12 @@
     gap: 20px;
 }
 
+#ApplicantTypeAndfieldSelectionPopup > div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .fieldSelectionGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -527,12 +459,16 @@
     margin-bottom: 20px;
 }
 
-.span-two-columns {
-    grid-column: span 2;
-    /* Span across two columns */
+.fieldSelectionGrid > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Button container styling */
+.span-two-columns {
+    grid-column: span 2;
+}
+
 .buttons-container {
     display: flex;
     justify-content: flex-end;
@@ -579,3 +515,85 @@
     margin: 10px;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.profile_container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+}
+
+.profile_container span {
+    font-size: 17px;
+    color: #333;
+    font-weight: 300;
+    text-transform: capitalize;
+    font-family: OpenSans-Bold, Helvetica, Arial, sans-serif;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-right: 20px;
+}
+
+.profile_container div span:first-child {
+    font-size: 18px;
+    color: #2c3e50;
+    font-weight: 400;
+}
+
+.profile_container .profile_resume span:first-child {
+    font-weight: 400;
+    color: rgb(131, 3, 3);
+}
+
+.profile_container .profile_transcripts span:first-child {
+    font-weight: 400;
+    color: rgb(131, 3, 3);
+}
+
+.profile_container .profile_credits_will_register span:first-child {
+    font-size: 16px;
+}
+
+.profile_container div {
+    margin-bottom: 15px;
+}
+
+
+.close_profile_btn {
+    background-color: #ff5f5f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    float: right;
+}
+
+.close_profile_btn:hover {
+    background-color: #e04848;
+}

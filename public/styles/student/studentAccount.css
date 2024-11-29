@@ -70,3 +70,11 @@
     font-weight: 400;
     letter-spacing: 1px;
 }
+
+.student_information_container .programstartdate .value {
+    display: inline-flex;
+}
+
+.student_information_container .expectedgraduationdate .value {
+    display: inline-flex;
+}

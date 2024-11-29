@@ -1,0 +1,35 @@
+/* Inbox Content */
+
+.StudentInboxContent {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 10px auto;
+    background-color: #fff;
+}
+
+.StudentInboxContent .department_title_container {
+    width: 100%;
+    height: 60px;
+    background-color: rgb(236, 239, 241);
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    grid-column: 1 / 3;
+}
+
+.StudentInboxContent .department_title_container span {
+    font-size: 20px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgb(131, 3, 3);
+}
+
+.StudentInboxContent .inbox_navigation_container {
+    height: 10px;
+    background-color: rgb(129, 133, 138);
+}
