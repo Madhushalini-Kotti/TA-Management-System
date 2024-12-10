@@ -57,7 +57,7 @@
             <span class="nav_bat_item_text">Applications</span>
         </button>
 
-        <button type="submit" class="nav_bar_item_btn inbox" id="inbox_btn">
+        <button type="submit" class="nav_bar_item_btn inbox" id="inbox_btn" style="display: none;">
             <svg xmlns="http://www.w3.org/2000/svg" width="37" height="36" fill="white" class="bi bi-chat-right-text-fill"
                 viewBox="0 0 16 16">
                 <path
@@ -150,15 +150,11 @@
     <div class="StudentAccountContent">
         
         <div class="student_account_header">
-
             <div class="title"><span>Student Profile</span></div>
-            <button class="btn btn-primary" id="editProfileBtn" type="button">Edit Profile</button>
-            <button class="btn btn-primary" id="saveProfileBtn" type="button" style="display: none;">Save</button>
-
         </div>
         <hr>
 
-        <div class="student_information_container">
+        <div class="student_information_container first_batch">
 
             <div class="name">
                 <div class="title">
@@ -196,6 +192,32 @@
                     
                 </div>
             </div>
+
+        </div>
+
+        <div class="student_information_container second_batch">
+        
+            <div class="resume">
+                <div class="title">
+                    <span> Resume : </span>
+                </div>
+                <div class="value">
+                    
+                </div>
+            </div>
+        
+            <div class="transcripts">
+                <div class="title">
+                    <span> Transcripts : </span>
+                </div>
+                <div class="value">
+                    
+                </div>
+            </div>
+        
+        </div>
+
+        <div class="student_information_container third_batch">
 
             <div class="mobilenumber">
                 <div class="title">
@@ -341,26 +363,9 @@
                 </div>
             </div>
 
-            <div class="resume">
-                <div class="title">
-                    <span> Resume : </span>
-                </div>
-                <div class="value">
-                    <a target="_blank" id="resume-link">
-                        <span> View Resume </span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="transcripts">
-                <div class="title">
-                    <span> Transcripts : </span>
-                </div>
-                <div class="value">
-                    <a target="_blank" id="transcripts-link">
-                        <span> View Transcripts </span>
-                    </a>
-                </div>
+            <div class="edit_and_save_btns_container">
+                <button class="btn btn-primary" id="editProfileBtn" type="button">Edit Profile</button>
+                <button class="btn btn-primary" id="saveProfileBtn" type="button" style="display: none;">Save</button>
             </div>
 
         </div>

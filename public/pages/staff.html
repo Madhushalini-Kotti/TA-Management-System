@@ -271,10 +271,6 @@
             <span>
                 Electrical Engineering And Computer Science
             </span>
-
-            <div class="export_applicants_btn_container">
-                <button class="export_applicants_btn btn btn-link" id="exportApplicants">Export Applicants</button>
-            </div>
         </div>
 
         <div class="applicantTypeAndfieldSelectionContainer" id="ApplicantTypeAndfieldSelectionPopup" style="display: none;">
@@ -380,10 +376,6 @@
                     <label for="allApplicationsCheckbox">All Applicants</label>
                 </div>
                 <div>
-                    <input type="checkbox" id="shortlistedApplicationsCheckbox">
-                    <label for="shortlistedApplicationsCheckbox">Shortlisted Applicants</label>
-                </div>
-                <div>
                     <input type="checkbox" id="selectedApplicationsCheckbox">
                     <label for="selectedApplicationsCheckbox">Selected Applicants</label>
                 </div>
@@ -402,17 +394,6 @@
         </div>
 
         <div class="staffApplicantsDataContent">
-            <div class="Applicant_type_btns_container">
-                <button id="allApplicantsBtn" class="active">
-                    <span>All Applicants</span>
-                </button>
-                <button id="shortlistedApplicantsBtn">
-                    <span>Shortlisted Applicants</span>
-                </button>
-                <button id="selectedApplicantsBtn">
-                    <span>Selected Applicants</span>
-                </button>
-            </div>
             
             <div class="navigation">
             
@@ -423,33 +404,6 @@
                     <div class="courses_dropdown_container">
                         <select id="courseDropdownApplicants" size="1">
                         </select>
-                    </div>
-                </div>
-            
-                <div class="served_as_ta_container" style="display: none;">
-                    <div class="title">
-                        <span>Served as TA </span>
-                    </div>
-                    <div>
-                        <input type="checkbox" value="servedAsTA" />
-                    </div>
-                </div>
-            
-                <div class="a_grade_container" style="display: none;">
-                    <div class="title">
-                        <span>A Grade </span>
-                    </div>
-                    <div>
-                        <input type="checkbox" value="AGrade" />
-                    </div>
-                </div>
-            
-                <div class="experience_container" style="display: none;">
-                    <div class="title">
-                        <span>Professional Experience</span>
-                    </div>
-                    <div>
-                        <input type="checkbox" value="experience" />
                     </div>
                 </div>
             
@@ -465,7 +419,11 @@
                         </select>
                     </div>
                 </div>
-            
+
+                <div class="export_applicants_btn_container">
+                    <button class="export_applicants_btn btn btn-link" id="exportApplicants">Export Applicants</button>
+                </div>
+
             </div>
             
             <div class="applicants_container">

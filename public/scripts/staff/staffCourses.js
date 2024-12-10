@@ -586,7 +586,7 @@ async function uploadCourseListFile() {
     }
 
     const formData = new FormData();
-    formData.append('csvFile', file);
+    formData.append('semesterCourses', file);
     formData.append('semester', semester);
 
     try {

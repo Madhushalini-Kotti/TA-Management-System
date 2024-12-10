@@ -303,7 +303,6 @@ app.get('/student', checkSession, async (req, res) => {
 async function fetchStudentDetails(netid) {
     let result = await db.query("select * from userprofile WHERE netid = $1", [netid]);
 
-    // Return an object with empty strings for all fields
     if (result.rows.length === 0) {
         await db.query("insert into userprofile (netid) values($1) ", [netid]);
         result = await db.query("SELECT * FROM userprofile WHERE netid = $1", [netid]);
@@ -313,10 +312,6 @@ async function fetchStudentDetails(netid) {
     const details = result.rows[0];
 
     return {
-        'name': details.name || '',
-        'netid': details.netid || '',
-        'znumber': details.znumber || '',
-        'email': details.email || '',
         'mobilenumber': details.mobilenumber || '',
         'graduateprogram': details.graduateprogram || '',
         'advisorname': details.advisorname || '',
@@ -349,6 +344,38 @@ app.get("/studentDetails", checkSession, async (req, res) => {
 
 });
 
+
+async function fetchStudentMainDetails(netid) {
+    let result = await db.query("select * from userprofile WHERE netid = $1", [netid]);
+
+    if (result.rows.length === 0) {
+        await db.query("insert into userprofile (netid) values($1) ", [netid]);
+        result = await db.query("SELECT * FROM userprofile WHERE netid = $1", [netid]);
+    }
+
+    result = await db.query("select * from userprofile WHERE netid = $1", [netid]);
+    const details = result.rows[0];
+
+    return {
+        'name': details.name || '',
+        'znumber': details.znumber || '',
+        'email': details.email || '',
+    };
+}
+
+app.get("/studentMainDetails", checkSession, async (req, res) => {
+
+    var netid = req.session.netid;
+    try {
+        const studentDetails = await fetchStudentMainDetails(netid);
+        res.json(studentDetails);
+    } catch (error) {
+        console.error("Error fetching student Details:", error); // Improved error logging
+        res.status(500).json({ error: 'Failed to fetch student Details' });
+    }
+
+});
+
 app.get("/studentNetid", checkSession, async (req, res) => {
 
     var netid = req.session.netid;
@@ -369,106 +396,194 @@ const storage = multer.diskStorage({
             cb(null, "./public/resume");
         } else if (file.fieldname === 'transcripts') {
             cb(null, "./public/transcripts");
-        } else if (file.fieldname === 'csvFile') {
-            cb(null, "./public/uploads"); // Set this for CSV uploads
+        } else if (file.fieldname === 'semesterCourses') {
+            cb(null, "./public/semesterCourses");
         } else {
-            cb(null, "./public/uploads"); // Default upload directory for any other files
+            cb(null, "./public/uploads");
         }
     },
-    filename: function (req, file, cb) {
-        const extension = file.originalname.split('.').pop(); // Get file extension
+    filename: async function (req, file, cb) {
+        const extension = path.extname(file.originalname); // Extract file extension
+        const originalName = path.basename(file.originalname, extension); // Extract original filename
+        const netid = req.session.netid || "mkotti2023";
 
-        if (file.fieldname === 'resume' || file.fieldname === 'transcripts') {
-            // For resumes and transcripts, use netid for naming
-            const filename = `${req.body.netid}.${extension}`;
-            cb(null, filename);
-        } else if (file.fieldname === 'csvFile') {
-            // For CSV file, use semester and department name for naming
-            const semester = req.session.semester || "Fall 2024"; // Default if not provided
-            const dept_name = req.session.dept_name || "eecs"; // Default if not provided
-            const filename = `${semester}_${dept_name}.${extension}`; // Format: semester_dept.extension
-            cb(null, filename);
-        } else {
-            // Fallback for other cases
-            const filename = `${Date.now()}.${extension}`; // Use a timestamp for fallback
-            cb(null, filename);
+        try {
+
+            if (file.fieldname === 'resume') {
+
+                const dir = "./public/resume";
+                const newFilename = `${netid}_${originalName}${extension}`; 
+                const files = await fs.promises.readdir(dir);
+                const existingFile = files.find(f => f.startsWith(`${netid}_`) && f.endsWith(extension));
+                if (existingFile) {
+                    const existingFilePath = path.join(dir, existingFile);
+                    await fs.promises.unlink(existingFilePath);
+                }
+                return cb(null, newFilename);
+
+            } else if (file.fieldname === 'transcripts') {
+
+                const dir = "./public/transcripts";
+                const baseName = `${netid}_${originalName}`;
+                let generatedFilename = `${baseName}${extension}`; // Default filename
+
+                const files = await fs.promises.readdir(dir); // Read directory contents
+                const existingFiles = files.filter(f => f.startsWith(baseName) && f.endsWith(extension));
+
+                if (existingFiles.includes(generatedFilename)) {
+                    let index = 1;
+                    // Increment index until a unique filename is found
+                    while (existingFiles.includes(`${baseName}_${index}${extension}`)) {
+                        index++;
+                    }
+                    generatedFilename = `${baseName}_${index}${extension}`;
+                }
+                return cb(null, generatedFilename);
+
+            } else if (file.fieldname === 'semesterCourses') {
+
+                const filename = `${Date.now()}_${originalName}${extension}`; // Unique timestamped filename
+                return cb(null, filename);
+
+            } else {
+
+                const filename = `${Date.now()}_${originalName}${extension}`; // Default case
+                return cb(null, filename);
+
+            }
+        } catch (err) {
+            console.error('Error generating filename:', err);
+            return cb(err); // Pass error to Multer
         }
     }
 });
 
+
+
 const upload = multer({ storage: storage });
 
-app.post("/updateStudentDetails", checkSession, upload.fields([{ name: "resume" }, { name: "transcripts" }]), async (req, res) => {
-
-    var netid = req.session.netid;
-
-    const {
-        name,
-        znumber,
-        email,
-        mobilenumber,
-        graduateprogram,
-        advisorname,
-        advisoremail,
-        department,
-        courseprogram,
-        gpa,
-        enrollementstatus,
-        citizenshipstatus,
-        creditscompleted,
-        creditsplannedtoregister,
-        semesterstartdate,
-        expectedgraduationdate,
-        workedforfau,
-        externalwork,
-        hoursofexternalwork
-
-    } = req.body;
-
+app.post('/uploadResume', checkSession, upload.single('resume'), async (req, res) => {
     try {
-
-        await db.query('UPDATE userprofile SET name = $1, znumber = $2, mobilenumber = $3, graduateprogram = $4, advisorname = $5, advisoremail = $6, department = $7, courseprogram = $8, currentgpa = $9, enrollementstatus = $10,citizenshipstatus = $11,creditscompletedatfau = $12, creditsplannedtoregisterforupcomingsemester = $13, programstartdate = $14, expectedgraduationdate = $15, email = $16, workedforfau = $17, externalwork = $18, hoursofexternalwork = $19 WHERE netid = $20',
-            [name, znumber, mobilenumber, graduateprogram, advisorname, advisoremail, department, courseprogram, gpa, enrollementstatus, citizenshipstatus, creditscompleted, creditsplannedtoregister, semesterstartdate, expectedgraduationdate, email, workedforfau, externalwork, hoursofexternalwork, netid]);
-
-        // Rename uploaded resume file
-        if (req.files['resume']) {
-            const resumeFile = req.files['resume'][0];
-            const extension = path.extname(resumeFile.originalname);
-            const newResumeName = `${netid}${extension}`;
-            const oldPath = resumeFile.path;
-            const newPath = path.join(path.dirname(oldPath), newResumeName);
-
-            // Rename with a callback function to handle any errors
-            fs.rename(oldPath, newPath, (err) => {
-                if (err) {
-                    console.error('Error renaming resume file:', err);
-                }
-            });
-        }
-
-        // Rename uploaded transcripts file
-        if (req.files['transcripts']) {
-            const transcriptFile = req.files['transcripts'][0];
-            const extension = path.extname(transcriptFile.originalname);
-            const newTranscriptName = `${netid}${extension}`;
-            const oldPath = transcriptFile.path;
-            const newPath = path.join(path.dirname(oldPath), newTranscriptName);
-
-            // Rename with a callback function to handle any errors
-            fs.rename(oldPath, newPath, (err) => {
-                if (err) {
-                    console.error('Error renaming transcripts file:', err);
-                }
-            });
-        }
-
-        res.status(200).json({ message: 'Profile updated successfully' });
-
+        res.status(200).json({ message: "Resume uploaded successfully" });
     } catch (error) {
-        console.error('Error updating profile:', error);
-        res.status(500).json({ message: 'Error updating profile' });
+        console.error("Error uploading resume:", error);
+        res.status(500).json({ message: "Error uploading resume" });
+    }
+});
+
+app.post('/uploadTranscript', checkSession, upload.single('transcripts'), async (req, res) => {
+    try {
+        res.status(200).json({ message: "Transcript uploaded successfully" });
+    } catch (error) {
+        console.error("Error uploading transcript:", error);
+        res.status(500).json({ message: "Error uploading transcript" });
+    }
+});
+
+app.get('/fetchResumeFileName', checkSession, (req, res) => {
+    const netid = req.session.netid;
+    const resumesDir = path.join(__dirname, 'public', 'resume');
+
+    if (!fs.existsSync(resumesDir)) {
+        return res.status(404).json({ message: 'Resume directory not found' });
     }
 
+    try {
+        const files = fs.readdirSync(resumesDir);
+        const resumeFile = files.find(file => file.startsWith(netid));
+
+        if (resumeFile) {
+            return res.json({ resume: resumeFile });
+        } else {
+            return res.json({ resume: null }); // No file found
+        }
+
+    } catch (err) {
+        console.error('Error fetching resume file:', err);
+        return res.status(500).json({ error: 'Error fetching resume file' });
+    }
+
+});
+
+app.get('/fetchTranscripts', checkSession, (req, res) => {
+    const netid = req.session.netid;
+    const transcriptsDir = path.join(__dirname, 'public', 'transcripts');
+
+    if (!fs.existsSync(transcriptsDir)) {
+        return res.status(404).json({ message: 'Transcripts directory not found' });
+    }
+
+    fs.readdir(transcriptsDir, (err, files) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error reading transcripts directory' });
+        }
+
+        const netidTranscripts = files.filter(file => file.startsWith(netid));
+        res.json({ transcripts: netidTranscripts });
+    });
+});
+
+app.post('/deleteResume', checkSession, (req, res) => {
+    const { filename } = req.body;
+    const filePath = path.join(__dirname, 'public', 'resume', filename);
+
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        res.status(200).send({ message: 'Resume deleted successfully' });
+    } else {
+        res.status(404).send({ message: 'Resume not found' });
+    }
+});
+
+app.post('/deleteTranscript', checkSession, (req, res) => {
+    const { filename } = req.body;
+    const filePath = path.join(__dirname, 'public', 'transcripts', filename);
+
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        res.status(200).send({ message: 'Transcript deleted successfully' });
+    } else {
+        res.status(404).send({ message: 'Transcript not found' });
+    }
+});
+
+
+
+
+
+app.post("/updateStudentDetails", checkSession, upload.none(), async (req, res) => {
+
+    const netid = req.session.netid;
+    const { mobilenumber, graduateprogram, advisorname, advisoremail,
+        department, courseprogram, gpa, enrollementstatus, citizenshipstatus,
+        creditscompleted, creditsplannedtoregister, semesterstartdate, expectedgraduationdate,
+        workedforfau, externalwork, hoursofexternalwork, } = req.body;
+    
+    try {
+
+        await db.query(
+            `UPDATE userprofile SET mobilenumber = $1, 
+                graduateprogram = $2, advisorname = $3, advisoremail = $4, 
+                department = $5, courseprogram = $6, currentgpa = $7, 
+                enrollementstatus = $8, citizenshipstatus = $9, 
+                creditscompletedatfau = $10, creditsplannedtoregisterforupcomingsemester = $11, 
+                programstartdate = $12, expectedgraduationdate = $13, 
+                workedforfau = $14, externalwork = $15, hoursofexternalwork = $16 
+                WHERE netid = $17`,
+            [
+                mobilenumber, graduateprogram,
+                advisorname, advisoremail, department, courseprogram, gpa,
+                enrollementstatus, citizenshipstatus, creditscompleted, creditsplannedtoregister,
+                semesterstartdate, expectedgraduationdate, workedforfau, externalwork, hoursofexternalwork,
+                netid.trim(),
+            ]
+        );
+
+        res.status(200).json({ message: "Profile updated successfully" });
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({ message: "Error updating profile" });
+    }
 });
 
 
@@ -983,7 +1098,7 @@ function extractRowsFromCSV(filePath) {
     });
 }
 
-app.post('/add_multiple_courses', checkSession, upload.single('csvFile'), async (req, res) => {
+app.post('/add_multiple_courses', checkSession, upload.single('semesterCourses'), async (req, res) => {
 
     const filePath = req.file.path;
     const semester = req.body.semester;
@@ -1136,10 +1251,11 @@ async function fetchApplicantsWithCoursesAndAssignedCourses(applicant_types, sem
         const applicants = results.rows;
 
         for (let applicant of applicants) {
-            const studentDetails = await fetchStudentDetails(applicant.netid);
-            applicant.name = studentDetails.name;
-            applicant.gpa = studentDetails.gpa;
-            applicant.programtype = studentDetails.graduateprogram;
+            const studentOtherDetails = await fetchStudentDetails(applicant.netid);
+            const studentMainDetails = await fetchStudentMainDetails(applicant.netid);
+            applicant.name = studentMainDetails.name;
+            applicant.gpa = studentOtherDetails.gpa;
+            applicant.programtype = studentOtherDetails.graduateprogram;
             applicant.courseAssigned = applicant.course_assigned;
 
             const courses = await fetchCourseDetails(applicant.netid, semester);
@@ -1171,6 +1287,46 @@ app.get('/fetchApplicantsBySemester', checkSession, async (req, res) => {
     }
 });
 
+async function fetchResumeFileName(netid) {
+    const resumesDir = path.join(__dirname, 'public', 'resume');
+
+    if (!fs.existsSync(resumesDir)) {
+        throw new Error('Resume directory not found');
+    }
+
+    try {
+        const files = fs.readdirSync(resumesDir);
+        const resumeFile = files.find(file => file.startsWith(netid));
+
+        if (resumeFile) {
+            return resumeFile; // Return the resume filename
+        } else {
+            return null; // No resume file found
+        }
+    } catch (err) {
+        console.error('Error fetching resume file:', err);
+        throw new Error('Error fetching resume file');
+    }
+}
+
+async function fetchTranscripts(netid) {
+    const transcriptsDir = path.join(__dirname, 'public', 'transcripts');
+
+    if (!fs.existsSync(transcriptsDir)) {
+        throw new Error('Transcripts directory not found');
+    }
+
+    try {
+        const files = await fs.promises.readdir(transcriptsDir); // Use promises version
+        const netidTranscripts = files.filter(file => file.startsWith(netid));
+
+        return netidTranscripts; // Return array of transcript filenames
+    } catch (err) {
+        console.error('Error fetching transcripts:', err);
+        throw new Error('Error fetching transcripts');
+    }
+}
+
 app.get('/fetchApplicantDetails', checkSession, async (req, res) => {
     const applicantNetid = req.query.ApplicantNetid;
 
@@ -1178,7 +1334,27 @@ app.get('/fetchApplicantDetails', checkSession, async (req, res) => {
         return res.status(400).json({ success: false, message: 'Couldnt fetch details' });
     }
     try {
-        const result = await fetchStudentDetails(applicantNetid);
+        const applicantMainDetails = await fetchStudentMainDetails(applicantNetid);
+        const applicantOtherDetails = await fetchStudentDetails(applicantNetid);
+
+        const resumeFileName = await fetchResumeFileName(applicantNetid);
+        const resume = resumeFileName ? resumeFileName : "not_available";
+
+        const transcriptFiles = await fetchTranscripts(applicantNetid);
+        const transcriptCount = transcriptFiles.length;
+        const transcripts = transcriptFiles;
+
+        const result = {
+            netid : applicantNetid,
+            resume : resume,
+            transcriptCount : transcriptCount,
+            transcripts : transcripts,
+            ...applicantMainDetails,
+            ...applicantOtherDetails
+        };
+
+        console.log(result);
+
         res.json(result);
     } catch (error) {
         console.error('Error fetching applicant details:', error);
@@ -1709,7 +1885,7 @@ cron.schedule('0 0 * * *', async () => {
 
         // Updating the status of semesters where the end_date is today or earlier
         const result = await db.query(
-            "UPDATE semesters_list SET status = 'inactive' WHERE date <= $1 AND status != 'inactive'",
+            "UPDATE semesters_list SET status = 'inactive' WHERE end_date <= $1 AND status != 'inactive'",
             [todayDate]
         );
 

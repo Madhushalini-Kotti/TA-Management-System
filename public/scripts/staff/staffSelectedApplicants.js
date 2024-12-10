@@ -9,8 +9,6 @@ function setUpSelectedApplicantsMainBtn() {
     selectedApplicantsBtn.addEventListener('click', async function () {
 
         await fetchAndRenderSemestersInSelectedApplicants();
-        //setUpSortApplicantsByDropdownInSelectedApplicants();
-        //setUpExportApplicantsBtn();
     });
 }
 
@@ -125,9 +123,6 @@ function displaySelectedApplicants(applicants) {
             </div> 
             <button type="button" class="toggle_selected_applicant_courses_btn">View Courses </button>
             <button type="button" class="assign_course_btn">Assign Course</button>
-            <button type="button" class="bg_verification_email_btn" style="display: none;">BG Verify Email</button>
-            <button type="button" class="selected_email_btn" style="display: none;">Selection Email</button>
-            <button type="button" class="unselect_selected_applicant_btn" data-applicant-id="${applicant.applicant_id}" data-name="${applicant.name}">Unselect Applicant</button> 
             <div class="applicant_assigned_courses_list">${assignedCoursesHTML}</div>
             <div class="applicant_applied_courses_list" style="display: none;">${coursesHTML}</div>
         `;
@@ -169,12 +164,6 @@ function displaySelectedApplicants(applicants) {
         const editAssignedCourseBtns = applicantItem.querySelectorAll(".edit_assigned_course_btn");
         setUpEditAssignedCourseLogic(editAssignedCourseBtns);
 
-        const bgVerificationEmailBtns = applicantItem.querySelectorAll(".bg_verification_email_btn");
-        setUpBgVerificationEmailLogic(bgVerificationEmailBtns);
-
-        const selectedEmailBtns = applicantItem.querySelectorAll(".selected_email_btn");
-        setUpSelectedEmailLogic(selectedEmailBtns);
-
     });
 
     window.addEventListener("resize", () => {
@@ -185,7 +174,6 @@ function displaySelectedApplicants(applicants) {
     });
 
     setUpViewProfileEventListener();
-    setUpUnSelectSelectedApplicantBtn();
 
 }
 
@@ -530,34 +518,6 @@ function createOverlayForEmails(overlayId, containerId) {
 }
 
 
-function setUpBgVerificationEmailLogic(bgVerificationEmailBtns) {
-    bgVerificationEmailBtns.forEach(button => {
-        button.addEventListener("click", (event) => {
-            const { overlay, container } = createOverlayForEmails("bgemailoverlay", "bgemailcontainer");
-
-            const message = document.createElement("div");
-            message.textContent = "Background Verification Email Content Goes Here.";
-            container.appendChild(message);
-
-            document.body.appendChild(overlay);
-        });
-    });
-}
-
-function setUpSelectedEmailLogic(selectedEmailBtns) {
-    selectedEmailBtns.forEach(button => {
-        button.addEventListener("click", (event) => {
-            const { overlay, container } = createOverlayForEmails("selectedemailoverlay", "selectedemailcontainer");
-
-            const message = document.createElement("div");
-            message.textContent = "Selection Email Content Goes Here.";
-            container.appendChild(message);
-
-            document.body.appendChild(overlay);
-        });
-    });
-}
-
 
 
 
@@ -606,75 +566,4 @@ async function fetchAndUpdateCourses(semester) {
     } catch (error) {
         console.error('Error fetching additional courses:', error);
     }
-}
-
-function setUpUnSelectSelectedApplicantBtn() {
-    const unselectBtn = document.querySelectorAll('.unselect_selected_applicant_btn');
-
-    unselectBtn.forEach(button => {
-        button.addEventListener('click', async function () {
-            const applicantId = this.getAttribute('data-applicant-id');
-            const applicantName = this.getAttribute('data-name');
-            await unSelectSelectedApplicant(applicantId, applicantName);
-            document.getElementById("selectedApplicantsBtn").click();
-        });
-    });
-
-}
-
-async function unSelectSelectedApplicant(applicantId, applicantName) {
-    const userConfirmed = await showConfirmationModalInSelectedApplicants(applicantName, "Unselect");
-
-    if (userConfirmed) {
-        try {
-            const semester = getActiveSemesterInSelectedApplicants();
-            const response = await fetch(`/unSelectApplicant?applicantId=${applicantId}&semester=${semester}`);
-
-            if (response.redirected) {
-                window.location.href = '/?sessionExpired=true';
-                return;
-            }
-
-            if (response.ok) {
-                const result = await response.json();
-                alert(result.message);
-
-                const activeSemester = getActiveSemesterInSelectedApplicants();
-                const activeSemesterButton = document.querySelector(`.semester-button-in-selected-applicants[data-semester="${activeSemester}"]`);
-                if (activeSemesterButton) {
-                    activeSemesterButton.click();
-                }
-
-                const semester = getActiveSemesterInSelectedApplicants();
-                fetchSelectedApplicantsBySemester(semester);
-            } else {
-                const errorData = await response.json();
-                alert(errorData.message || "Failed to un Select the applicant.");
-            }
-        } catch (error) {
-            console.log('Error occurred while un selecting the applicant:', error);
-            alert("An error occurred. Please try again later.");
-        }
-    }
-}
-
-function showConfirmationModalInSelectedApplicants(applicantName, actionText) {
-    const modal = document.getElementById('confirmationModal') || createConfirmationModal();
-
-    document.getElementById('applicantName').textContent = applicantName;
-    document.getElementById('actionText').textContent = actionText;
-
-    modal.style.display = 'block';
-
-    return new Promise((resolve) => {
-        document.getElementById('confirmBtn').onclick = () => {
-            hideConfirmationModal();
-            resolve(true);
-        };
-
-        document.getElementById('cancelBtn').onclick = () => {
-            hideConfirmationModal();
-            resolve(false);
-        };
-    });
 }

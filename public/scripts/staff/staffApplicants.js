@@ -13,8 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setUpApplicantsMainBtn();
 });
 
-let inWhichView = 'all';
-
 function setUpApplicantsMainBtn() {
     const applicantsBtn = document.getElementById("applicants_btn");
 
@@ -22,8 +20,7 @@ function setUpApplicantsMainBtn() {
 
         await fetchAndRenderSemesters();
         setUpSortApplicantsByDropdown();
-        setUpApplicantTypebtns();
-        setUpShorlistSelectBtns();
+        setUpSelectBtns();
         setUpExportApplicantsBtn();
     });
 }
@@ -75,9 +72,6 @@ async function setUpSemesterBtns(buttons) {
         button.addEventListener('click', async () => {
             buttons.forEach(btn => btn.classList.remove("active_semester_button"));
             button.classList.add("active_semester_button");
-
-            inWhichView = 'all';
-            document.getElementById('allApplicantsBtn').click();
 
             const courseDropdown = document.getElementById('courseDropdownApplicants');
             courseDropdown.innerHTML = '';
@@ -137,16 +131,9 @@ async function fetchApplicantsBySemester(semester) {
 
 function displayApplicants(applicants) {
     const applicantsContainer = document.querySelector(".applicants_container");
-    const heading = document.getElementById('ApplicantItemHeading');
     applicantsContainer.innerHTML = '';
-    applicantsContainer.appendChild(heading);
 
-    let filteredApplicants = applicants;
-    if (inWhichView !== 'all') {
-        filteredApplicants = applicants.filter(applicant => applicant.applicant_type === inWhichView);
-    }
-
-    filteredApplicants.forEach(applicant => {
+    applicants.forEach(applicant => {
         const applicantItem = document.createElement("div");
         applicantItem.className = "applicant_item";
         applicantItem.setAttribute('data-gpa', applicant.gpa);
@@ -157,43 +144,17 @@ function displayApplicants(applicants) {
 
         let buttonHTML = '';
 
-        if (inWhichView === 'all') {
-            if (applicant.applicant_type === 'new') {
-                buttonHTML = `
-                    <button type="button" class="shortlist_btn" 
-                        data-applicant-id="${applicant.applicant_id}" 
-                        data-name="${applicant.name}">Shortlist</button>
-                    <button type="button" class="select_btn" 
-                        data-applicant-id="${applicant.applicant_id}" 
-                        data-name="${applicant.name}">Select</button>
-                `;
-            } else if (applicant.applicant_type === 'shortlisted') {
-                buttonHTML = `
-                    <button type="button" class="shortlisted_btn" 
-                        data-applicant-id="${applicant.applicant_id}" 
-                        data-name="${applicant.name}">Shortlisted</button>
-                `;
-            } else if (applicant.applicant_type === 'selected') {
-                buttonHTML = `
-                    <button type="button" class="selected_btn" 
-                        data-applicant-id="${applicant.applicant_id}" 
-                        data-name="${applicant.name}">Selected</button>
-                `;
-            }
-        } else if (inWhichView === 'shortlisted') {
+        if (applicant.applicant_type === 'new') {
             buttonHTML = `
-                <button type="button" class="unshortlist_btn" 
-                    data-applicant-id="${applicant.applicant_id}" 
-                    data-name="${applicant.name}">Unshortlist</button>
-                <button type="button" class="select_btn" style="background-color:#4cae4c"
+                <button type="button" class="select_btn" 
                     data-applicant-id="${applicant.applicant_id}" 
                     data-name="${applicant.name}">Select</button>
             `;
-        } else if (inWhichView === 'selected') {
+        } else if (applicant.applicant_type === 'selected') {
             buttonHTML = `
-                <button type="button" class="unselect_btn" 
-                    data-applicant-id="${applicant.applicant_id}" 
-                    data-name="${applicant.name}">UnSelect</button>
+                <button type="button" class="unselect_btn"
+                data-applicant-id="${applicant.applicant_id}" 
+                data-name="${applicant.name}">UnSelect</button>
             `;
         }
 
@@ -284,7 +245,7 @@ function displayApplicants(applicants) {
     });
 
     setUpViewProfileEventListener();
-    setUpShorlistSelectBtns();
+    setUpSelectBtns();
 }
 
 function setUpViewProfileEventListener() {
@@ -334,6 +295,37 @@ async function createProfileContainer(profileData) {
     profileContainer.classList.add('profile_container');
     profileContainer.style.display = 'block';
 
+    let resumeSection;
+    if (profileData.resume === "not_available" || !profileData.resume) {
+        resumeSection = `
+        <div><span>Resume:</span> <span>No Resume Available</span></div>
+    `;
+    } else {
+        resumeSection = `
+        <div><span>Resume:</span> 
+            <a href="../resume/${profileData.resume}" target="_blank">${profileData.resume}</a>
+        </div>
+    `;
+    }
+
+    let transcriptSection;
+    if (profileData.transcriptCount === 0 || !profileData.transcripts || profileData.transcripts.length === 0) {
+        transcriptSection = `
+        <div><span>Transcripts:</span> <span>No Transcripts Available</span></div>
+    `;
+    } else {
+        transcriptSection = `
+        <div><span>Transcripts:</span></div>
+        <ul>
+            ${profileData.transcripts.map(transcript => `
+                <li><a href="/transcripts/${transcript}" target="_blank">${transcript}</a></li>
+            `).join('')}
+        </ul>
+    `;
+    }
+
+
+
     profileContainer.innerHTML = `
         <div class="profile_name">
             <span>Name: </span><span>${profileData.name}</span>
@@ -380,13 +372,10 @@ async function createProfileContainer(profileData) {
         <div class="profile_credits_will_register">
             <span>Credits Planned to register next semester</span><span>${profileData.creditsplannedtoregisterforupcomingsemester}</span>
         </div>
-        <div class="profile_resume">
-            <a href="../resume/${profileData.netid}.pdf" target="_blank"><span>View Resume </span></a> 
-        </div>
-        <div class="profile_transcripts">
-            <a href="/transcripts/${profileData.netid}.pdf" target="_blank"><span>View Transcripts </span></a> 
-        </div>
-        
+
+        ${resumeSection}
+
+        ${transcriptSection}
 
         <button class="close_profile_btn">Close</button>
     `;
@@ -466,58 +455,18 @@ function sortApplicants() {
         } 
     });
 
-    const heading = document.getElementById('ApplicantItemHeading');
     container.innerHTML = '';
-    container.appendChild(heading);
     applicantsToSort.forEach(item => container.appendChild(item));
 
 }
 
 
 
-function setUpApplicantTypebtns() {
-    const allApplicantsBtn = document.getElementById('allApplicantsBtn');
-    const shortlistedApplicantsBtn = document.getElementById('shortlistedApplicantsBtn');
-    const selectedApplicantsBtn = document.getElementById('selectedApplicantsBtn');
 
-    allApplicantsBtn.addEventListener('click', async function (event) {
-        handleApplicantTypeBtnClick(event);
-        inWhichView = 'all';
-        const course = getSelectedCourse();
-        await filterApplicantsByCourse(course);
-    });
-
-    shortlistedApplicantsBtn.addEventListener('click', async function (event) {
-        handleApplicantTypeBtnClick(event);
-        inWhichView = 'shortlisted';
-        const course = getSelectedCourse();
-        await filterApplicantsByCourse(course);
-    });
-
-    selectedApplicantsBtn.addEventListener('click', async function (event) {
-        handleApplicantTypeBtnClick(event);
-        inWhichView = 'selected';
-        const course = getSelectedCourse();
-        await filterApplicantsByCourse(course);
-    });
-}
-
-function handleApplicantTypeBtnClick(event) {
-    const buttons = document.querySelectorAll('.Applicant_type_btns_container button');
-    buttons.forEach(button => {
-        button.classList.remove('active');
-    });
-    event.currentTarget.classList.add('active');
-}
 
 function getActiveSemester() {
     const activeButton = document.querySelector('.semester-button.active_semester_button');
     return activeButton ? activeButton.dataset.semester : null;
-}
-
-function getSelectedCourse() {
-    const courseDropdown = document.getElementById('courseDropdownApplicants');
-    return courseDropdown ? courseDropdown.value : null;
 }
 
 
@@ -585,9 +534,7 @@ async function filterApplicantsByCourse(selectedCourse) {
     const semester = getActiveSemester();
     const applicants = await fetchApplicantsBySemester(semester);
 
-    const heading = document.getElementById('ApplicantItemHeading');
     applicantsContainer.innerHTML = '';
-    applicantsContainer.appendChild(heading);
 
     let filteredApplicants = applicants;
     if (selectedCourse !== 'select here' && selectedCourse) {
@@ -596,12 +543,9 @@ async function filterApplicantsByCourse(selectedCourse) {
         );
     }
 
-    if (inWhichView !== 'all') {
-        filteredApplicants = filteredApplicants.filter(applicant => applicant.applicant_type === inWhichView);
-    }
-
     if (filteredApplicants.length > 0) {
         displayApplicants(filteredApplicants);
+
     } else {
         const noApplicantsMessage = document.createElement('p');
         noApplicantsMessage.textContent = 'No Applicants Found for this Course and View';
@@ -616,33 +560,15 @@ async function filterApplicantsByCourse(selectedCourse) {
 
 
 
-function setUpShorlistSelectBtns() {
-    const shortlistBtns = document.querySelectorAll('.shortlist_btn');
+function setUpSelectBtns() {
     const selectBtn= document.querySelectorAll('.select_btn');
-    const unshortlistBtn = document.querySelectorAll('.unshortlist_btn');
     const unselectBtn = document.querySelectorAll('.unselect_btn');
-
-    shortlistBtns.forEach(button => {
-        button.addEventListener('click', async function () {
-            const applicantId = this.getAttribute('data-applicant-id');
-            const applicantName = this.getAttribute('data-name');
-            await shortlistApplicant(applicantId, applicantName);
-        });
-    });
 
     selectBtn.forEach(button => {
         button.addEventListener('click', async function () {
             const applicantId = this.getAttribute('data-applicant-id');
             const applicantName = this.getAttribute('data-name');
             await selectApplicant(applicantId, applicantName);
-        });
-    });
-
-    unshortlistBtn.forEach(button => {
-        button.addEventListener('click', async function () {
-            const applicantId = this.getAttribute('data-applicant-id');
-            const applicantName = this.getAttribute('data-name');
-            await unShortlistApplicant(applicantId, applicantName);
         });
     });
 
@@ -653,40 +579,6 @@ function setUpShorlistSelectBtns() {
             await unSelectApplicant(applicantId, applicantName);
         });
     });
-}
-
-async function shortlistApplicant(applicantId, applicantName) {
-    const userConfirmed = await showConfirmationModal(applicantName, "Shortlist");
-
-    if (userConfirmed) {
-        try {
-            const semester = getActiveSemester();
-
-            const response = await fetch(`/shortlistApplicant?applicantId=${applicantId}&semester=${semester}`);
-
-            if (response.redirected) {
-                window.location.href = '/?sessionExpired=true';
-                return;
-            }
-
-            if (response.ok) {
-                const result = await response.json();
-                alert(result.message);
-
-                const activeSemesterButton = document.querySelector(`.semester-button[data-semester="${semester}"]`);
-                if (activeSemesterButton) {
-                    activeSemesterButton.click(); 
-                }
-
-            } else {
-                const errorData = await response.json();
-                alert(errorData.message || "Failed to shortlist the applicant.");
-            }
-        } catch (error) {
-            console.log('Error occurred while shortlisting the applicant:', error);
-            alert("An error occurred. Please try again later.");
-        }
-    }
 }
 
 async function selectApplicant(applicantId, applicantName) {
@@ -716,40 +608,6 @@ async function selectApplicant(applicantId, applicantName) {
             }
         } catch (error) {
             console.log('Error occurred while selecting the applicant:', error);
-            alert("An error occurred. Please try again later.");
-        }
-    }
-}
-
-async function unShortlistApplicant(applicantId, applicantName) {
-    const userConfirmed = await showConfirmationModal(applicantName, "unshorlist");
-
-    if (userConfirmed) {
-        try {
-            const semester = getActiveSemester();
-            const response = await fetch(`/unShortlistApplicant?applicantId=${applicantId}&semester=${semester}`);
-
-
-            if (response.redirected) {
-                window.location.href = '/?sessionExpired=true';
-                return;
-            }
-
-            if (response.ok) {
-                const result = await response.json();
-                alert(result.message);
-                
-                const activeSemesterButton = document.querySelector(`.semester-button[data-semester="${semester}"]`);
-                if (activeSemesterButton) {
-                    activeSemesterButton.click();
-                }
-
-            } else {
-                const errorData = await response.json();
-                alert(errorData.message || "Failed to Un Shortlist the applicant.");
-            }
-        } catch (error) {
-            console.log('Error occurred while un shortlisting the applicant:', error);
             alert("An error occurred. Please try again later.");
         }
     }
@@ -852,6 +710,10 @@ function createConfirmationModal() {
 
 
 
+
+
+
+
 function setUpExportApplicantsBtn() {
     const exportApplicantsBtn = document.querySelector('#exportApplicants');
     const confirmSelectionBtn = document.getElementById('confirmSelectionBtn');
@@ -923,7 +785,6 @@ async function exportApplicants() {
 
     const selectedApplicationTypes = {
         allApplicants: document.getElementById('allApplicationsCheckbox').checked,
-        shortlistedApplicants: document.getElementById('shortlistedApplicationsCheckbox').checked,
         selectedApplicants: document.getElementById('selectedApplicationsCheckbox').checked,
     };
 

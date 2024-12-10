@@ -1,7 +1,7 @@
 .StaffSelectedApplicantsContent {
     width: 100%;
     display: grid;
-    grid-template-columns: 200px auto;
+    grid-template-columns: 170px auto;
     grid-template-rows: 60px 10px auto;
 }
 
@@ -18,6 +18,9 @@
 
     grid-column-start: 1;
     grid-column-end: 3;
+
+    border: 0px solid #003366;
+    border-width: 0px 0px 1px 0px;
 }
 
 .StaffSelectedApplicantsContent .department_title_container span {
@@ -26,10 +29,8 @@
     font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: rgb(131, 3, 3);
+    color: #003366;
 }
-
-
 
 .StaffSelectedApplicantsContent .semesters_container {
     width: 100%;
@@ -44,7 +45,9 @@
     grid-row-end: 4;
     grid-column-start: 1;
     grid-column-end: 2;
-    box-shadow: 8px 0px 8px rgba(0, 0, 0, 0.5);
+
+    margin-top: 12px;
+    /* box-shadow: 8px 0px 8px rgba(0, 0, 0, 0.5); */
 }
 
 .StaffSelectedApplicantsContent .semester-button-in-selected-applicants {
@@ -60,8 +63,7 @@
 }
 
 .StaffSelectedApplicantsContent .semester-button-in-selected-applicants.active_semester_button_in_selected_applicants {
-    background-color: #0056b3;
-    background-color: rgb(131, 3, 3);
+    background-color: rgb(129, 133, 138);
     color: white;
 }
 
@@ -75,6 +77,9 @@
 
 
 .StaffSelectedApplicantsContent .navigation {
+
+    margin-top: 12px;
+
     grid-row: 2;
     grid-column: 2;
 
@@ -133,7 +138,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
     padding: 50px;
     padding-top: 30px;
 }
@@ -143,8 +148,7 @@
     align-items: center;
     justify-content: flex-start;
     grid-template-rows: 50px auto;
-    grid-template-columns: 7fr 1fr 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: 7fr 1fr 1fr;
     background-color: #fff;
     width: 98%;
     padding: 10px 20px;
