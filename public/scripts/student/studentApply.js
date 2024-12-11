@@ -151,7 +151,7 @@ async function fetchCoursesListBySemester(semester) {
 function setupApplyButtons() {
 
     const newApplicationContainer = document.querySelector(".new_application_container");
-    const popupOverlay = document.querySelector(".overlay");
+    const popupOverlay = document.querySelector(".new_application_container_overlay");
 
     const courseTitleSpan = newApplicationContainer.querySelector(".course_title span");
     const courseNameSpan = newApplicationContainer.querySelector(".course_name_container .value span");
@@ -181,7 +181,7 @@ function setupApplyButtons() {
 // Submit or Cancel application form
 function setupSubmitCancelApplicationBtns() {
     const newApplicationContainer = document.querySelector(".new_application_container");
-    const popupOverlay = document.querySelector(".overlay");
+    const popupOverlay = document.querySelector(".new_application_container_overlay");
 
     const submitApplicationBtn = document.querySelector(".submit_application_btn");
     const cancleApplicationBtn = document.querySelector(".cancel_application_btn");

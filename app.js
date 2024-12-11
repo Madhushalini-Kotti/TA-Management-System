@@ -316,7 +316,7 @@ async function fetchStudentDetails(netid) {
         'graduateprogram': details.graduateprogram || '',
         'advisorname': details.advisorname || '',
         'advisoremail': details.advisoremail || '',
-        'department': details.department || '',
+        'department': details.department|| '',
         'courseprogram': details.courseprogram || '',
         'enrollementstatus': details.enrollementstatus || '',
         'expectedgraduationdate': details.expectedgraduationdate || '',

@@ -131,9 +131,9 @@ async function fetchApplicationsListBySemester(semester) {
                 </div>
             </div>
             <div class="comments">
-                <div class="title"><span>Your Comments</span></div>
+                <div class="title"><span>Comments</span></div>
                 <div class="value">
-                    <span id="comments_${application.id}">${application.comments || 'No Comments'}</span>
+                    <span id="comments_${application.id}">${application.comments || 'Enter additional comments.'}</span>
                 </div>
             </div>
             <div class="edit_delete_save_cancel_btns_container">

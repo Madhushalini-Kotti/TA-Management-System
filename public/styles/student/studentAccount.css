@@ -6,17 +6,19 @@
 }
 
 .student_account_header {
-    display: grid;
-    grid-template-columns: 50% auto auto;
-    align-items: flex-end;
+    display: flex;
+    align-items: center;
     justify-content: flex-start;
-    width: 100%;
+    width: 92%;
     height: 70px;
+    margin: 10px auto 30px auto;
+
+    border: 0px solid rgba(0, 0, 0, 0.5);
+    border-width: 0px 0px 0.5px 0px;
 }
 
-.student_account_header .title span {
+.student_account_header span {
     color: #003366;
-    margin-left: 50px;
     font-size: 30px;
     font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 500;
@@ -24,21 +26,11 @@
     margin-bottom: 0px;
 }
 
-.student_account_header button {
-    width: 150px;
-}
-
-.StudentAccountContent>hr {
-    margin-left: 40px;
-    height: 10px;
-}
-
 .student_information_container {
     width: 70%;
     height: auto;
     margin-left: 50px;
     margin-bottom: 50px;
-    background-color: rgb(205, 224, 241);
 
     display: inline-flex;
     flex-direction: column;
@@ -51,6 +43,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 50px;
 }
 
 .student_information_container.second_batch {
@@ -58,39 +52,41 @@
     display: flex;
     flex-direction: column;
     gap: 50px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
 }
 
 .student_information_container.third_batch {
     padding: 30px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
 }
 
 .student_information_container.first_batch > div {
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 1fr 4fr;
-    gap: 20px;
+    gap: 15px;
 }
 
 .student_information_container.second_batch > div {
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 1fr 4fr;
-    gap: 20px;
+    gap: 15px;
 }
 
 .student_information_container.third_batch > div {
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 4fr 5fr;
-    gap: 20px;
+    gap: 15px;
 }
 
 .student_information_container > div > .title {
     color: #003366;
-    font-size: 20px;
+    font-size: 17px;
     font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 500;
     letter-spacing: 1px;
@@ -98,7 +94,7 @@
 
 .student_information_container > div > .value {
     color: #003366;
-    font-size: 20px;
+    font-size: 16px;
     font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 400;
     letter-spacing: 1px;
@@ -118,10 +114,17 @@
 
 .student_information_container .resume .value div {
     display: flex;
-    gap: 20px;
+    gap: 10px;
 }
 
-
+.student_information_container .resume .value button {
+    width: 80px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+}
 
 .student_information_container .transcripts .value {
     display: flex;
@@ -130,9 +133,18 @@
     justify-content: center;
 }
 
+.student_information_container .transcripts .value button {
+    width: 80px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 20px;
+}
+
 .student_information_container .transcripts .value div {
     display: flex;
-    gap: 20px;
+    gap: 10px;
 }
 
 
@@ -140,11 +152,27 @@
 
 
 .student_information_container #new_resume_input {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.student_information_container #new_resume_input button {
+    width: 80px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .student_information_container #new_transcript_input {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.student_information_container #new_transcript_input button {
+    width: 80px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
@@ -165,6 +193,21 @@
     padding-right: 30px;
 }
 
+.student_information_container .edit_and_save_btns_container button {
+    margin-top: 30px;
+    width: 150px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.student_information_container .dept .value{
+    text-transform: uppercase;
+}
+
 .student_information_container .programstartdate .value {
     display: inline-flex;
 }
@@ -180,7 +223,6 @@
 
 
 
-/* Overlay styling */
 .delete_file_confirmation_overlay {
     position: fixed;
     top: 0;
@@ -197,7 +239,7 @@
 .delete_file_confirmation_overlay .message {
     background: white;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 2px;
     text-align: center;
     width: 300px;
 }

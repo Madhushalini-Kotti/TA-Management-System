@@ -405,7 +405,7 @@ async function fetchCoursePrograms() {
     const courseProgramList = [];
     data.forEach(program => {
         courseProgramList.push({
-            abbreviation: program.courseprogram_abbre,
+            abbreviation: program.courseprogram_abbre.toUpperCase(),
             name: program.courseprogram_name
         });
     });
@@ -457,12 +457,12 @@ function setUpEditSaveProfileBtn() {
 
     newEditBtn.addEventListener('click', function () {
         newEditBtn.style.display = 'none';
-        newSaveBtn.style.display = "inline-block";
+        newSaveBtn.style.display = "flex";
         replaceTextWithInputs();
     });
 
     newSaveBtn.addEventListener('click', function () {
-        newEditBtn.style.display = "inline-block";
+        newEditBtn.style.display = "flex";
         newSaveBtn.style.display = 'none';
         saveProfileData();
     });
