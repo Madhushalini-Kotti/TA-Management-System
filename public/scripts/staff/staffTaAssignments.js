@@ -4,9 +4,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function setUpSelectedApplicantsMainBtn() {
-    const selectedApplicantsBtn = document.getElementById("selectedApplicants_btn");
+    const taAssignmentsBtn = document.getElementById("taAssignments_btn");
 
-    selectedApplicantsBtn.addEventListener('click', async function () {
+    taAssignmentsBtn.addEventListener('click', async function () {
 
         await fetchAndRenderSemestersInSelectedApplicants();
     });
@@ -23,7 +23,7 @@ async function fetchAndRenderSemestersInSelectedApplicants() {
         const semesterResponse = await fetch('/semesterList');
         if (semesterResponse.ok) {
             const semesters = await semesterResponse.json();
-            const semesterContainer = document.querySelector('.StaffSelectedApplicantsContent .semesters_container');
+            const semesterContainer = document.querySelector('.StaffTaAssignmentsContent .semesters_container');
 
             semesterContainer.innerHTML = '';
 

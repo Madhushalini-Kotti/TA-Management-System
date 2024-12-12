@@ -27,6 +27,7 @@ sequelize.authenticate()
     .then(() => console.log('Database connected successfully'))
     .catch((error) => console.error('Error connecting to the database:', error));
 
+
 sequelize.sync({ force: false })
     .then(() => {
         console.log('Database synchronized successfully!');
@@ -1010,7 +1011,10 @@ async function fetchTAsForCourse(courseName, courseNumber, semester, department)
 async function fetchCoursesBySemester(semester) {
     try {
         const coursesResult = await db.query(`
-            SELECT course_name, course_number, course_title, dept_name, sections, ta_hours_total, ta_hours_assigned, no_of_ta_assigned
+            SELECT DISTINCT ON (semester, dept_name, course_name, course_number)
+                crn, course_name, course_number, course_title, dept_name, sections, 
+                current_enrollement, total_enrollement, professor, ta_hours_assigned
+                no_of_ta_assigned
             FROM courses
             WHERE semester = $1
             ORDER BY course_name, course_number
@@ -1028,7 +1032,6 @@ async function fetchCoursesBySemester(semester) {
         console.error('Error fetching courses from database:', error);
         throw error;
     }
-
 }
 
 app.get('/CoursesListBySemester', checkSession, async (req, res) => {
@@ -1042,42 +1045,117 @@ app.get('/CoursesListBySemester', checkSession, async (req, res) => {
     }
 });
 
-async function insertRowsIntoDatabase(rows, semester, deptName) {
+app.get('/CourseDetails', async (req, res) => {
+    const { semester, courseNumber, courseName } = req.query;
+    const dept_name = "eecs";
+
+    // Validate input
+    if (!semester || !courseNumber || !courseName) {
+        return res.status(400).json({ error: 'Missing required query parameters.' });
+    }
 
     try {
-        // Looping through each row from the CSV file
-        for (const row of rows) {
+        // Fetch main course details
+        const courseDetailsQuery = `
+            SELECT 
+                course_title, course_name, course_number, ta_hours_assigned
+            FROM courses
+            WHERE semester = $1 AND course_number = $2 AND course_name = $3 AND dept_name = $4
+        `;
+        const courseResult = await db.query(courseDetailsQuery, [semester, courseNumber, courseName, dept_name]);
 
-            const courseNumber = row['course number'];
-            const courseName = row['course name'];
-            const courseTitle = row['course title'];
-
-            let sections = parseInt(row['sections'], 10);
-            let taHoursTotal = parseInt(row['ta hours total'], 10);
-
-            if (isNaN(sections)) sections = 1; // Default to 1 section
-            if (isNaN(taHoursTotal)) taHoursTotal = 0; // Default to 0 TA hours
-
-            await db.query(`
-                INSERT INTO courses (
-                    dept_name, semester, course_name, course_number, 
-                    course_title, sections, ta_hours_total, ta_hours_assigned, no_of_ta_assigned
-                )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-                ON CONFLICT (dept_name, semester, course_number, course_name) DO UPDATE
-                SET 
-                    course_title = EXCLUDED.course_title,
-                    sections = EXCLUDED.sections,
-                    ta_hours_total = EXCLUDED.ta_hours_total;`,
-                [deptName, semester, courseName, courseNumber, courseTitle, sections, taHoursTotal, 0, 0]
-            );
+        if (courseResult.rows.length === 0) {
+            return res.status(404).json({ error: 'Course not found.' });
         }
 
+        const course = courseResult.rows[0];
+
+        // Fetch sections for the course
+        const sectionsQuery = `
+            SELECT crn, current_enrollement, total_enrollement, professor
+            FROM courses
+            WHERE semester = $1 AND course_number = $2 AND course_name = $3 AND dept_name = $4
+        `;
+
+        const sectionsResult = await db.query(sectionsQuery, [semester, courseNumber, courseName, dept_name]);
+
+        // Fetch TA details using the provided function
+        const tas = await fetchTAsForCourse(courseName, courseNumber, semester, dept_name);
+
+        // Combine results
+        const courseDetails = {
+            ...course,
+            sections: sectionsResult.rows,
+            tas: tas.map(ta => ({
+                netid: ta.applicant_netid,
+                name: ta.name,
+                hours: ta.ta_hours
+            }))
+        };
+
+        res.json(courseDetails);
+
+    } catch (error) {
+        console.error('Error fetching course details:', error);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+async function insertRowsIntoDatabase(rows, semester, deptName) {
+    try {
+        for (const row of rows) {
+            // Extracting values from the row
+            const crn = parseInt(row['CRN'], 10);
+            const courseNumber = row['COURSE'].split(' ')[1]; // Extract course number from COURSE
+            const courseName = row['COURSE'].split(' ')[0];  // Extract course name from COURSE
+            const section = parseInt(row['SECT'], 10);
+            const courseTitle = row['TITLE'];
+            const currentEnrollment = parseInt(row['ENRL ACTL'], 10);
+            const totalEnrollment = currentEnrollment + parseInt(row['ENRL REMN'], 10);
+            const professor = row['INSTRUCTOR'];
+
+            // Defaulting values if necessary
+            const taHoursAssigned = 0;
+            const noOfTaAssigned = 0;
+
+            // Insert or update the database
+            await db.query(`
+    INSERT INTO courses (
+        dept_name, semester, course_number, course_name, course_title,
+        sections, crn, current_enrollement, total_enrollement, professor,
+        ta_hours_assigned, no_of_ta_assigned
+    )
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    ON CONFLICT (dept_name, semester, course_number, course_name, crn) DO UPDATE
+    SET 
+        course_title = EXCLUDED.course_title,
+        sections = EXCLUDED.sections,
+        current_enrollement = EXCLUDED.current_enrollement,
+        total_enrollement = EXCLUDED.total_enrollement,
+        professor = EXCLUDED.professor,
+        ta_hours_assigned = EXCLUDED.ta_hours_assigned,
+        no_of_ta_assigned = EXCLUDED.no_of_ta_assigned;
+`, [
+                deptName,
+                semester,
+                courseNumber,
+                courseName,
+                courseTitle,
+                section,
+                crn,
+                currentEnrollment,
+                totalEnrollment,
+                professor,
+                taHoursAssigned,
+                noOfTaAssigned
+            ]);
+
+
+        }
     } catch (error) {
         console.error('Error inserting rows into the database:', error);
         throw new Error('Failed to insert rows into the database');
     }
-
 }
 
 function extractRowsFromCSV(filePath) {
@@ -1124,14 +1202,14 @@ app.post('/add_single_course', checkSession, async (req, res) => {
 
     try {
         await db.query(`
-            INSERT INTO courses (dept_name, semester, course_number, course_name, course_title, sections, ta_hours_total, ta_hours_assigned, no_of_ta_assigned)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            INSERT INTO courses (dept_name, semester, course_number, course_name, course_title, sections, ta_hours_assigned, no_of_ta_assigned)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             ON CONFLICT (dept_name, semester, course_number, course_name) DO UPDATE
             SET 
                 course_title = EXCLUDED.course_title,
                 sections = EXCLUDED.sections,
                 ta_hours_total = EXCLUDED.ta_hours_total;`,
-            [dept_name, semester, courseNumber, courseName, courseTitle, sections, taHoursTotal, 0, 0]
+            [dept_name, semester, courseNumber, courseName, courseTitle, sections, 0, 0]
         );
 
         res.json({ success: true, message: 'Course uploaded successfully' });
@@ -1158,42 +1236,6 @@ app.post('/delete_single_course', checkSession, async (req, res) => {
         res.json({ success: false, message: 'Error deleting the course' });
     }
 
-});
-
-app.post('/updateCourse/:courseNumber', async (req, res) => {
-    const { course_name, course_number, semester, ta_hours_total, sections } = req.body;
-    const courseNumber = req.params.courseNumber;
-
-    try {
-        const courseResult = await db.query('SELECT * FROM courses WHERE course_number = $1 and course_name = $2 and semester = $3 and dept_name = $4', [courseNumber, course_name, semester, "eecs"]);
-
-        if (courseResult.rows.length === 0) {
-            return res.status(404).json({ success: false, message: 'Course not found' });
-        }
-
-        const updateResult = await db.query(`
-            UPDATE courses
-            SET 
-                sections = $1,
-                ta_hours_total = $2
-            WHERE 
-                course_name = $3
-                AND course_number = $4
-                AND semester = $5
-                AND dept_name = $6
-            RETURNING *
-        `, [sections, ta_hours_total, course_name, courseNumber, semester, "eecs"]);
-
-        if (updateResult.rowCount > 0) {
-            res.status(200).json({ success: true, message: 'Course updated successfully' });
-        } else {
-            res.status(500).json({ success: false, message: 'Failed to update course' });
-        }
-
-    } catch (error) {
-        console.error('Error updating course:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
 });
 
 
@@ -1353,32 +1395,10 @@ app.get('/fetchApplicantDetails', checkSession, async (req, res) => {
             ...applicantOtherDetails
         };
 
-        console.log(result);
-
         res.json(result);
     } catch (error) {
         console.error('Error fetching applicant details:', error);
         res.status(500).json({ success: false, message: 'Failed to fetch applicant details', error: error.message });
-    }
-
-});
-
-app.get('/shortlistApplicant', checkSession, async (req, res) => {
-    const applicantId = req.query.applicantId;
-    const semester = req.query.semester;
-
-    if (!applicantId) {
-        return res.status(400).json({
-            error: 'Couldn\'t Shortlist Applicant'
-        });
-    }
-
-    try {
-        await db.query('Update applicants set applicant_type = $1 where applicant_id = $2 AND semester = $3 AND dept_name = $4', ["shortlisted", applicantId, semester, "eecs"]);
-        res.json({ success: true, message: 'Applicant shortlisted successfully' });
-    } catch (error) {
-        console.error('Error shortlisting Applicant:', error);
-        return res.status(500).json({ error: 'Couldn\'t shortlist Applicant, Try Again Later' });
     }
 
 });
@@ -1403,26 +1423,6 @@ app.get('/selectApplicant', checkSession, async (req, res) => {
 
 });
 
-app.get('/unShortlistApplicant', checkSession, async (req, res) => {
-    const applicantId = req.query.applicantId;
-    const semester = req.query.semester;
-
-    if (!applicantId) {
-        return res.status(400).json({
-            error: 'Couldn\'t Un  Shortlist Applicant'
-        });
-    }
-
-    try {
-        await db.query('Update applicants set applicant_type = $1 where applicant_id = $2 and semester = $3 and dept_name = $4', ["new", applicantId, semester, "eecs"]);
-        res.json({ success: true, message: 'Applicant Un shortlisted successfully' });
-    } catch (error) {
-        console.error('Error Un shortlisting Applicant:', error);
-        return res.status(500).json({ error: 'Couldn\'t Un shortlist Applicant, Try Again Later' });
-    }
-
-});
-
 app.get('/unSelectApplicant', checkSession, async (req, res) => {
     const applicantId = req.query.applicantId;
     const semester = req.query.semester;
@@ -1434,15 +1434,32 @@ app.get('/unSelectApplicant', checkSession, async (req, res) => {
     }
 
     try {
+        // Step 1: Fetch all courses assigned to the applicant
+        const coursesResult = await db.query(
+            `SELECT course_name, course_number 
+             FROM course_assignment_details 
+             WHERE applicant_id = $1 AND semester = $2 AND department = $3`,
+            [applicantId, semester, "eecs"]
+        );
+
+        // Step 2: Remove the applicant from each assigned course
+        for (let course of coursesResult.rows) {
+            const { course_name, course_number } = course;
+
+            // Call the function to remove the assigned course (simulate POST request for each course)
+            await removeAssignedCourseForApplicant(applicantId, course_name, course_number, semester);
+        }
+
+        // Step 3: Unselect the applicant (set to "new" and no course assigned)
         await db.query('Update applicants set applicant_type = $1 where applicant_id = $2 and semester = $3 and dept_name = $4', ["new", applicantId, semester, "eecs"]);
         await db.query('update applicants set course_assigned = $1 where applicant_id = $2 and semester = $3 and dept_name = $4', [false, applicantId, semester, "eecs"]);
         await db.query('delete from course_assignment_details where applicant_id = $1 and semester = $2 and department = $3', [applicantId, semester, "eecs"]);
-        res.json({ success: true, message: 'Applicant Un selected successfully' });
+
+        res.json({ success: true, message: 'Applicant Un selected and courses removed successfully' });
     } catch (error) {
         console.error('Error Un selecting Applicant:', error);
         return res.status(500).json({ error: 'Couldn\'t Un select Applicant, Try Again Later' });
     }
-
 });
 
 app.post("/exportApplicants", checkSession, async (req, res) => {
@@ -1609,82 +1626,96 @@ app.post('/assignCourse', checkSession, async (req, res) => {
     }
 });
 
+async function removeAssignedCourseForApplicant(applicantId, courseName, courseNumber, semester) {
+    try {
+        // Get the TA hours for the course assignment
+        const result = await db.query(
+            `SELECT ta_hours FROM course_assignment_details 
+             WHERE applicant_id = $1 AND course_number = $2 AND course_name = $3 AND semester = $4 AND department = $5`,
+            [applicantId, courseNumber, courseName, semester, "eecs"]
+        );
+
+        if (result.rows.length === 0) {
+            throw new Error("Course assignment not found for this applicant.");
+        }
+
+        const taHours = result.rows[0].ta_hours;
+
+        // Delete the course assignment details
+        await db.query(
+            `DELETE FROM course_assignment_details 
+             WHERE applicant_id = $1 AND course_number = $2 AND course_name = $3 AND semester = $4 AND department = $5`,
+            [applicantId, courseNumber, courseName, semester, "eecs"]
+        );
+
+        // Update the courses table: decrement TA hours assigned and number of TAs assigned
+        const courseResult = await db.query(
+            `SELECT ta_hours_assigned, no_of_ta_assigned 
+             FROM courses WHERE course_number = $1 AND course_name = $2 AND semester = $3 AND dept_name = $4`,
+            [courseNumber, courseName, semester, "eecs"]
+        );
+
+        if (courseResult.rows.length > 0) {
+            const currentTaHoursAssigned = courseResult.rows[0].ta_hours_assigned || 0;
+            const currentNoOfTaAssigned = courseResult.rows[0].no_of_ta_assigned || 0;
+
+            const newTaHoursAssigned = Math.max(currentTaHoursAssigned - taHours, 0);
+            const newNoOfTaAssigned = Math.max(currentNoOfTaAssigned - 1, 0);
+
+            await db.query(
+                `UPDATE courses SET 
+                 ta_hours_assigned = $1, 
+                 no_of_ta_assigned = $2 
+                 WHERE course_number = $3 AND course_name = $4 AND semester = $5 AND dept_name = $6`,
+                [
+                    newTaHoursAssigned,
+                    newNoOfTaAssigned,
+                    courseNumber, courseName, semester, "eecs"
+                ]
+            );
+        }
+
+        // Check if the applicant still has assigned courses
+        const { rows } = await db.query(
+            `SELECT COUNT(*) FROM course_assignment_details 
+             WHERE applicant_id = $1 AND semester = $2 and department = $3`,
+            [applicantId, semester, "eecs"]
+        );
+
+        if (parseInt(rows[0].count) === 0) {
+            // If no courses are assigned, update the applicant's status
+            await db.query(
+                `UPDATE applicants 
+                 SET course_assigned = $1 
+                 WHERE applicant_id = $2 AND semester = $3 AND dept_name = $4`,
+                [false, applicantId, semester, "eecs"]
+            );
+        }
+
+        return { success: true, message: "Assigned course removed successfully!" };
+    } catch (error) {
+        console.error("Error removing assigned course:", error);
+        throw new Error("Failed to remove assigned course. Please try again.");
+    }
+}
 
 app.post('/removeAssignedCourse', checkSession, async (req, res) => {
     const { applicantId, courseName, courseNumber, semester } = req.body;
 
-    if (applicantId && courseNumber && courseName && semester) {
-        try {
-
-            const result = await db.query(
-                `SELECT ta_hours FROM course_assignment_details 
-                 WHERE applicant_id = $1 AND course_number = $2 AND course_name = $3 AND semester = $4 AND department = $5`,
-                [applicantId, courseNumber, courseName, semester, "eecs"]
-            );
-
-            if (result.rows.length === 0) {
-                return res.status(400).json({ error: "Course assignment not found for this applicant." });
-            }
-
-            const taHours = result.rows[0].ta_hours;
-
-            await db.query(
-                `DELETE FROM course_assignment_details 
-                 WHERE applicant_id = $1 AND course_number = $2 AND course_name = $3 AND semester = $4 AND department = $5`,
-                [applicantId, courseNumber, courseName, semester, "eecs"]
-            );
-
-            const courseResult = await db.query(
-                `SELECT ta_hours_assigned, no_of_ta_assigned 
-                 FROM courses WHERE course_number = $1 AND course_name = $2 AND semester = $3 AND dept_name = $4`,
-                [courseNumber, courseName, semester, "eecs"]
-            );
-
-            if (courseResult.rows.length > 0) {
-                const currentTaHoursAssigned = courseResult.rows[0].ta_hours_assigned || 0;
-                const currentNoOfTaAssigned = courseResult.rows[0].no_of_ta_assigned || 0;
-
-                const newTaHoursAssigned = Math.max(currentTaHoursAssigned - taHours, 0);
-                const newNoOfTaAssigned = Math.max(currentNoOfTaAssigned - 1, 0);
-
-                // Update the courses table: decrement ta_hours_assigned and no_of_ta_assigned
-                await db.query(
-                    `UPDATE courses SET 
-                     ta_hours_assigned = $1, 
-                     no_of_ta_assigned = $2 
-                     WHERE course_number = $3 AND course_name = $4 AND semester = $5 AND dept_name = $6`,
-                    [
-                        newTaHoursAssigned,
-                        newNoOfTaAssigned,
-                        courseNumber, courseName, semester, "eecs"
-                    ]
-                );
-            }
-
-            const { rows } = await db.query(
-                `SELECT COUNT(*) FROM course_assignment_details 
-                 WHERE applicant_id = $1 AND semester = $2 and department = $3`,
-                [applicantId, semester, "eecs"]
-            );
-
-            if (parseInt(rows[0].count) === 0) {
-                // If no courses are assigned, update the applicant's status
-                await db.query(
-                    `UPDATE applicants 
-                     SET course_assigned = $1 
-                     WHERE applicant_id = $2 AND semester = $3 AND dept_name = $4`,
-                    [false, applicantId, semester, "eecs"]
-                );
-            }
-
-            res.json({ message: "Assigned course removed successfully!" });
-
-        } catch (error) {
-            console.error("Error removing assigned course:", error);
-            res.status(500).json({ error: "Failed to remove assigned course. Please try again." });
-        }
+    if (!applicantId || !courseName || !courseNumber || !semester) {
+        return res.status(400).json({ error: "Missing required parameters." });
     }
 
+    try {
+        // Call the helper function to remove the assigned course
+        const result = await removeAssignedCourseForApplicant(applicantId, courseName, courseNumber, semester);
+
+        // Return the response to the client
+        res.json({ message: result.message });
+    } catch (error) {
+        console.error("Error in /removeAssignedCourse:", error);
+        res.status(500).json({ error: "Failed to remove assigned course. Please try again later." });
+    }
 });
 
 app.post('/updateAssignedCourse', checkSession, async (req, res) => {

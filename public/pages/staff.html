@@ -13,7 +13,7 @@
     <link href="/styles/staff/staffSemesters.css" rel="stylesheet" />
     <link href="/styles/staff/staffCourses.css" rel="stylesheet" />
     <link href="/styles/staff/staffApplicants.css" rel="stylesheet" />
-    <link href="/styles/staff/staffSelectedApplicants.css" rel="stylesheet" />
+    <link href="/styles/staff/staffTaAssignments.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -81,14 +81,15 @@
             <span class="nav_bat_item_text">Applicants</span>
         </button>
 
-        <button type="submit" class="nav_bar_item_btn selectedApplicants" id="selectedApplicants_btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-person-check-fill"
+        <button type="submit" class="nav_bar_item_btn taAssignments" id="taAssignments_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" class="bi bi-card-checklist"
                 viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                    d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
-                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-            </svg>
-            <span class="nav_bat_item_text">Selected Applicants</span>
+                <path
+                    d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
+                <path
+                    d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0M7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0" />
+            </svg><br>
+            <span class="nav_bat_item_text">TA Assignments</span>
         </button>
 
         <button type="submit" class="nav_bar_item_btn logout" id="logout_btn">
@@ -131,12 +132,12 @@
                 </div>
             </button>
 
-            <button type="submit" class="nav_bar_item_btn selectedApplicants" id="selectedApplicants_btn_dashboard">
+            <button type="submit" class="nav_bar_item_btn taAssignments" id="taAssignments_btn_dashboard">
                 <div class="dashboard_item third">
                     <div class="top_part">
                     </div>
                     <div class="lower_part">
-                        <span>Selected Applicants</span>
+                        <span>TA Assignments</span>
                     </div>
                 </div>
             </button>
@@ -206,61 +207,75 @@
         <div class="semesters_container">
         
         </div>
-        
-        <div class="staffCoursesDataContent">
 
-            <div class="search_course_manage_courses_containers">
-                <div class="ta_assignment_details_labels_container">
-                    <div><span>TA Assignment status</span></div>
-                    <div><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-square-fill"
-                            viewBox="0 0 16 16">
-                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2z" />
-                        </svg> Completed
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-square-fill"
-                            viewBox="0 0 16 16">
-                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2z" />
-                        </svg> In Process
-                    </div>
-                    <div><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-square-fill"
-                            viewBox="0 0 16 16">
-                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2z" />
-                        </svg> Not Started
-                    </div>
-                </div>
-                <div class="manage_courses_buttons_container">
-                    <button id="addMultipleCoursesBtn"><span>Add Multiple Courses</span></button>
-                    <button id="addSingleCourseBtn"><span>Add Single Courses</span></button>
-                </div>
+        <div class="course_list_details_cotnainer">
+            <div class="search_course_container">
+                
+                <input type="text" name="searchCourse" placeholder="Course Title">
+                <button>Search</button>
             </div>
-            
-            <div class="CoursesFileUploadContainer" style="display:none">
-                <input type="file" id="csvFileInput" accept=".csv" style="margin-right: 10px;" />
-                <button id="uploadCsvBtn" class="btn btn-primary">Upload</button>
-                <button id="cancleFileUploadBtn" class="btn btn-secondary">Cancel</button>
-            </div>
-            
-            <div class="SingleCourseUploadContainer" style="display:none">
-                <input type="text" id="courseTitle" name="courseTitle" class="form-control" placeholder="Enter course title" />
-                <input type="text" id="courseName" name="courseName" class="form-control" placeholder="Enter course name" />
-                <input type="text" id="courseNumber" name="courseNumber" class="form-control" placeholder="Enter course number" />
-                <input type="number" id="sections" name="sections" class="form-control" placeholder="Enter number of sections" />
-                <input type="number" id="taHoursTotal" name="taHoursTotal" class="form-control" placeholder="Enter total TA hours" />
-                <button id="uploadSingleCourseBtn" class="btn btn-primary">Upload</button>
-                <button id="cancelSingleCourseUploadBtn" class="btn btn-secondary">Cancel</button>
-            </div>
-            
-            <div class="SingleCourseDeleteContainer" style="display: none;">
-                <input type="text" id="courseNumberDelete" name="courseNumber" class="form-control"
-                    placeholder="Enter CourseNumber" />
-                <input type="text" id="courseNameDelete" name="courseName" class="form-control" placeholder="Enter Course Name" />
-                <button id="deleteCourseBtn" class="btn btn-primary">Delete</button>
-                <button id="cancelDeletelSingleCourseBtn" class="btn btn-secondary">Cancel</button>
-            </div>
-            
             <div class="courses_list_container">
                 <!-- Courses will be Updated Dynamically-->
+            </div>
+            
+            <div class="course_details_container" style="display: none;">
+                <div class="course_name_number_title">
+                    <span class="course_title">Applied Machine Learning</span>
+                    <span class="course_name">CAP</span>
+                    <span class="course_number">6610</span>
+                </div>
+                <div class="course_section_details">
+                    <div class="sections_title">
+                        <span>Sections</span>
+                    </div>
+                    <div class="course_section_item">
+                        <div class="crn"><span class="title">CRN </span><span class="value">16030</span></div>
+                        <div class="enrollement"><span class="title">Enrollment</span><span class="value">9/31</span></div>
+                        <div class="instructor"><span class="title">Instructor</span><span class="value">Givre, Charles</span></div>
+                    </div>
+                    <div class="course_section_item">
+                        <div class="crn"><span class="title">CRN </span><span class="value">16032</span></div>
+                        <div class="enrollement"><span class="title">Enrollment</span><span class="value">2/37</span></div>
+                        <div class="instructor"><span class="title">Instructor</span><span class="value">Givre, Charles</span></div>
+                    </div>
+                </div>
+                <div class="course_tas">
+                    <div class="ta_details_title">
+                        <span>TA Details</span>
+                        <div class="course_ta_hours_available"><span class="title">TA Hours Available</span><span class="value">80</span></div>
+                        <div class="course_ta_hours_assigned"><span class="title">TA Hours Assigned</span><span class="value">20</span></div>
+                    </div>
+                    <div class="ta_details">
+                        <div><span>Madhushalini Kotti</span><span>20 Hours</span></div>
+                        <div><span>Vikas Reddy Mothe</span><span>20 Hours</span></div>
+                    </div>
+                </div>
+                <div class="course_manage_btns_container">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="courses_navigation">
+            <div class="manage_courses_buttons_container">
+                <button id="addMultipleCoursesBtn"><span>Add Multiple Courses</span></button>
+                <button id="addSingleCourseBtn"><span>Add Single Courses</span></button>
+            </div>
+            <div class="ta_assignment_status_color_coding_container">
+                <div class="title"><span>TA Assignment Status</span></div>
+                <div class="item">
+                    <div class="completed"></div>
+                    <span>Completed</span>
+                </div>
+                <div class="item">
+                    <div class="inprocess"></div>
+                    <span>In Process</span>
+                </div>
+                <div class="item">
+                    <div class="notstarted"></div>
+                    <span>Not Started</span>
+                </div>
             </div>
         </div>
     </div>
@@ -440,7 +455,7 @@
 
     </div>
 
-    <div class="StaffSelectedApplicantsContent" style="display: none;">
+    <div class="StaffTaAssignmentsContent" style="display: none;">
         <div class="department_title_container">
             <span>
                 Electrical Engineering And Computer Science
@@ -472,7 +487,7 @@
     <script src="/scripts/staff/staffSemesters.js" type="text/javascript"></script>
     <script src="/scripts/staff/staffCourses.js" type="text/javascript"></script>
     <script src="/scripts/staff/staffApplicants.js" type="text/javascript"></script>
-    <script src="/scripts/staff/staffSelectedApplicants.js" type="text/javascript"></script>
+    <script src="/scripts/staff/staffTaAssignments.js" type="text/javascript"></script>
 
 </body>
 

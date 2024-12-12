@@ -1,29 +1,26 @@
-.StaffSelectedApplicantsContent {
+.StaffTaAssignmentsContent {
     width: 100%;
     display: grid;
     grid-template-columns: 170px auto;
-    grid-template-rows: 60px 10px auto;
+    grid-template-rows: 80px 10px auto;
 }
 
-.StaffSelectedApplicantsContent .department_title_container {
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    grid-row-start: 1;
-    grid-row-end: 2;
-
-    grid-column-start: 1;
-    grid-column-end: 3;
-
-    border: 0px solid #003366;
-    border-width: 0px 0px 1px 0px;
+.StaffTaAssignmentsContent .department_title_container {
+    width: 95%;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 10px auto;
+    
+        grid-column: 1 / 3;
+        grid-row: 1 / 2;
+    
+        border: 0px solid rgba(0, 0, 0, 0.5);
+        border-width: 0px 0px 0.5px 0px;
 }
 
-.StaffSelectedApplicantsContent .department_title_container span {
+.StaffTaAssignmentsContent .department_title_container span {
     font-size: 20px;
     font-family: "Open Sans", sans-serif;
     font-weight: 500;
@@ -32,51 +29,51 @@
     color: #003366;
 }
 
-.StaffSelectedApplicantsContent .semesters_container {
+.StaffTaAssignmentsContent .semesters_container {
+    grid-row: 2 / 4;
+    grid-column: 1 / 2;
+
     width: 100%;
     height: 100%;
     background-color: white;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
     flex-direction: column;
-    grid-row-start: 2;
-    grid-row-end: 4;
-    grid-column-start: 1;
-    grid-column-end: 2;
-
-    margin-top: 12px;
-    /* box-shadow: 8px 0px 8px rgba(0, 0, 0, 0.5); */
+    gap: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
 }
 
-.StaffSelectedApplicantsContent .semester-button-in-selected-applicants {
-    border: none;
+.StaffTaAssignmentsContent .semester-button-in-selected-applicants {
+border: none;
     background-color: white;
     color: #0056b3;
     cursor: pointer;
     font-size: 14px;
-    height: 50px;
+    height: 35px;
     width: 100%;
-    padding: 10px 0;
+    padding: 10px;
+    text-align: left;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.StaffSelectedApplicantsContent .semester-button-in-selected-applicants.active_semester_button_in_selected_applicants {
-    background-color: rgb(129, 133, 138);
-    color: white;
+.StaffTaAssignmentsContent .semester-button-in-selected-applicants.active_semester_button_in_selected_applicants {
+    color: rgb(45, 59, 69);
+        border-left: 4px solid rgb(45, 59, 69);
 }
 
-.StaffSelectedApplicantsContent .semester-button-in-selected-applicants span {
+.StaffTaAssignmentsContent .semester-button-in-selected-applicants span {
     text-transform: uppercase;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     letter-spacing: 1px;
 }
 
 
 
-.StaffSelectedApplicantsContent .navigation {
+.StaffTaAssignmentsContent .navigation {
 
     margin-top: 12px;
 
@@ -89,7 +86,7 @@
     background-color: rgb(129, 133, 138);
 }
 
-.StaffSelectedApplicantsContent .navigation .title span {
+.StaffTaAssignmentsContent .navigation .title span {
     font-size: 20px;
     color: #fff;
     text-align: center;
@@ -98,7 +95,7 @@
     letter-spacing: 1px;
 }
 
-.StaffSelectedApplicantsContent .navigation select {
+.StaffTaAssignmentsContent .navigation select {
 
     font-size: 18px;
     color: #333;
@@ -113,17 +110,17 @@
     overflow-y: hidden;
 }
 
-.StaffSelectedApplicantsContent .navigation .sort_by_container select {
+.StaffTaAssignmentsContent .navigation .sort_by_container select {
     width: 170px;
 }
 
-.StaffSelectedApplicantsContent .sort_by_container {
+.StaffTaAssignmentsContent .sort_by_container {
     display: inline-flex;
     gap: 7px;
     padding-right: 40px;
 }
 
-.StaffSelectedApplicantsContent option {
+.StaffTaAssignmentsContent option {
     margin: 5px;
 }
 
@@ -133,7 +130,7 @@
 
 
 
-.StaffSelectedApplicantsContent .selected_applicants_container {
+.StaffTaAssignmentsContent .selected_applicants_container {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -143,7 +140,7 @@
     padding-top: 30px;
 }
 
-.StaffSelectedApplicantsContent .selected_applicants_container .selected_applicant_item {
+.StaffTaAssignmentsContent .selected_applicants_container .selected_applicant_item {
     display: grid;
     align-items: center;
     justify-content: flex-start;

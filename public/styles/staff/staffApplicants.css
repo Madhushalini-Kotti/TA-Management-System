@@ -2,25 +2,22 @@
     width: 100%;
     display: grid;
     grid-template-columns: 170px auto;
-    grid-template-rows: 60px auto;
+    grid-template-rows: 80px auto;
 }
 
 .StaffApplicantsContent .department_title_container {
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    grid-row-start: 1;
-    grid-row-end: 2;
-
-    grid-column-start: 1;
-    grid-column-end: 3;
-
-    border: 0px solid #003366;
-    border-width: 0px 0px 1px 0px;
+    width: 95%;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 10px auto;
+    
+        grid-column: 1 / 3;
+        grid-row: 1 / 2;
+    
+        border: 0px solid rgba(0, 0, 0, 0.5);
+        border-width: 0px 0px 0.5px 0px;
 }
 
 .StaffApplicantsContent .department_title_container span {
@@ -33,44 +30,44 @@
 }
 
 .StaffApplicantsContent .semesters_container {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    flex-direction: column;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    grid-column-start: 1;
-    grid-column-end: 2;
+    grid-row: 2 / 3;
+        grid-column: 1 / 2;
 
-    margin-top: 12px;
-    /* box-shadow: 8px 0px 8px rgba(0, 0, 0, 0.5); */
+    width: 100%;
+        height: 100%;
+        background-color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+        margin-left: 20px;
 }
 
 .StaffApplicantsContent .semester-button {
     border: none;
-    background-color: white;
-    color: #0056b3;
-    cursor: pointer;
-    font-size: 14px;
-    height: 50px;
-    width: 100%;
-    padding: 10px 0;
-    transition: background-color 0.3s ease, color 0.3s ease;
+        background-color: white;
+        color: #0056b3;
+        cursor: pointer;
+        font-size: 14px;
+        height: 35px;
+        width: 100%;
+        padding: 10px;
+        text-align: left;
+        transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .StaffApplicantsContent .semester-button.active_semester_button {
-    background-color: rgb(129, 133, 138);
-    color: white;
+    color: rgb(45, 59, 69);
+        border-left: 4px solid rgb(45, 59, 69);
 }
 
 .StaffApplicantsContent .semester-button span {
     text-transform: uppercase;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     letter-spacing: 1px;
 }
 

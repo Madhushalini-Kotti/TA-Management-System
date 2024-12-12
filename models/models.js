@@ -189,14 +189,29 @@ const Course = sequelize.define('Course', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
+    crn: {
+        type: DataTypes.INTEGER,
+        allowNull: true, 
+    },
+    current_enrollement: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    total_enrollement: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    professor: {
+        type: DataTypes.STRING(1000),
+        allowNull: true,
+    },
 }, {
     tableName: 'courses',
-    timestamps: false,  // No timestamps in the table
-    primaryKey: ['dept_name', 'semester', 'course_number', 'course_name'],  // Add composite primary key
+    timestamps: false, // No timestamps in the table
     indexes: [
         {
             unique: true,
-            fields: ['dept_name', 'semester', 'course_number', 'course_name'],
+            fields: ['dept_name', 'semester', 'course_number', 'course_name', 'crn'], // Composite uniqueness constraint
         },
     ],
 });

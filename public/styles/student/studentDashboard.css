@@ -66,6 +66,13 @@ body {
     display: none;
 }
 
+
+
+
+
+
+
+
 .StudentDashboardContent {
     height: 100vh;
     width: 100%;
@@ -106,14 +113,6 @@ body {
     margin-left: 50px;
     margin-top: 20px;
 
-}
-
-.second_dashboard_items_wrapper {
-    width: 60%;
-    flex: 1;
-    display: inline-flex;
-    align-items: flex-start;
-    justify-content: space-around;
 }
 
 .dashboard_item {
