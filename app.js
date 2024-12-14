@@ -361,6 +361,7 @@ async function fetchStudentMainDetails(netid) {
         'name': details.name || '',
         'znumber': details.znumber || '',
         'email': details.email || '',
+        'netid': netid || '',
     };
 }
 
@@ -992,6 +993,7 @@ async function fetchTAsForCourse(courseName, courseNumber, semester, department)
         const result = await db.query(`
             SELECT 
                 applicant_netid, 
+                (SELECT email FROM userprofile WHERE netid = course_assignment_details.applicant_netid LIMIT 1) AS email,
                 (SELECT name FROM userprofile WHERE netid = course_assignment_details.applicant_netid LIMIT 1) AS name,
                 ta_hours
             FROM course_assignment_details 
@@ -1012,7 +1014,7 @@ async function fetchCoursesBySemester(semester) {
     try {
         const coursesResult = await db.query(`
             SELECT DISTINCT ON (semester, dept_name, course_name, course_number)
-                crn, course_name, course_number, course_title, dept_name, sections, 
+                crn, course_name, course_number, course_title, dept_name,
                 current_enrollement, total_enrollement, professor, ta_hours_assigned
                 no_of_ta_assigned
             FROM courses
@@ -1089,6 +1091,7 @@ app.get('/CourseDetails', async (req, res) => {
             tas: tas.map(ta => ({
                 netid: ta.applicant_netid,
                 name: ta.name,
+                email: ta.email,
                 hours: ta.ta_hours
             }))
         };
@@ -1108,7 +1111,6 @@ async function insertRowsIntoDatabase(rows, semester, deptName) {
             const crn = parseInt(row['CRN'], 10);
             const courseNumber = row['COURSE'].split(' ')[1]; // Extract course number from COURSE
             const courseName = row['COURSE'].split(' ')[0];  // Extract course name from COURSE
-            const section = parseInt(row['SECT'], 10);
             const courseTitle = row['TITLE'];
             const currentEnrollment = parseInt(row['ENRL ACTL'], 10);
             const totalEnrollment = currentEnrollment + parseInt(row['ENRL REMN'], 10);
@@ -1117,35 +1119,33 @@ async function insertRowsIntoDatabase(rows, semester, deptName) {
             // Defaulting values if necessary
             const taHoursAssigned = 0;
             const noOfTaAssigned = 0;
+            const course_status = "notstarted";
 
             // Insert or update the database
             await db.query(`
     INSERT INTO courses (
-        dept_name, semester, course_number, course_name, course_title,
-        sections, crn, current_enrollement, total_enrollement, professor,
+        dept_name, semester, course_number, course_name, course_title
+        , crn, current_enrollement, total_enrollement, professor, status,
         ta_hours_assigned, no_of_ta_assigned
     )
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
     ON CONFLICT (dept_name, semester, course_number, course_name, crn) DO UPDATE
     SET 
         course_title = EXCLUDED.course_title,
-        sections = EXCLUDED.sections,
-        current_enrollement = EXCLUDED.current_enrollement,
-        total_enrollement = EXCLUDED.total_enrollement,
         professor = EXCLUDED.professor,
-        ta_hours_assigned = EXCLUDED.ta_hours_assigned,
-        no_of_ta_assigned = EXCLUDED.no_of_ta_assigned;
+        current_enrollement = EXCLUDED.current_enrollement,
+        total_enrollement = EXCLUDED.total_enrollement;
 `, [
                 deptName,
                 semester,
                 courseNumber,
                 courseName,
                 courseTitle,
-                section,
                 crn,
                 currentEnrollment,
                 totalEnrollment,
                 professor,
+                course_status,
                 taHoursAssigned,
                 noOfTaAssigned
             ]);
@@ -1197,19 +1197,45 @@ app.post('/add_multiple_courses', checkSession, upload.single('semesterCourses')
 });
 
 app.post('/add_single_course', checkSession, async (req, res) => {
-    const { courseTitle, courseName, courseNumber, sections, taHoursTotal, semester } = req.body;
+    const { 
+        courseTitle, 
+        courseName, 
+        courseNumber, 
+        crn, 
+        professor, 
+        current_enrollement, 
+        total_enrollement, 
+        semester 
+    } = req.body;
     const dept_name = "eecs";
+    const course_status = "notstarted"; // default for new courses
 
     try {
         await db.query(`
-            INSERT INTO courses (dept_name, semester, course_number, course_name, course_title, sections, ta_hours_assigned, no_of_ta_assigned)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            ON CONFLICT (dept_name, semester, course_number, course_name) DO UPDATE
+            INSERT INTO courses (dept_name, semester, course_number, course_name, course_title, 
+            crn, professor,status, current_enrollement, total_enrollement, 
+            ta_hours_assigned, no_of_ta_assigned)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            ON CONFLICT (dept_name, semester, course_number, course_name, crn) DO UPDATE
             SET 
                 course_title = EXCLUDED.course_title,
-                sections = EXCLUDED.sections,
-                ta_hours_total = EXCLUDED.ta_hours_total;`,
-            [dept_name, semester, courseNumber, courseName, courseTitle, sections, 0, 0]
+                professor = EXCLUDED.professor,
+                current_enrollement = EXCLUDED.current_enrollement,
+                total_enrollement = EXCLUDED.total_enrollement`,
+            [
+                dept_name, 
+                semester, 
+                courseNumber, 
+                courseName, 
+                courseTitle, 
+                crn, 
+                professor, 
+                course_status,
+                current_enrollement, 
+                total_enrollement, 
+                0, // ta_hours_assigned default value
+                0  // no_of_ta_assigned default value
+            ]
         );
 
         res.json({ success: true, message: 'Course uploaded successfully' });
@@ -1217,6 +1243,23 @@ app.post('/add_single_course', checkSession, async (req, res) => {
         console.error('Error inserting course into the database:', error);
         res.status(500).json({ success: false, message: 'Error uploading the course' });
     }
+});
+
+app.post('/delete_all_courses', checkSession, async (req, res) => {
+    const { semester } = req.body;
+    const dept_name = "eecs";
+
+    try {
+        await db.query(`
+            delete from courses where semester like $1`,[ semester,]
+        );
+
+        res.json({ success: true, message: 'Course deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting courses from the database:', error);
+        res.status(500).json({ success: false, message: 'Error deleting the courses' });
+    }
+
 });
 
 app.post('/delete_single_course', checkSession, async (req, res) => {
@@ -1297,6 +1340,7 @@ async function fetchApplicantsWithCoursesAndAssignedCourses(applicant_types, sem
             const studentMainDetails = await fetchStudentMainDetails(applicant.netid);
             applicant.name = studentMainDetails.name;
             applicant.gpa = studentOtherDetails.gpa;
+            applicant.netid = studentMainDetails.netid;
             applicant.programtype = studentOtherDetails.graduateprogram;
             applicant.courseAssigned = applicant.course_assigned;
 
@@ -1328,6 +1372,65 @@ app.get('/fetchApplicantsBySemester', checkSession, async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to fetch applicants', error: error.message });
     }
 });
+
+async function fetchApplicantDetails(applicantId, applicantNetid, semester) {
+    try {
+        // Fetch student details
+        const studentOtherDetails = await fetchStudentDetails(applicantNetid);
+        const studentMainDetails = await fetchStudentMainDetails(applicantNetid);
+
+        if (!studentMainDetails || !studentOtherDetails) {
+            throw new Error('Applicant not found');
+        }
+
+        // Fetch courses applied for
+        const courses = await fetchCourseDetails(applicantNetid, semester);
+
+        // Fetch assigned courses
+        const assignedCourses = await fetchAssignedCoursesDetails(applicantId, semester);
+
+        // Construct applicant details
+        const applicantDetails = {
+            applicantId,
+            name: studentMainDetails.name,
+            netid: studentMainDetails.netid,
+            znumber: studentMainDetails.znumber,
+            gpa: studentOtherDetails.gpa,
+            mobile: studentOtherDetails.mobilenumber,
+            email: studentOtherDetails.email,
+            programtype: studentOtherDetails.graduateprogram,
+            advisorname: studentOtherDetails.advisorname,
+            advisoremail: studentOtherDetails.advisoremail,
+            semester,
+            courses,
+            assignedCourses
+        };
+
+        return applicantDetails;
+    } catch (error) {
+        console.error('Error fetching applicant details:', error);
+        throw error; // Propagate error for handling in the route
+    }
+}
+
+// Route for fetching applicant details
+app.get('/ApplicantDetails', async (req, res) => {
+    const { applicantId, applicantNetid, semester } = req.query;
+
+    if (!applicantId || !semester || !applicantNetid) {
+        return res.status(400).json({ error: 'Applicant ID, NetID, and semester are required' });
+    }
+
+    try {
+        const applicantDetails = await fetchApplicantDetails(applicantId, applicantNetid, semester);
+        res.status(200).json(applicantDetails);
+    } catch (error) {
+        console.error('Error fetching applicant details:', error);
+        res.status(500).json({ error: 'Failed to fetch applicant details', message: error.message });
+    }
+});
+
+
 
 async function fetchResumeFileName(netid) {
     const resumesDir = path.join(__dirname, 'public', 'resume');
@@ -1707,7 +1810,6 @@ app.post('/removeAssignedCourse', checkSession, async (req, res) => {
     }
 
     try {
-        // Call the helper function to remove the assigned course
         const result = await removeAssignedCourseForApplicant(applicantId, courseName, courseNumber, semester);
 
         // Return the response to the client

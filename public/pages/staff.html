@@ -13,7 +13,6 @@
     <link href="/styles/staff/staffSemesters.css" rel="stylesheet" />
     <link href="/styles/staff/staffCourses.css" rel="stylesheet" />
     <link href="/styles/staff/staffApplicants.css" rel="stylesheet" />
-    <link href="/styles/staff/staffTaAssignments.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -81,17 +80,6 @@
             <span class="nav_bat_item_text">Applicants</span>
         </button>
 
-        <button type="submit" class="nav_bar_item_btn taAssignments" id="taAssignments_btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" class="bi bi-card-checklist"
-                viewBox="0 0 16 16">
-                <path
-                    d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
-                <path
-                    d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0M7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0" />
-            </svg><br>
-            <span class="nav_bat_item_text">TA Assignments</span>
-        </button>
-
         <button type="submit" class="nav_bar_item_btn logout" id="logout_btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="37" height="35" fill="white"
                 class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -132,12 +120,22 @@
                 </div>
             </button>
 
-            <button type="submit" class="nav_bar_item_btn taAssignments" id="taAssignments_btn_dashboard">
+            <button type="submit" class="nav_bar_item_btn departments" id="departments_btn_dashboard">
                 <div class="dashboard_item third">
                     <div class="top_part">
                     </div>
                     <div class="lower_part">
-                        <span>TA Assignments</span>
+                        <span>Departments</span>
+                    </div>
+                </div>
+            </button>
+
+            <button type="submit" class="nav_bar_item_btn semesters" id="semesters_btn_dashboard">
+                <div class="dashboard_item fourth">
+                    <div class="top_part">
+                    </div>
+                    <div class="lower_part">
+                        <span>Semesters</span>
                     </div>
                 </div>
             </button>
@@ -210,7 +208,6 @@
 
         <div class="course_list_details_cotnainer">
             <div class="search_course_container">
-                
                 <input type="text" name="searchCourse" placeholder="Course Title">
                 <button>Search</button>
             </div>
@@ -261,22 +258,139 @@
             <div class="manage_courses_buttons_container">
                 <button id="addMultipleCoursesBtn"><span>Add Multiple Courses</span></button>
                 <button id="addSingleCourseBtn"><span>Add Single Courses</span></button>
+                <button id="deleteAllCoursesBtn"><span>Delete All Courses</span></button>
             </div>
-            <div class="ta_assignment_status_color_coding_container">
+            <div class="ta_assignment_status_color_coding_container" style="display: none;">
                 <div class="title"><span>TA Assignment Status</span></div>
                 <div class="item">
                     <div class="completed"></div>
                     <span>Completed</span>
                 </div>
                 <div class="item">
-                    <div class="inprocess"></div>
-                    <span>In Process</span>
-                </div>
-                <div class="item">
                     <div class="notstarted"></div>
                     <span>Not Started</span>
                 </div>
+                <div class="item">
+                    <div class="inprocess"></div>
+                    <span>In Process</span>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="applicantTypeAndfieldSelectionContainer" id="ApplicantTypeAndfieldSelectionPopup" style="display: none;">
+    
+        <div>
+            <label for="fileNameInput">
+                <h4>File Name: </h4>
+            </label>
+            <input type="text" id="fileNameInput" placeholder="Enter file name">
+        </div>
+    
+        <hr>
+    
+        <div>
+            <h5>Select Fields to Print</h5>
+        </div>
+        <div class="fieldSelectionGrid">
+            <div>
+                <input type="checkbox" id="nameCheckbox" checked>
+                <label for="nameCheckbox">Name</label>
+            </div>
+            <div>
+                <input type="checkbox" id="netidCheckbox">
+                <label for="netidCheckbox">NetID</label>
+            </div>
+            <div>
+                <input type="checkbox" id="znumberCheckbox" checked>
+                <label for="znumberCheckbox">Z-Number</label>
+            </div>
+            <div>
+                <input type="checkbox" id="departmentCheckbox">
+                <label for="departmentCheckbox">Department</label>
+            </div>
+            <div>
+                <input type="checkbox" id="courseProgramCheckbox">
+                <label for="courseProgramCheckbox">Course Program</label>
+            </div>
+            <div>
+                <input type="checkbox" id="gpaCheckbox" checked>
+                <label for="gpaCheckbox">GPA</label>
+            </div>
+            <div>
+                <input type="checkbox" id="emailCheckbox" checked>
+                <label for="emailCheckbox">Email</label>
+            </div>
+            <div>
+                <input type="checkbox" id="phoneCheckbox">
+                <label for="phoneCheckbox">Phone Number</label>
+            </div>
+            <div>
+                <input type="checkbox" id="programTypeCheckbox" checked>
+                <label for="programTypeCheckbox">Program Type</label>
+            </div>
+            <div>
+                <input type="checkbox" id="startDateCheckbox" checked>
+                <label for="startDateCheckbox">Program Start Date</label>
+            </div>
+            <div>
+                <input type="checkbox" id="graduationDateCheckbox">
+                <label for="graduationDateCheckbox">Graduation Date</label>
+            </div>
+            <div>
+                <input type="checkbox" id="enrollmentStatusCheckbox">
+                <label for="enrollmentStatusCheckbox">Enrollment Status</label>
+            </div>
+            <div>
+                <input type="checkbox" id="citizenshipStatusCheckbox" checked>
+                <label for="citizenshipStatusCheckbox">Citizenship Status</label>
+            </div>
+            <div>
+                <input type="checkbox" id="workedForFauCheckbox">
+                <label for="workedForFauCheckbox">Worked for FAU</label>
+            </div>
+            <div>
+                <input type="checkbox" id="externalWorkCheckbox">
+                <label for="externalWorkCheckbox">External Work</label>
+            </div>
+            <div>
+                <input type="checkbox" id="hoursOfExternalWorkFauCheckbox">
+                <label for="hoursOfExternalWorkFauCheckbox">Hours of External Work</label>
+            </div>
+            <div>
+                <input type="checkbox" id="creditsCompletedCheckbox">
+                <label for="creditsCompletedCheckbox">Credits Completed at FAU</label>
+            </div>
+            <div class="span-two-columns">
+                <input type="checkbox" id="creditsPlannedCheckbox">
+                <label for="creditsPlannedCheckbox">Credits Planned to Register at FAU</label>
+            </div>
+    
+    
+        </div>
+    
+        <hr>
+    
+        <div>
+            <h5>Select Applications Type to Export</h5>
+        </div>
+    
+        <div class="fieldSelectionGrid">
+            <div>
+                <input type="checkbox" id="allApplicationsCheckbox" checked>
+                <label for="allApplicationsCheckbox">All Applicants</label>
+            </div>
+            <div>
+                <input type="checkbox" id="selectedApplicationsCheckbox">
+                <label for="selectedApplicationsCheckbox">Selected Applicants</label>
+            </div>
+        </div>
+    
+        <hr>
+    
+        <div class="buttons-container">
+            <button id="confirmSelectionBtn">Confirm</button>
+            <button id="cancelSelectionBtn">Cancel</button>
         </div>
     </div>
 
@@ -288,130 +402,13 @@
             </span>
         </div>
 
-        <div class="applicantTypeAndfieldSelectionContainer" id="ApplicantTypeAndfieldSelectionPopup" style="display: none;">
-        
-            <div>
-                <label for="fileNameInput">
-                    <h4>File Name: </h4>
-                </label>
-                <input type="text" id="fileNameInput" placeholder="Enter file name">
-            </div>
-        
-            <hr>
-        
-            <div>
-                <h5>Select Fields to Print</h5>
-            </div>
-            <div class="fieldSelectionGrid">
-                <div>
-                    <input type="checkbox" id="nameCheckbox" checked>
-                    <label for="nameCheckbox">Name</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="netidCheckbox">
-                    <label for="netidCheckbox">NetID</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="znumberCheckbox" checked>
-                    <label for="znumberCheckbox">Z-Number</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="departmentCheckbox">
-                    <label for="departmentCheckbox">Department</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="courseProgramCheckbox">
-                    <label for="courseProgramCheckbox">Course Program</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="gpaCheckbox" checked>
-                    <label for="gpaCheckbox">GPA</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="emailCheckbox" checked>
-                    <label for="emailCheckbox">Email</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="phoneCheckbox">
-                    <label for="phoneCheckbox">Phone Number</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="programTypeCheckbox" checked>
-                    <label for="programTypeCheckbox">Program Type</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="startDateCheckbox" checked>
-                    <label for="startDateCheckbox">Program Start Date</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="graduationDateCheckbox">
-                    <label for="graduationDateCheckbox">Graduation Date</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="enrollmentStatusCheckbox">
-                    <label for="enrollmentStatusCheckbox">Enrollment Status</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="citizenshipStatusCheckbox" checked>
-                    <label for="citizenshipStatusCheckbox">Citizenship Status</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="workedForFauCheckbox">
-                    <label for="workedForFauCheckbox">Worked for FAU</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="externalWorkCheckbox">
-                    <label for="externalWorkCheckbox">External Work</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="hoursOfExternalWorkFauCheckbox">
-                    <label for="hoursOfExternalWorkFauCheckbox">Hours of External Work</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="creditsCompletedCheckbox">
-                    <label for="creditsCompletedCheckbox">Credits Completed at FAU</label>
-                </div>
-                <div class="span-two-columns">
-                    <input type="checkbox" id="creditsPlannedCheckbox">
-                    <label for="creditsPlannedCheckbox">Credits Planned to Register at FAU</label>
-                </div>
-                
-
-            </div>
-        
-            <hr>
-        
-            <div>
-                <h5>Select Applications Type to Export</h5>
-            </div>
-        
-            <div class="fieldSelectionGrid">
-                <div>
-                    <input type="checkbox" id="allApplicationsCheckbox" checked>
-                    <label for="allApplicationsCheckbox">All Applicants</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="selectedApplicationsCheckbox">
-                    <label for="selectedApplicationsCheckbox">Selected Applicants</label>
-                </div>
-            </div>
-        
-            <hr>
-        
-            <div class="buttons-container">
-                <button id="confirmSelectionBtn">Confirm</button>
-                <button id="cancelSelectionBtn">Cancel</button>
-            </div>
-        </div>
-
         <div class="semesters_container">
             
         </div>
 
-        <div class="staffApplicantsDataContent">
-            
-            <div class="navigation">
-            
+        <div class="applicant_list_details_Container">
+
+            <div class="course_selection_sortby_container">
                 <div class="course_selection_container">
                     <div class="title">
                         <span>Course : </span>
@@ -421,7 +418,6 @@
                         </select>
                     </div>
                 </div>
-            
                 <div class="sort_by_container">
                     <div class="title">
                         <span>Sort By :</span>
@@ -434,13 +430,8 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="export_applicants_btn_container">
-                    <button class="export_applicants_btn btn btn-link" id="exportApplicants">Export Applicants</button>
-                </div>
-
             </div>
-            
+
             <div class="applicants_container">
                 <div class="applicant_item" id="ApplicantItemHeading">
                     <div><span>Name</span></div>
@@ -450,29 +441,83 @@
                     <div><span>Applied Courses</span></div>
                 </div>
             </div>
-        </div>
-    
 
-    </div>
+            <div class="applicant_details_container" style="display: none;">
 
-    <div class="StaffTaAssignmentsContent" style="display: none;">
-        <div class="department_title_container">
-            <span>
-                Electrical Engineering And Computer Science
-            </span>
-        </div>
-        
-        <div class="semesters_container">
-        
+                <div class="applicant_main_details">
+                    <span class="name">Madhushalini Kotti</span>
+                    <span class="netid">mkotti2023</span>
+                    <button class="select_or_unselect_btn">Select</span>
+                </div>
+
+                <div class="applicant_btns">
+                    <button type="button" name="view_profile_btn"><span>View Profile</span></button>
+                    <button type="button" name="assign_course"><span>Assign Course</span></button>
+                </div>
+                
+                <div class="assigned_courses_list">
+                    <div class="assigned_courses_title">
+                        <span>TA Assignment</span>
+                    </div>
+                    <div class="assigned_course_item">
+                        <div class="course">
+                            <span class="title"> Intro to computer program</span>
+                            <span class="name"> BME </span>
+                            <span class="number"> 3000 </span>
+                        </div>
+                        <div class="hours">
+                            <span>
+                                20 Hours
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="applied_courses_list">
+                    <div class="applied_courses_title">
+                        <span>Applied Courses</span>
+                    </div>
+
+                    <div class="applied_course_item">
+                        <div>
+                            <span class="title">Intro to data science</span>
+                            <span class="name">CAP</span>
+                            <span class="number">2500</span>
+                        </div>
+                        <div><span>A Grade : yes</span>
+                            <span>Served as TA : no</span>
+                            <span>Professional Experience : no</span>
+                        </div>
+                        <div><span class="comments_title">Comments : </span><span>I have done certifications for this course</span></div>
+                    </div>
+
+                    <div class="applied_course_item">
+                        <div>
+                            <span class="title">Intro to deep learning</span>
+                            <span class="name">CAP</span>
+                            <span class="number">2000</span>
+                        </div>
+                        <div><span>A Grade : yes</span>
+                            <span>Served as TA : no</span>
+                            <span>Professional Experience : yes</span>
+                        </div>
+                        <div><span class="comments_title">Comments : </span><span>I have done certifications for this course</span></div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
         <div class="navigation">
-    
+        
+            <div class="export_applicants_btn_container">
+                <button class="export_applicants_btn" id="exportApplicants"><span>Export Applicants</span></button>
+            </div>
+        
         </div>
 
-        <div class="selected_applicants_container">
 
-        </div>
     </div>
 
 
@@ -487,7 +532,6 @@
     <script src="/scripts/staff/staffSemesters.js" type="text/javascript"></script>
     <script src="/scripts/staff/staffCourses.js" type="text/javascript"></script>
     <script src="/scripts/staff/staffApplicants.js" type="text/javascript"></script>
-    <script src="/scripts/staff/staffTaAssignments.js" type="text/javascript"></script>
 
 </body>
 

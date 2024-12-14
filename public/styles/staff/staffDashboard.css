@@ -139,6 +139,16 @@ body {
     color: #4f8045;
 }
 
+.dashboard_item.fourth>.top_part {
+    background-color: rgb(26, 127, 147);
+}
+
+.dashboard_item.fourth>.lower_part {
+    color: rgb(26, 127, 147);
+}
+
+
+
 .top_part {
     border-radius: 2%;
     border-bottom-left-radius: 0%;

@@ -173,19 +173,11 @@ const Course = sequelize.define('Course', {
         type: DataTypes.STRING(50),
         allowNull: true,
     },
-    ta_hours_total: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    },
     ta_hours_assigned: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
     no_of_ta_assigned: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    },
-    sections: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
@@ -199,6 +191,10 @@ const Course = sequelize.define('Course', {
     },
     total_enrollement: {
         type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    status: {
+        type: DataTypes.STRING(200),
         allowNull: true,
     },
     professor: {

@@ -408,7 +408,7 @@ background-color: #eae7e7bd;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.5);
     /* Semi-transparent background */
     display: flex;
     justify-content: center;
@@ -437,11 +437,11 @@ background-color: #eae7e7bd;
 }
 
 .failure-message {
-    color: red;
+    color: black;
 }
 
 .success-message {
-    color: green;
+    color: black;
 }
 
 /* Styling for the close button */

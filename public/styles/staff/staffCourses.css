@@ -152,12 +152,12 @@
     background-color: green;
 }
 
-.ta_assignment_status_color_coding_container .item .inprocess {
-    background-color: orange;
-}
-
 .ta_assignment_status_color_coding_container .item .notstarted {
     background-color: red;
+}
+
+.ta_assignment_status_color_coding_container .item .inprocess {
+    background-color: orange;
 }
 
 
@@ -253,11 +253,17 @@
     background-color: rgba(0, 0, 0, 0.1);
 }
 
+.course_container .course_title {
+    display: flex;
+    justify-content: flex-start;
+}
+
 .course_container .course_title span {
-    font-size: 15px;
+    font-size: 16px;
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 400;
+        font-weight: 500;
         color: #003366;
+        text-align: left;
 }
 
 .course_container .course_name_number {
@@ -272,30 +278,6 @@
     font-weight: 400;
     color: black;
 }
-
-.course_container .delete_this_course_btn {
-    width: 80px;
-    height: 28px;
-    border: 0.5px solid rgb(199, 205, 209);
-    border-radius: 1px;
-    padding: 3px;
-    background-color: rgb(245, 245, 245);
-    
-    font-size: 14px;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 400;
-    letter-spacing: 1px;
-    color: #003366;
-    text-transform: capitalize;
-
-    align-self: center;
-}
-
-.course_container button:hover {
-    background-color: rgb(231, 229, 229);
-}
-
-
 
 
 
@@ -428,9 +410,10 @@
 }
 
 .course_details_container .course_tas .ta_details > div {
-    width: 50%;
+    width: 75%;
     display: grid;
-    grid-template-columns: 3fr 2.5fr;
+    gap: 15px;
+    grid-template-columns: 2.25fr 2.5fr 1fr;
 }
 
 .course_details_container .course_manage_btns_container {
@@ -473,7 +456,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.3);
     z-index: 999;
 }
 
@@ -514,7 +497,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
     z-index: 1000;
 }
 
@@ -582,7 +565,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -595,11 +578,24 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
+}
+
+.deleteallcoursesoverlay {
+    position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
 }
 
 .message-container {
@@ -695,7 +691,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;

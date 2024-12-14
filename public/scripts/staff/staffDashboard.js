@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     setUpManageUsersBtn();
     setUpCoursesBtn();
     setUpApplicantsBtn();
-    setUpTaAssignmentsBtn();
     setUpLogoutBtn();
 
     document.getElementById("dashboard_btn").click();
@@ -138,6 +137,7 @@ function setUpDashboardBtn() {
 
 function setUpDepartmentsBtn() {
     const departmentsBtn = document.getElementById("departments_btn");
+    const departmentsBtnDashboard = document.getElementById("departments_btn_dashboard");
     const departmentsContent = document.querySelector(".StaffDepartmentsContent");
 
     departmentsBtn.addEventListener("click", async () => {
@@ -151,10 +151,28 @@ function setUpDepartmentsBtn() {
             window.location.href = "/?sessionExpired=true";
         }
     });
+
+    departmentsBtnDashboard.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            departmentsContent.style.display = "inline-flex";
+            resetButtonStyles();
+            setActiveButton(departmentsBtn);
+            departmentsBtn.click();
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+
+    });
+
+
 }  
 
 function setUpSemestersBtn() {
     const semestersBtn = document.getElementById("semesters_btn");
+    const semestersBtnDashboard = document.getElementById("semesters_btn_dashboard");
     const semestersContent = document.querySelector(".StaffSemestersContent");
 
     semestersBtn.addEventListener("click", async () => {
@@ -165,6 +183,21 @@ function setUpSemestersBtn() {
             semestersContent.style.display = "grid";
             resetButtonStyles();
             setActiveButton(semestersBtn);
+        } else {
+            window.location.href = "/?sessionExpired=true";
+        }
+
+    });
+
+    semestersBtnDashboard.addEventListener("click", async () => {
+
+        const sessionActive = await checkSession();
+        if (sessionActive) {
+            hideAllContents();
+            semestersContent.style.display = "inline-flex";
+            resetButtonStyles();
+            setActiveButton(semestersBtn);
+            semestersBtn.click();
         } else {
             window.location.href = "/?sessionExpired=true";
         }
@@ -261,40 +294,6 @@ function setUpApplicantsBtn() {
     });
 }
 
-function setUpTaAssignmentsBtn() {
-    const taAssignmentsBtn = document.getElementById("taAssignments_btn");
-    const taAssignmentsBtnDashboard = document.getElementById("taAssignments_btn_dashboard");
-    const taAssignmentsContent = document.querySelector(".StaffTaAssignmentsContent");
-
-    taAssignmentsBtn.addEventListener("click", async () => {
-
-        const sessionActive = await checkSession();
-        if (sessionActive) {
-            hideAllContents();
-            taAssignmentsContent.style.display = "grid";
-            resetButtonStyles();
-            setActiveButton(taAssignmentsBtn);
-        } else {
-            window.location.href = "/?sessionExpired=true";
-        }
-        
-    });
-
-    taAssignmentsBtnDashboard.addEventListener("click", async () => {
-
-        const sessionActive = await checkSession();
-        if (sessionActive) {
-            hideAllContents();
-            taAssignmentsContent.style.display = "grid";
-            resetButtonStyles();
-            setActiveButton(taAssignmentsBtn);
-            taAssignmentsBtn.click();
-        } else {
-            window.location.href = "/?sessionExpired=true";
-        }
-        
-    });
-}
 
 function setUpLogoutBtn() {
     const logoutBtn = document.getElementById("logout_btn");
@@ -310,7 +309,6 @@ function hideAllContents() {
     const semestersContent = document.querySelector(".StaffSemestersContent");
     const coursesContent = document.querySelector(".StaffCoursesContent");
     const applicantsContent = document.querySelector(".StaffApplicantsContent");
-    const taAssignmentsContent = document.querySelector(".StaffTaAssignmentsContent");
 
     dashboardContent.style.display = "none";
     manageUsersContent.style.display = "none";
@@ -318,7 +316,6 @@ function hideAllContents() {
     semestersContent.style.display = "none";
     coursesContent.style.display = "none";
     applicantsContent.style.display = "none";
-    taAssignmentsContent.style.display = "none";
 }
 
 function resetButtonStyles() {
@@ -328,9 +325,8 @@ function resetButtonStyles() {
     const manageUsersBtn = document.getElementById("manageUsers_btn");
     const coursesBtn = document.getElementById("courses_btn");
     const applicantsBtn = document.getElementById("applicants_btn");
-    const taAssignmentsBtn = document.getElementById("taAssignments_btn");
 
-    const buttons = [dashboardBtn, departmentsBtn, semestersBtn, manageUsersBtn, coursesBtn, applicantsBtn, taAssignmentsBtn];
+    const buttons = [dashboardBtn, departmentsBtn, semestersBtn, manageUsersBtn, coursesBtn, applicantsBtn];
     buttons.forEach(btn => {
         btn.style.backgroundColor = "#003366";
         const svg = btn.querySelector('svg');

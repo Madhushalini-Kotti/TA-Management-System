@@ -195,7 +195,7 @@ function updateCourseDetailsContainer(courseDetails) {
             </div>
             <div class="ta_details">
                 ${courseDetails.tas.map(ta => `
-                    <div><span>${ta.name}</span><span>${ta.hours} Hours</span></div>
+                    <div><span>${ta.name}</span><span>${ta.email}</span><span>${ta.hours} Hours</span></div>
                 `).join('')}
             </div>
         </div>
@@ -292,6 +292,7 @@ function setUpManageCoursesBtns() {
 
     const addMultipleCoursesBtn = document.getElementById('addMultipleCoursesBtn');
     const addSingleCourseBtn = document.getElementById('addSingleCourseBtn');
+    const deleteAllCoursesBtn = document.getElementById('deleteAllCoursesBtn');
 
     addMultipleCoursesBtn.addEventListener('click', function () {
         const existingOverlay = document.querySelector('.multiplecoursesoverlay');
@@ -328,7 +329,6 @@ function setUpManageCoursesBtns() {
     });
 
     addSingleCourseBtn.addEventListener('click', function () {
-
         const existingOverlay = document.querySelector('.singlecourseoverlay');
         if (existingOverlay) {
             document.body.removeChild(existingOverlay);
@@ -339,28 +339,25 @@ function setUpManageCoursesBtns() {
 
         overlay.innerHTML = `
         <div class="message-container">
-        <p>Please Enter all the Course Details:</p>
-
-        <!-- Input fields for course details -->
-        <div class="form-group">
-            <input type="text" id="courseTitle" name="courseTitle" class="form-control" placeholder="Enter course title" />
-            <input type="text" id="courseName" name="courseName" class="form-control" placeholder="Enter course name" />
-            <input type="text" id="courseNumber" name="courseNumber" class="form-control" placeholder="Enter course number" />
-            <input type="number" id="sections" name="sections" class="form-control" placeholder="Enter number of sections" />
-            <input type="number" id="taHoursTotal" name="taHoursTotal" class="form-control" placeholder="Enter total TA hours" />
+            <p>Please Enter all the Course Details:</p>
+            <div class="form-group">
+                <input type="text" id="courseTitle" class="form-control" placeholder="Enter course title" />
+                <input type="text" id="courseName" class="form-control" placeholder="Enter course name" />
+                <input type="text" id="courseNumber" class="form-control" placeholder="Enter course number" />
+                <input type="number" id="crn" class="form-control" placeholder="Enter CRN" />
+                <input type="text" id="professor" class="form-control" placeholder="Enter professor name" />
+                <input type="number" id="currentEnrollement" class="form-control" placeholder="Enter current enrollment" />
+                <input type="number" id="totalEnrollement" class="form-control" placeholder="Enter total enrollment" />
+            </div>
+            <div class="btn_container">
+                <button class="btn" id="uploadSingleCourseBtn">Upload</button>
+                <button class="btn" id="cancelSingleCourseUploadBtn">Cancel</button>
+            </div>
         </div>
+        `;
 
-        <!-- Button container with Upload and Cancel buttons -->
-        <div class="btn_container">
-            <button class="btn" id="uploadSingleCourseBtn">Upload</button>
-            <button class="btn" id="cancelSingleCourseUploadBtn">Cancel</button>
-        </div>
-    </div>
-    `;
-        
         document.body.appendChild(overlay);
 
-        // Add event listeners for buttons
         document.getElementById('uploadSingleCourseBtn').addEventListener('click', async function () {
             await uploadSingleCourse();
             document.body.removeChild(overlay);
@@ -369,27 +366,87 @@ function setUpManageCoursesBtns() {
         document.getElementById('cancelSingleCourseUploadBtn').addEventListener('click', function () {
             document.body.removeChild(overlay);
         });
+    });
+
+    deleteAllCoursesBtn.addEventListener('click', function () {
+        const existingOverlay = document.querySelector('.deleteallcoursesoverlay');
+        if (existingOverlay) {
+            document.body.removeChild(existingOverlay);
+        }
+
+        const overlay = document.createElement('div');
+        overlay.classList.add('deleteallcoursesoverlay');
+
+        overlay.innerHTML = `
+        <div class="message-container">
+            <p>Are you sure you want to delete all the courses ?</p>
+            <div class="btn_container">
+                <button class="btn" id="confirmDeleteAllCoursesBtn">Confirm</button>
+                <button class="btn" id="cancelDeleteAllCoursesBtn">Cancel</button>
+            </div>
+        </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        document.getElementById('confirmDeleteAllCoursesBtn').addEventListener('click', async function () {
+            await deleteAllCourses();
+            document.body.removeChild(overlay);
+        });
+
+        document.getElementById('cancelDeleteAllCoursesBtn').addEventListener('click', function () {
+            document.body.removeChild(overlay);
+        });
 
     });
 
 }
 
-async function uploadSingleCourse() {
+async function deleteAllCourses() {
+    const semester = await getActiveSemesterInCourses();
 
+    try {
+        const response = await fetch('/delete_all_courses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                semester
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("Courses deleted successfully!");
+            fetchCoursesListBySemester(semester);
+        } else {
+            alert(`Failed to delete courses: ${result.message || 'Unknown error'}`);
+        }
+    } catch (error) {
+        console.error('Error deleting courses:', error);
+        alert('An error occurred while deleting the courses. Please try again later.');
+    }
+
+}
+
+async function uploadSingleCourse() {
     const courseTitle = document.getElementById('courseTitle').value.trim();
     const courseName = document.getElementById('courseName').value.trim();
     const courseNumber = document.getElementById('courseNumber').value.trim();
-    const sections = parseInt(document.getElementById('sections').value.trim(), 10);
-    const taHoursTotal = parseInt(document.getElementById('taHoursTotal').value.trim(), 10);
+    const crn = parseInt(document.getElementById('crn').value.trim(), 10);
+    const professor = document.getElementById('professor').value.trim();
+    const currentEnrollement = parseInt(document.getElementById('currentEnrollement').value.trim(), 10);
+    const totalEnrollement = parseInt(document.getElementById('totalEnrollement').value.trim(), 10);
     const semester = await getActiveSemesterInCourses();
 
-    if (!courseTitle || !courseName || !courseNumber || isNaN(sections) || isNaN(taHoursTotal)) {
+    if (!courseTitle || !courseName || !courseNumber || isNaN(crn) || !professor || isNaN(currentEnrollement) || isNaN(totalEnrollement)) {
         alert("Please fill in all fields before uploading the course.");
         return;
     }
 
-    try { 
-
+    try {
         const response = await fetch('/add_single_course', {
             method: 'POST',
             headers: {
@@ -399,9 +456,11 @@ async function uploadSingleCourse() {
                 courseTitle,
                 courseName,
                 courseNumber,
-                sections,
-                taHoursTotal,
-                semester,
+                crn,
+                professor,
+                current_enrollement: currentEnrollement,
+                total_enrollement: totalEnrollement,
+                semester
             })
         });
 
@@ -409,12 +468,14 @@ async function uploadSingleCourse() {
 
         if (response.ok) {
             alert("Course uploaded successfully!");
-            fetchCoursesListBySemester(semester); 
+            fetchCoursesListBySemester(semester);
             document.getElementById('courseTitle').value = '';
             document.getElementById('courseName').value = '';
             document.getElementById('courseNumber').value = '';
-            document.getElementById('sections').value = '';
-            document.getElementById('taHoursTotal').value = '';
+            document.getElementById('crn').value = '';
+            document.getElementById('professor').value = '';
+            document.getElementById('currentEnrollement').value = '';
+            document.getElementById('totalEnrollement').value = '';
         } else {
             alert(`Failed to upload course: ${result.message || 'Unknown error'}`);
         }
@@ -422,8 +483,8 @@ async function uploadSingleCourse() {
         console.error('Error uploading course:', error);
         alert('An error occurred while uploading the course. Please try again later.');
     }
-
 }
+
 
 async function uploadCourseListFile() {
 
