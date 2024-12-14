@@ -8,6 +8,7 @@ function setUpCoursesMainBtns() {
         document.body.querySelector('.course_details_container').style.display = 'none';
         await fetchAndRenderSemestersInCourses();
         setUpManageCoursesBtns();
+        setUpSeachAndClearSearchBtns();
     });
 }
 
@@ -86,6 +87,7 @@ async function fetchCoursesListBySemester(semester) {
         if (response.ok) {
             const courses = await response.json();
             updateCoursesList(courses);
+            return courses;
         } else {
             console.error('Failed to fetch courses.');
             showNoCoursesMessage(); 
@@ -286,6 +288,40 @@ async function deleteSingleCourse(courseNumber, courseName) {
 
 
 
+function setUpSeachAndClearSearchBtns() {
+    const searchCoursesBtn = document.getElementById('searchCourseBtn');
+    const clearSearchCoursesBtn = document.getElementById('clearSearchBtn');
+
+    searchCoursesBtn.addEventListener('click', async function () {
+        const searchValue = document.getElementById('searchCourseValue').value.trim().toLowerCase();
+        const semester = await getActiveSemesterInCourses();
+
+        if (searchValue !== "") {
+            // Fetch all courses for the active semester
+            const courses = await fetchCoursesListBySemester(semester);
+
+            // Filter courses based on the course title
+            const filteredCourses = courses.filter(course => {
+                const courseTitle = course.course_title?.toLowerCase() || "";
+                return courseTitle.includes(searchValue);
+            });
+
+            // Update the UI with the filtered courses
+            updateCoursesList(filteredCourses);
+        }
+    });
+
+    clearSearchCoursesBtn.addEventListener('click', async function () {
+        const searchValueInput = document.getElementById('searchCourseValue');
+        searchValueInput.value = "";
+
+        const semester = await getActiveSemesterInCourses();
+
+        // Fetch all courses for the active semester and update the UI
+        const courses = await fetchCoursesListBySemester(semester);
+        updateCoursesList(courses);
+    });
+}
 
 
 function setUpManageCoursesBtns() {
