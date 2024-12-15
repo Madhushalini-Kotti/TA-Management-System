@@ -1,10 +1,19 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
-const sequelize = new Sequelize('TA Management System', 'postgres', 'kmr2023', {
-    host: 'localhost',
-    dialect: 'postgres', 
-    logging: false, 
-});
+dotenv.config();  // Load environment variables
+
+const sequelize = new Sequelize(
+    process.env.DB_NAME,   // Use the environment variable for DB name
+    process.env.DB_USER,   // Use the environment variable for DB user
+    process.env.DB_PASSWORD,  // Use the environment variable for DB password
+    {
+        host: process.env.DB_HOST,  // Use the environment variable for DB host
+        port: process.env.DB_PORT,  // Use the environment variable for DB port
+        dialect: 'postgres',
+        logging: false,
+    }
+);
 
 const testConnection = async () => {
     try {
@@ -18,4 +27,3 @@ const testConnection = async () => {
 testConnection();
 
 export default sequelize;
-

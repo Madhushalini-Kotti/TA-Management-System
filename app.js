@@ -8,8 +8,11 @@ import { fileURLToPath } from 'url';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 import sequelize from './config/database.js'; 
+dotenv.config();
+
 import { Applicant, Application, CourseAssignmentDetail, CourseProgram, Course, DepartmentList, SemestersList, UserProfile } from './models/models.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,7 +30,6 @@ sequelize.authenticate()
     .then(() => console.log('Database connected successfully'))
     .catch((error) => console.error('Error connecting to the database:', error));
 
-
 sequelize.sync({ force: false })
     .then(() => {
         console.log('Database synchronized successfully!');
@@ -39,11 +41,11 @@ sequelize.sync({ force: false })
 import pg from 'pg';
 
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "TA Management System",
-    password: "kmr2023",
-    port: 5432
+    user: process.env.DB_USER,           // Use process.env to access environment variables
+    host: process.env.DB_HOST,           // Correct the host value
+    database: process.env.DB_NAME,       // Use environment variable for DB name
+    password: process.env.DB_PASSWORD,   // Use environment variable for DB password
+    port: process.env.DB_PORT,           // Use environment variable for DB port
 });
 
 db.connect();
