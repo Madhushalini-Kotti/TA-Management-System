@@ -10,10 +10,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-import sequelize from './config/database.js'; 
 dotenv.config();
-
-import { Applicant, Application, CourseAssignmentDetail, CourseProgram, Course, DepartmentList, SemestersList, UserProfile } from './models/models.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +23,11 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use(cors());
 
+/*
+import sequelize from './config/database.js'; 
+
+import { Applicant, Application, CourseAssignmentDetail, CourseProgram, Course, DepartmentList, SemestersList, UserProfile } from './models/models.js';
+
 sequelize.authenticate()
     .then(() => console.log('Database connected successfully'))
     .catch((error) => console.error('Error connecting to the database:', error));
@@ -37,6 +39,8 @@ sequelize.sync({ force: false })
     .catch((error) => {
         console.error('Error synchronizing database:', error);
     });
+
+*/
 
 import pg from 'pg';
 
@@ -199,8 +203,8 @@ async function fetchSemesterList() {
 
 app.get('/departmentList', checkSession, async (req, res) => {
     try {
-        const departmentList = await fetchDepartmentList();  // Fetch the department list along with programs
-        res.json(departmentList);  // Send the department list as a JSON response
+        const departmentsList = await fetchDepartmentList();  // Fetch the department list along with programs
+        res.json(departmentsList);  // Send the department list as a JSON response
     } catch (error) {
         console.error('Error fetching department list:', error);
         res.status(500).json({ success: false, message: 'Error fetching department list' });
@@ -947,25 +951,12 @@ app.delete('/deleteApplication/:id', checkSession, async (req, res) => {
 
 
 app.post("/staff/login", async (req, res) => {
-    const netid = req.body.netid || "staff2023"; // Default value if empty
-    const departmentAbbreviation = req.body.department || "EECS"; // Default abbreviation
-    const semester = req.body.semester || "spring 2024"; // Default value if empty
+    const netid = req.body.netid || "staff2023"; 
 
     try {
-        // Use Sequelize to query the department by abbreviation
-        const department = await DepartmentList.findOne({
-            where: { department_abbre: departmentAbbreviation },
-            attributes: ['department_name']
-        });
-
-        // Check if a department name was found, set a default if not
-        const departmentName = department ? department.department_name.trim() : "Unknown Department";
-        const departmentFull = `${departmentAbbreviation} - ${departmentName}`;
 
         // Store values in the session
         req.session.netid = netid;
-        req.session.department = departmentFull;
-        req.session.semester = semester;
 
         // Save the session and send the response
         req.session.save(err => {
