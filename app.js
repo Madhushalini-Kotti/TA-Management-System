@@ -19,7 +19,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 3100;
+const port = process.env.APP_PORT;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -307,11 +307,14 @@ async function fetchStudentDetails(netid) {
     let result = await db.query("select * from userprofile WHERE netid = $1", [netid]);
 
     if (result.rows.length === 0) {
-        await db.query("insert into userprofile (netid) values($1) ", [netid]);
-        result = await db.query("SELECT * FROM userprofile WHERE netid = $1", [netid]);
+        const email = netid + "@fau.edu";
+        result = await db.query(
+            "INSERT INTO userprofile (netid, email) VALUES ($1, $2) RETURNING *",
+            [netid, email]
+        );
     }
 
-    result = await db.query("select * from userprofile WHERE netid = $1", [netid]);
+    // `result.rows[0]` now contains the user data
     const details = result.rows[0];
 
     return {

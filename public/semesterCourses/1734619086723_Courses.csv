@@ -1,0 +1,135 @@
+CRN,COURSE,SECT,TITLE,ENRL ACTL,ENRL REMN,INSTRUCTOR
+16030,CAI 4802,001,Artif Intell for Cybersecurity,31,0,"Givre, Charles"
+16032,CAI 4802,002,Artif Intell for Cybersecurity,2,37,"Givre, Charles"
+14021,CAP 2753,001,RI: Exper Design Data Analysis,59,0,"Aalo, Valentine"
+14023,CAP 4613,001,Intro to Deep Learning,60,0,"Ghoraani, Behnaz"
+14024,CAP 4613,002,Intro to Deep Learning,99,0,"Ghoraani, Behnaz"
+15601,CAP 4630,001,Intro Artificial Intelligence,120,0,"Thijssen, Sven"
+15603,CAP 4630,002,Intro Artificial Intelligence,40,-11,"Thijssen, Sven"
+16144,CAP 4770,001,Intro Data Mining Mach Learnng,74,4,"Khoshgoftaar, Taghi"
+14025,CAP 4773,001,Intro Data Science Analytics,79,0,"Ibrahim, Ali"
+14026,CAP 4773,002,Intro Data Science Analytics,45,0,"Ibrahim, Ali"
+15602,CAP 4773,003,Intro Data Science Analytics,80,0,"Lee, Chang-Hwan"
+14031,CDA 3203,001,Computer Logic Design,89,5,"Petrie, Maria"
+14032,CDA 3203,003,Computer Logic Design,45,44,"Petrie, Maria"
+14033,CDA 3203,042,Computer Logic Design,15,14,"Petrie, Maria"
+16147,CDA 3203,043,Computer Logic Design,30,59,"Rajendran, Sree Ranjani"
+14034,CDA 4102,001,Computer Architecture,149,0,"Alhalabi, Bassem"
+14035,CDA 4102,042,Computer Architecture,29,0,"Alhalabi, Bassem"
+13425,CDA 4210,001,Introduction to VLSI,16,33,"Rajendran, Sree Ranjani"
+14036,CDA 4240C,001,Design of Digital Sys and Lab,59,0,"Alhalabi, Bassem"
+14036,CDA 4240C,001,Design of Digital Sys and Lab,59,0,"Alhalabi, Bassem"
+15607,CDA 4323,001,Hardware Security,16,33,"Rajendran, Sree Ranjani"
+15609,CEN 3062C,002,Intro to Software Design,64,86,"Kayikci, Safak"
+15608,CEN 3062C,001,Intro to Software Design,149,0,"Kayikci, Safak"
+15610,CEN 3062C,042,Intro to Software Design,30,-1,"Kayikci, Safak"
+14038,CEN 4010,042,Prin Software Engineering,23,16,"Koch, Fernando"
+14037,CEN 4010,001,Prin Software Engineering,120,0,"Koch, Fernando"
+16126,CIS 4634,001,Appl Cryptography and Security,36,3,"Nojoumian, Mehrdad"
+16037,CIS 4634,002,Appl Cryptography and Security,21,-2,"Nojoumian, Mehrdad"
+14197,CNT 4007,001,Communication Networks,95,4,"Ilyas, Mohammad"
+14198,CNT 4007,042,Communication Networks,58,21,"Ilyas, Mohammad"
+15613,CNT 4164,042,Intro Intrnt Things Sens Netwk,24,5,"Ilyas, Mohammad"
+14044,CNT 4164,001,Intro Intrnt Things Sens Netwk,59,0,"Ilyas, Mohammad"
+15614,CNT 4403,001,Foundations of Cybersecurity,80,0,"Chatterjee, Suvosree"
+15964,CNT 4403,002,Foundations of Cybersecurity,80,0,"Chatterjee, Suvosree"
+15619,COP 3035C,001,Intro Programming in Python,29,121,"Taebi, Sareh"
+15620,COP 3035C,002,Intro Programming in Python,112,38,"Yepes, Juan"
+15622,COP 3035C,042,Intro Programming in Python,25,5,"Yepes, Juan"
+15623,COP 3035C,003,Intro Programming in Python,89,61,"Yepes, Juan"
+15624,COP 3035C,013,Intro Programming in Python,20,10,TBA
+15625,COP 3035C,014,Intro Programming in Python,3,27,TBA
+15627,COP 3035C,017,Intro Programming in Python,14,16,TBA
+15628,COP 3035C,020,Intro Programming in Python,12,18,TBA
+15629,COP 3035C,024,Intro Programming in Python,17,13,TBA
+15630,COP 3035C,025,Intro Programming in Python,4,26,TBA
+15631,COP 3035C,029,Intro Programming in Python,5,25,TBA
+15632,COP 3035C,030,Intro Programming in Python,16,14,TBA
+15637,COP 3035C,018,Intro Programming in Python,3,27,TBA
+15638,COP 3035C,021,Intro Programming in Python,8,22,TBA
+15640,COP 3035C,022,Intro Programming in Python,5,25,TBA
+15641,COP 3035C,026,Intro Programming in Python,3,27,TBA
+16038,COP 3035C,050,Intro Programming in Python,25,5,TBA
+16039,COP 3035C,051,Intro Programming in Python,0,30,TBA
+16040,COP 3035C,052,Intro Programming in Python,0,30,TBA
+15621,COP 3035C,011,Intro Programming in Python,30,0,TBA
+15626,COP 3035C,016,Intro Programming in Python,30,0,TBA
+15642,COP 3035C,012,Intro Programming in Python,30,0,TBA
+15643,COP 3035C,019,Intro Programming in Python,30,0,TBA
+15645,COP 3275C,001,Systems Programming with C++,67,83,"Sorgente, Tami"
+15984,COP 3275C,002,Systems Programming with C++,15,14,"Sorgente, Tami"
+15646,COP 3410C,001,Data Strc Algrthm Anlys Python,36,113,"Taebi, Sareh"
+15685,COP 3530C,002,Data Struc and Algrthm Anlys,56,38,"Nojoumian, Mehrdad"
+16041,COP 3530C,001,Data Struc and Algrthm Anlys,19,10,"Nojoumian, Mehrdad"
+13197,COP 3540,003,Intro to Database Structures,4,85,"Lee, Chang-Hwan"
+10296,COP 3540,001,Intro to Database Structures,29,0,"Lee, Chang-Hwan"
+16191,COP 3834,001,Introduction to Web Programmin,44,86,"Resnick, Rhian"
+16192,COP 3834,002,Introduction to Web Programmin,4,25,"Resnick, Rhian"
+15651,COP 4020,001,Princip of Programmg Languages,51,64,"Kayikci, Safak"
+16042,COP 4020,002,Princip of Programmg Languages,29,10,"Kayikci, Safak"
+14049,COP 4045,001,Python Programming,79,0,"Al-Najada, Hamzah"
+14050,COP 4045,002,Python Programming,30,-1,"Al-Najada, Hamzah"
+13198,COP 4610,003,Computer Operating Systems,11,34,"Furht, Borivoje"
+15652,COP 4610,004,Computer Operating Systems,44,50,"Furht, Borivoje"
+13199,COP 4703,001,Advanced Database Systems,0,79,TBA
+14051,COP 4808,001,Full-Stack Web Development,140,0,"Jaramillo, David"
+15653,COT 2000C,002,Foundations of Computing,38,112,"Adzic, Velibor"
+15654,COT 2000C,011,Foundations of Computing,22,8,TBA
+15655,COT 2000C,001,Foundations of Computing,61,54,"Adzic, Velibor"
+15656,COT 2000C,003,Foundations of Computing,89,60,TBA
+15657,COT 2000C,042,Foundations of Computing,16,13,"Adzic, Velibor"
+15658,COT 2000C,012,Foundations of Computing,28,2,TBA
+15659,COT 2000C,013,Foundations of Computing,4,26,TBA
+15661,COT 2000C,015,Foundations of Computing,8,22,TBA
+15662,COT 2000C,016,Foundations of Computing,9,21,TBA
+15663,COT 2000C,017,Foundations of Computing,5,25,TBA
+15664,COT 2000C,019,Foundations of Computing,10,20,TBA
+15665,COT 2000C,021,Foundations of Computing,7,23,TBA
+15666,COT 2000C,023,Foundations of Computing,1,29,TBA
+15667,COT 2000C,024,Foundations of Computing,11,19,TBA
+15668,COT 2000C,025,Foundations of Computing,9,21,TBA
+15686,COT 2000C,018,Foundations of Computing,22,8,TBA
+15687,COT 2000C,020,Foundations of Computing,8,22,TBA
+15688,COT 2000C,026,Foundations of Computing,7,23,TBA
+15696,COT 2000C,022,Foundations of Computing,7,23,TBA
+16043,COT 2000C,052,Foundations of Computing,8,22,TBA
+16044,COT 2000C,053,Foundations of Computing,8,22,TBA
+15660,COT 2000C,014,Foundations of Computing,30,0,TBA
+10297,COT 3949,001,Co-Op Ed Computer Science,0,20,"Kalva, Harikrishna"
+10298,COT 4400,001,Design/Analysis of Algorithms,78,2,"Adzic, Velibor"
+14055,COT 4400,002,Design/Analysis of Algorithms,29,0,"Ni, Zhen"
+15669,COT 4400,003,Design/Analysis of Algorithms,79,0,"Ni, Zhen"
+14199,COT 4420,001,Theory of Computation,90,30,"Sorgente, Tami"
+16117,COT 4420,002,Theory of Computation,29,0,"Sorgente, Tami"
+10300,COT 4900,001,Directed Independent Study,0,30,"Kalva, Harikrishna"
+16376,COT 4900,200,Directed Independent Study,0,60,"Kalva, Harikrishna"
+16045,COT 4930,002,Cloud Native Development,14,5,"de Andrade, Ricardo"
+16046,COT 4930,003,Entrepreneurial Eng Sales Mgmt,3,26,TBA
+16047,COT 4930,004,Entrepreneurial Eng: Managing,4,25,TBA
+16132,COT 4930,001,Cloud Native Development,25,25,"de Andrade, Ricardo"
+16148,COT 4930,005,Software Engineering Developmt,3,35,"Cole, Wayne"
+16149,COT 4930,006,Securing Satellite TV Systems,13,2,"Azarderakhsh, Reza"
+11111,EEE 3300,001,Electronics 1,25,24,"Peterson, Vance"
+14057,EEE 4361C,001,Electronics 2 and Lab,29,0,"Peterson, Vance"
+14057,EEE 4361C,001,Electronics 2 and Lab,29,0,"Peterson, Vance"
+16377,EEE 4510,001,Intro to Digital Signal Proces,17,12,"De Groff, Dolores"
+16055,EEL 2161,001,C for Engineers,21,28,"Hammond, Scott"
+15670,EEL 3111,002,Circuits 1,40,10,"Raviv, Daniel"
+11109,EEL 3118L,001,Electronics Laboratory 1,10,22,"Peterson, Vance"
+12907,EEL 3118L,002,Electronics Laboratory 1,17,15,"Peterson, Vance"
+15671,EEL 3470,002,Electromagnetic Fields & Waves,34,5,"Bagby, Jonathan"
+14061,EEL 3502,001,Signals Digital Filter Design,39,0,"Bagby, Jonathan"
+12908,EEL 4216,001,Electric Power Systems,23,12,"Tang, Yufei"
+16290,EEL 4436C,001,Microwave Engineering,0,19,"Neelakantaswamy, Perambur"
+13518,EEL 4461,001,Introductions To Antennas,4,35,"Bagby, Jonathan"
+14062,EEL 4512C,001,Princ of Communication Systems,29,0,"Neelakantaswamy, Perambur"
+14062,EEL 4512C,001,Princ of Communication Systems,29,0,"Neelakantaswamy, Perambur"
+14403,EEL 4652C,001,Control Systems 1,29,0,"De Groff, Dolores"
+11863,EEL 4905,001,Directed Independent Study,0,30,"Kalva, Harikrishna"
+10289,EEL 4949,001,Co-Op Educ Elec Engineering,0,25,"Kalva, Harikrishna"
+12668,EGN 4950C,001,RI: Engineering Design 1,29,60,"Zhuang, Hanqi"
+15673,EGN 4950C,002,RI: Engineering Design 1,10,19,"Zhuang, Hanqi"
+12064,EGN 4952C,001,RI: Engineering Design 2,84,35,"Asghar, Waseem"
+15674,EGN 4952C,002,RI: Engineering Design 2,23,6,"Asghar, Waseem"
+15683,STA 4821,001,Stochastic Models for Comp Sci,82,68,"Aalo, Valentine"
+15684,STA 4821,002,Stochastic Models for Comp Sci,31,-2,"Aalo, Valentine"
