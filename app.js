@@ -622,7 +622,7 @@ app.post("/submitNewApplication", checkSession, async (req, res) => {
             [netid]
         );
 
-        const studentGpa = gpaResult.rows[0]?.currentgpa;
+        const studentGpa = gpaResult.rows.length > 0 ? gpaResult.rows[0].currentgpa : null;
 
         // Check if the GPA exists and meets the minimum requirement
         if (studentGpa === null || parseFloat(studentGpa) < 3.4) {
